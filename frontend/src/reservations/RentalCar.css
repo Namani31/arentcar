@@ -1,0 +1,37 @@
+.rental-car-wrap{
+    width: 413px;
+    height: 400px;
+    overflow: hidden;
+    box-shadow : 0px 0px 5px 1px #ccc;
+    margin: 0px;
+    margin-right: 20px;
+}
+
+.rental-car-wrap a{
+    width: 413px;
+    text-decoration-line: none;
+    color: black;
+}
+
+.rental-car-wrap img{
+    margin-left: 60px;
+}
+
+.rental-car-title{
+    margin: 50px 50px 0px;
+}
+
+.rental-car-title h3{
+    font-size: 24px;
+}
+
+.rental-car-detail{
+    font-size: 16px;
+    font-weight: bold;
+    color: #3b70d6;
+}
+#car-image{
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+}
