@@ -1,0 +1,67 @@
+/* PaymentUp.css */
+
+.payment-up-table-container {
+  margin: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.payment-up-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.payment-up-detail-table th, .payment-up-detail-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.payment-up-detail-table td:last-child {
+  text-align: center;
+}
+
+.payment-up-detail-button {
+  padding: 4px 8px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  transition: background-color 0.3s;
+}
+
+.payment-up-detail-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* 페이지네이션 컨테이너 스타일 */
+.payment-up-pagination-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* 페이지네이션 버튼 스타일 */
+.payment-up-pagination {
+  display: flex;
+  gap: 5px;
+}
+
+.payment-up-page-button {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.payment-up-page-button:hover {
+  background-color: #e0e0e0;
+}
+
+.payment-up-page-button.active {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+}

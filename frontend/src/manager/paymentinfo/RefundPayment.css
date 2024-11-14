@@ -1,0 +1,67 @@
+/* RefundPayment.css */
+
+.refund-payment-table-container {
+  margin: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.refund-payment-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.refund-payment-detail-table th, .refund-payment-detail-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.refund-payment-detail-table td:last-child {
+  text-align: center;
+}
+
+.refund-payment-detail-button {
+  padding: 4px 8px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  transition: background-color 0.3s;
+}
+
+.refund-payment-detail-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* 페이지네이션 컨테이너 스타일 */
+.refund-payment-pagination-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* 페이지네이션 버튼 스타일 */
+.refund-payment-pagination {
+  display: flex;
+  gap: 5px;
+}
+
+.refund-payment-page-button {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.refund-payment-page-button:hover {
+  background-color: #e0e0e0;
+}
+
+.refund-payment-page-button.active {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+}
