@@ -1,0 +1,162 @@
+/* ManagerReservation.css */
+.container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.main-content {
+  width: 100%;
+  max-width: 1280px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+header h2 {
+  text-align: left;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.filter {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.filter select {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 28px;
+}
+
+.filter select:focus {
+  outline: none;
+  border-color: #aaa;
+}
+
+/* 테이블 대체 스타일 */
+.table-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-row {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+}
+
+.table-header {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.table-cell {
+  flex: 1;
+  padding: 8px;
+  text-align: center;
+  border-right: 1px solid #ddd;
+}
+
+.table-cell:last-child {
+  border-right: none;
+}
+
+.gray-button {
+  padding: 4px 8px;
+  color: black;
+  background-color: #d3d3d3;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.gray-button:hover {
+  background-color: #b0b0b0;
+}
+
+/* 모달 팝업 설정 */
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%;
+  max-width: 800px;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  color: #aaa;
+  cursor: pointer;
+}
+
+/* 추가된 예약코드와 헤더 스타일 */
+.modal-header {
+  margin-bottom: 1px; /* 상세 정보와 예약코드 사이 여백 */
+  font-size: 20px;
+}
+
+.reservation-code {
+  margin-bottom: 1px; /* 예약코드와 고객명 사이 여백 */
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.reservation-code p {
+  margin: 0; /* 불필요한 여백 제거 */
+}
+
+/* 정보 박스 스타일 */
+.info-box {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px; /* 각 정보박스 간 여백 */
+  background-color: #fff;
+}
+
+.info-box p {
+  margin: 5px 0; /* 텍스트 간의 간격 */
+}
+
+.btm-btn {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
