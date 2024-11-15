@@ -13,12 +13,20 @@ public interface MenusMapper  {
 
     Menus getMenusById(@Param("menuCode") Integer menuCode);
 
+    List<Menus> getMenusByMenuName(@Param("menuName") String menuName);
+
     void createMenus(Menus menus);
 
     void updateMenusById(Menus menus);
 
     void deleteMenusById(@Param("menuCode") Integer menuCode);
 
-    
+    List<Menus> getMenusWithPaging(@Param("pageSize") int pageSize, @Param("offset") int offset);
+
+    List<Menus> getMenusByNameWithPaging(@Param("menuName") String menuName, @Param("pageSize") int pageSize, @Param("offset") int offset);
+
+    int countAllMenus();
+
+    int countByNameMenus(@Param("menuName") String menuName);
 
 }

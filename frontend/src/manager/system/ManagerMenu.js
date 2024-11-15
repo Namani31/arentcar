@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'manager/system/ManagerMenu.css';
-import Sample from 'manager/reservation/Sample';
+import RegisterMenu from 'manager/system/RegisterMenu';
 import PostNotices from 'manager/reservation/posts/PostNotices';
 
 const ManagerMenu = () => {
@@ -16,7 +16,7 @@ const ManagerMenu = () => {
   };
 
   const componentMap = {
-    Sample: <Sample onClick={handleCloseClick} />,
+    RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
     //게시판 메뉴로 수정
     managementCustomer: <PostNotices />,
   };
@@ -24,7 +24,7 @@ const ManagerMenu = () => {
   useEffect(() => {
     const fetchMenus = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/user/menus`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus`);
         if (response.data) {
           setMenus(response.data);
         }
@@ -47,8 +47,8 @@ const ManagerMenu = () => {
   };
 
   const handleMainMouseLeave = () => {
-    setSubMenuState(false);
-    setSelectedMenuMain("");
+    // setSubMenuState(false);
+    // setSelectedMenuMain("");
   };
 
   const handleSubMenuMouseEnter = () => {
@@ -82,7 +82,7 @@ const ManagerMenu = () => {
                 <li key={index}
                   className='manager-menu-header-main-title'
                   onMouseEnter={(e) => handleMainMouseEnter(menuMain.menu_main, e)}
-                  // onMouseLeave={handleMainMouseLeave}
+                  onMouseLeave={handleMainMouseLeave}
                 >
                   {menuMain.menu_name}
                 </li>
@@ -97,10 +97,11 @@ const ManagerMenu = () => {
           <div
             className='manager-menu-sub-header'
             style={{ top: `${mainPosition.top}px`, left: `${mainPosition.left}px` }}
-            onMouseEnter={handleSubMenuMouseEnter}
-            onMouseLeave={handleSubMenuMouseLeave}
           >
-            <ul>
+            <ul
+              onMouseEnter={handleSubMenuMouseEnter}
+              onMouseLeave={handleSubMenuMouseLeave}
+            >
               {menus.filter(menuSub => menuSub.menu_type === "2" && menuSub.menu_main === selectedMenuMain)
                 .map((menuSub, index) => (
                   <li key={index}
@@ -116,7 +117,9 @@ const ManagerMenu = () => {
       </div>
       <div className='manager-menu-content-wrap'>
         <div className='manager-menu-content-left'>
-
+          <div>
+            홈페이지
+          </div>
         </div>
         <div className='manager-menu-content-right'>
           <div className='manager-menu-content-right-top'>

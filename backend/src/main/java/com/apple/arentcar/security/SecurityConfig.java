@@ -34,10 +34,10 @@ public class SecurityConfig {
                 .addFilterBefore(corsFilter, CorsFilter.class)
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/arentcar/manager/post/**").permitAll()//권한 임시해제
                         .requestMatchers("/arentcar/user/**").permitAll()
                         .requestMatchers("/arentcar/user/login", "/arentcar/user/userMemberships", "/arentcar/user/userMemberships/refresh").permitAll()
-                        .requestMatchers("/arentcar/manager/**").authenticated()
+                        .requestMatchers("/arentcar/manager/**").permitAll()
+                        //.requestMatchers("/arentcar/manager/**").authenticated()//권한 임시해제
                         .anyRequest().authenticated()  // 나머지 요청은 인증 필요
                 )
                 .sessionManagement(session -> session
