@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'manager/system/ManagerMenu.css';
 import Sample from 'manager/reservation/Sample';
+import ManageBranches from 'manager/branches/ManageBranches';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -16,6 +17,7 @@ const ManagerMenu = () => {
 
   const componentMap = {
     Sample: <Sample onClick={handleCloseClick} />,
+    ManageBranches: <ManageBranches onClick={handleCloseClick} />,
   };
 
   useEffect(() => {
