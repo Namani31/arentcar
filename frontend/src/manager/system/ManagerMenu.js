@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'manager/system/ManagerMenu.css';
 import RegisterMenu from 'manager/system/RegisterMenu';
+import CarInfo from 'manager/carinfo/CarInfo';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -16,6 +17,7 @@ const ManagerMenu = () => {
 
   const componentMap = {
     RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
+    managerCar: <CarInfo onClick={handleCloseClick} />,
   };
 
   useEffect(() => {
