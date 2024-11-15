@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'manager/system/ManagerMenu.css';
 import Sample from 'manager/reservation/Sample';
+import PostNotices from 'manager/reservation/posts/PostNotices';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -16,6 +17,8 @@ const ManagerMenu = () => {
 
   const componentMap = {
     Sample: <Sample onClick={handleCloseClick} />,
+    //게시판 메뉴로 수정
+    managementCustomer: <PostNotices />,
   };
 
   useEffect(() => {

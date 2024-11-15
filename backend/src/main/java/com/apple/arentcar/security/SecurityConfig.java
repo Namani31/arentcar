@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .addFilterBefore(corsFilter, CorsFilter.class)
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/arentcar/manager/post/**").permitAll()//권한 임시해제
                         .requestMatchers("/arentcar/user/**").permitAll()
                         .requestMatchers("/arentcar/user/login", "/arentcar/user/userMemberships", "/arentcar/user/userMemberships/refresh").permitAll()
                         .requestMatchers("/arentcar/manager/**").authenticated()
