@@ -41,15 +41,17 @@ const PromotionDiscountChart = () => {
 
     return (
         <div>
-            <h3>프로모션/할인 예약 건수 비교</h3>
-            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                <div>
-                    <h4>프로모션/할인 적용</h4>
-                    <Line data={dataWithPromotion} />
-                </div>
-                <div>
-                    <h4>프로모션/할인 미적용</h4>
-                    <Line data={dataWithoutPromotion} />
+            <div className="chart-container">
+                <h3>프로모션/할인 예약 건수 비교</h3>
+                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                    <div>
+                        <h4>프로모션/할인 적용</h4>
+                        <Line data={dataWithPromotion} />
+                    </div>
+                    <div>
+                        <h4>프로모션/할인 미적용</h4>
+                        <Line data={dataWithoutPromotion} />
+                    </div>
                 </div>
             </div>
         </div>
