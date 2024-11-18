@@ -10,7 +10,7 @@ import SalesChart from './charts/SalesChart';
 
 const ReservationStatistics = () => {
     const [filter, setFilter] = useState('daily'); // 선택된 필터 상태
-    const [chartType, setChartType] = useState('sales'); // 선택된 차트 타입 상태
+    const [chartType, setChartType] = useState('reservation'); // 선택된 차트 타입 상태
 
     const handleFilterChange = (event) => {
         setFilter(event.target.value); // 선택된 값을 상태에 반영
