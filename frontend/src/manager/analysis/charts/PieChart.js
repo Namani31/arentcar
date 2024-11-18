@@ -6,6 +6,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
+import './Charts.css';
 
 // 필요한 요소를 등록
 ChartJS.register(ArcElement, Tooltip, Legend);

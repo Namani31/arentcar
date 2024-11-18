@@ -1,4 +1,5 @@
 import React from 'react';
+import './Charts.css';
 import {
     Chart as ChartJS,
     LineElement,
