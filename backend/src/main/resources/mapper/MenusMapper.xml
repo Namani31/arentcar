@@ -12,16 +12,22 @@
 
     <!-- key 단건 조회 -->
     <select id="getMenusById" resultType="com.apple.arentcar.model.Menus">
-        SELECT * FROM menus 
+        SELECT * FROM menus
         WHERE menu_code = #{menuCode}
     </select>
 
+    <!-- menu_name 조회 -->
+    <select id="getMenusByMenuName" resultType="com.apple.arentcar.model.Menus">
+        SELECT * FROM menus
+        WHERE menu_name LIKE CONCAT('%', #{menuName}, '%')
+    </select>
+
     <!-- Insert -->
-    <insert id="createMenus" parameterType="com.apple.arentcar.model.Menus" >
+    <insert id="createMenus" parameterType="com.apple.arentcar.model.Menus"  useGeneratedKeys="true" keyProperty="menuCode" >
         INSERT INTO menus 
-        (menu_code, menu_kind, menu_main, menu_sub, menu_small, menu_name, menu_type, menu_icon, menu_component, created_at, updated_at)
+        (menu_code, menu_kind, menu_main, menu_sub, menu_small, menu_name, menu_type, menu_role, menu_icon, menu_component, created_at, updated_at)
         VALUES 
-        (#{menuCode}, #{menuKind}, #{menuMain}, #{menuSub}, #{menuSmall}, #{menuName}, #{menuType}, #{menuIcon}, #{menuComponent}, NOW(), NOW())
+        (#{menuCode}, #{menuKind}, #{menuMain}, #{menuSub}, #{menuSmall}, #{menuName}, #{menuType}, #{menuRole}, #{menuIcon}, #{menuComponent}, NOW(), NOW())
     </insert>
 
     <!-- Update -->
@@ -34,6 +40,7 @@
           menu_small = #{menuSmall},
           menu_name = #{menuName},
           menu_type = #{menuType},
+          menu_role = #{menuRole},
           menu_icon = #{menuIcon},
           menu_component = #{menuComponent},
           updated_at = NOW()
@@ -46,5 +53,30 @@
         WHERE menu_code = #{menuCode}
     </delete>
 
-    
+    <!-- 메뉴 페이징 조회 -->
+    <select id="getMenusWithPaging" resultType="com.apple.arentcar.model.Menus">
+        SELECT * FROM menus
+        ORDER BY menu_code
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <!-- 메뉴 수 조회 -->
+    <select id="countAllMenus" resultType="int">
+        SELECT COUNT(*) FROM menus
+    </select>
+
+    <!-- 검색조건에 맞게 메뉴 페이징 조회 -->
+    <select id="getMenusByNameWithPaging" resultType="com.apple.arentcar.model.Menus">
+        SELECT * FROM menus
+        WHERE menu_name LIKE CONCAT('%', #{menuName}, '%')
+        ORDER BY menu_code
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <!-- 메뉴 수 조회 -->
+    <select id="countByNameMenus" resultType="int">
+        SELECT COUNT(*) FROM menus
+        WHERE menu_name LIKE CONCAT('%', #{menuName}, '%')
+    </select>
+
 </mapper>

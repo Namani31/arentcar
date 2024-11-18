@@ -1,37 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { setAdminState } from '../../redux/AdminState';
+import { refreshAccessToken, handleLogout } from 'common/Common';
 import 'manager/system/ManagerMenu.css';
-import Sample from 'manager/reservation/Sample';
+import RegisterMenu from 'manager/system/RegisterMenu';
+import RegisterUser from 'manager/system/RegisterUser';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
   const [subMenuState, setSubMenuState] = useState(false);
+  const [subMenuMoveState, setSubMenuMoveState] = useState(false);
   const [selectedMenuMain, setSelectedMenuMain] = useState("");
   const [selectedComponent, setSelectedComponent] = useState("");
   const [mainPosition, setMainPosition] = useState({ left: 0, top: 0 });
+  const isAdminRole = useSelector((state) => state.adminState.adminRole);
+  const isAdminName = useSelector((state) => state.adminState.adminName);
+  const dispatch = useDispatch();
 
   const handleCloseClick = () => {
     setSelectedComponent("");
   };
 
   const componentMap = {
-    Sample: <Sample onClick={handleCloseClick} />,
+    RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
+    RegisterUser: <RegisterUser onClick={handleCloseClick} />,
   };
 
   useEffect(() => {
     const fetchMenus = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/user/menus`);
-        if (response.data) {
-          setMenus(response.data);
-        }
+        const token = localStorage.getItem('accessToken');
+        await getMenus(token);
       } catch (error) {
-        console.error('There was an error fetching the movies!', error);
+        if (error.response && error.response.status === 403) {
+          try {
+            const newToken = await refreshAccessToken();
+            await getMenus(newToken);
+          } catch (refreshError) {
+            alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+            handleLogout();
+          }
+        } else {
+          console.error('There was an error fetching the menu!', error);
+        }
       }
     };
 
     fetchMenus();
   }, []);
+
+  const getMenus = async (token) => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus`, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true, 
+    });
+    setMenus(response.data);
+  };
+
 
   const handleMainMouseEnter = (menuMain, event) => {
     const rect = event.target.getBoundingClientRect();
@@ -40,16 +66,20 @@ const ManagerMenu = () => {
       top: rect.bottom,
     });
     setSubMenuState(true);
+    setSubMenuMoveState(false);
     setSelectedMenuMain(menuMain);
   };
 
   const handleMainMouseLeave = () => {
-    setSubMenuState(false);
-    setSelectedMenuMain("");
+    if (!subMenuMoveState) {
+      setSubMenuState(false);
+      setSubMenuMoveState(false);
+    }
   };
 
   const handleSubMenuMouseEnter = () => {
     setSubMenuState(true);
+    setSubMenuMoveState(true);
   };
 
   const handleSubMenuMouseLeave = () => {
@@ -66,6 +96,13 @@ const ManagerMenu = () => {
     setSelectedComponent(component);
   }
 
+  const handleMenuCloseClick = () => {
+    dispatch(setAdminState({
+      loginState: false
+    }));
+    handleLogout()
+  }
+
   return (
     <div className='manager-menu-wrap'>
       <div className='manager-menu-header-wrap'>
@@ -74,12 +111,12 @@ const ManagerMenu = () => {
             <img className="manager-menu-header-img" src={`${process.env.REACT_APP_IMAGE_URL}/arentcar.png`} alt="" />
           </div>
           <ul>
-            {menus.filter(menu => menu.menu_type === "1")
+            {menus.filter(menu => menu.menu_kind === "2" && menu.menu_type === "1" && menu.menu_role >= isAdminRole)
               .map((menuMain, index) => (
                 <li key={index}
                   className='manager-menu-header-main-title'
                   onMouseEnter={(e) => handleMainMouseEnter(menuMain.menu_main, e)}
-                  // onMouseLeave={handleMainMouseLeave}
+                  onMouseLeave={handleMainMouseLeave}
                 >
                   {menuMain.menu_name}
                 </li>
@@ -87,18 +124,19 @@ const ManagerMenu = () => {
           </ul>
         </div>
         <div className='manager-menu-main-header-login-info'>
-          <div>접속자명</div>
-          <div>로그아웃</div>
+          <div>{isAdminName}님</div>
+          <div className='manager-menu-main-header-login-out' onClick={handleMenuCloseClick}>로그아웃</div>
         </div>
         {subMenuState && (
           <div
             className='manager-menu-sub-header'
             style={{ top: `${mainPosition.top}px`, left: `${mainPosition.left}px` }}
-            onMouseEnter={handleSubMenuMouseEnter}
-            onMouseLeave={handleSubMenuMouseLeave}
           >
-            <ul>
-              {menus.filter(menuSub => menuSub.menu_type === "2" && menuSub.menu_main === selectedMenuMain)
+            <ul 
+              onMouseEnter={handleSubMenuMouseEnter}
+              onMouseLeave={handleSubMenuMouseLeave}
+            >
+              {menus.filter(menuSub => menuSub.menu_kind === "2" && menuSub.menu_type === "2" && menuSub.menu_main === selectedMenuMain && menuSub.menu_role >= isAdminRole)
                 .map((menuSub, index) => (
                   <li key={index}
                     className='manager-menu-header-sub-title'
@@ -113,7 +151,9 @@ const ManagerMenu = () => {
       </div>
       <div className='manager-menu-content-wrap'>
         <div className='manager-menu-content-left'>
-
+          <div>
+            홈페이지
+          </div>
         </div>
         <div className='manager-menu-content-right'>
           <div className='manager-menu-content-right-top'>
