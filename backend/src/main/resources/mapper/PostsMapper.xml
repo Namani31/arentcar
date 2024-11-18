@@ -22,7 +22,28 @@
             END as 'author' from posts p
         LEFT join admins am on am.admin_code = p.author_code
         LEFT join users us on us.user_code = p.author_code
-        where p.post_type = 'NT';
+        where p.post_type = 'NT'
+        ORDER BY p.post_code LIMIT #{pageSize} OFFSET #{pageNumber};
+    </select>
+
+    <select id="countAllNotices" resultType="int">
+        SELECT count(*) from posts p where p.post_type = 'NT';
+    </select>
+
+    <select id="getsSarchNotices" resultType="com.apple.arentcar.model.post.Notices">
+        SELECT p.*,
+               CASE
+                   when p.author_type = 'US' THEN us.user_name
+                   when p.author_type = 'AM' THEN am.admin_name
+                   END as 'author' from posts p
+               LEFT join admins am on am.admin_code = p.author_code
+               LEFT join users us on us.user_code = p.author_code
+        where p.post_type = 'NT' and p.post_title LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY p.post_code LIMIT #{pageSize} OFFSET #{pageNumber};
+    </select>
+
+    <select id="countSarchNotices" resultType="int">
+        SELECT count(*) from posts p where p.post_type = 'NT' and p.post_title LIKE CONCAT('%', #{keyword}, '%');
     </select>
 
     <select id="getNotice" resultType="com.apple.arentcar.model.post.Notices">
@@ -34,17 +55,6 @@
         LEFT join admins am on am.admin_code = p.author_code
         LEFT join users us on us.user_code = p.author_code
         where p.post_type = 'NT' AND p.post_code = #{postCode};
-    </select>
-
-    <select id="getsSarchNotices" resultType="com.apple.arentcar.model.post.Notices">
-        SELECT p.*,
-                CASE
-                   when p.author_type = 'US' THEN us.user_name
-                   when p.author_type = 'AM' THEN am.admin_name
-                END as 'author' from posts p
-        LEFT join admins am on am.admin_code = p.author_code
-        LEFT join users us on us.user_code = p.author_code
-        where p.post_title LIKE CONCAT('%', #{keyword}, '%');
     </select>
 
     <insert id="createNotice" parameterType="com.apple.arentcar.model.post.Notices">

@@ -1,5 +1,5 @@
 package com.apple.arentcar.mapper;
-  
+
 import com.apple.arentcar.model.Menus;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

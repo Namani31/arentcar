@@ -11,9 +11,11 @@ import java.util.List;
 @Mapper
 public interface PostsMapper {
     List<Notices> getPostsAll();
-    List<Notices> getAllNotices();
+    List<Notices> getAllNotices(Integer pageSize, Integer pageNumber);
+    int countAllNotices();
+    List<Notices> getsSarchNotices(String keyword, Integer pageSize, Integer pageNumber);
+    int countSarchNotices(String keyword);
     Notices getNotice(Integer postCode);
-    List<Notices> getsSarchNotices(String keyword);
     void createNotice(Notices notice);
 
     List<Reviews> getAllReviews();

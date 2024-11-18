@@ -23,13 +23,30 @@ public class PostsController {
     public List<Notices> getPostsAll(){ return postsService.getPostsAll(); }
 
     @GetMapping("/manager/post/notices")
-    public List<Notices> getAllNotices(){ return postsService.getAllNotices(); }
-
-    @GetMapping("/manager/post/sarch")//RequestParam
-    public List<Notices> getsSarchNotices( ){
-
-        return postsService.getsSarchNotices("리뷰");
+    public ResponseEntity<List<Notices>> getAllNotices(
+        @RequestParam int pageSize,
+        @RequestParam int pageNumber,
+        @RequestParam(required = false) String postName ){
+        List<Notices> notices;
+        if(postName != null && !postName.isEmpty()){
+            notices = postsService.getSarchNotices(postName, pageSize, pageNumber);
+        } else {
+            notices = postsService.getAllNotices(pageSize, pageNumber);
+        }
+        return ResponseEntity.ok(notices);
     }
+
+    @GetMapping("/manager/post/notices/count")
+    public ResponseEntity<Integer> getNoticesCount( @RequestParam(required = false) String postName ){
+        int count;
+        if(postName != null && !postName.isEmpty()){
+            count = postsService.countSarchNotices(postName);
+        } else {
+            count = postsService.countAllNotices();
+        }
+        return ResponseEntity.ok(count);
+    }
+
 
     @GetMapping("/manager/post/notices/{postCode}")
     public ResponseEntity<Notices> getNotice(@PathVariable Integer postCode) {

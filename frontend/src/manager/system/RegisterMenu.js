@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { refreshAccessToken, handleLogout } from 'common/Common';
+import Loading from 'common/Loading';
 import 'manager/system/RegisterMenu.css';
 
 const RegisterMenu = ({ onClick }) => {
   const [menus, setMenus] = useState([]);
   const [isPopUp, setIsPopUp] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [workMode, setWorkMode] = useState("");
   const [searchName, setSearchName] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const pageSize = 10;
-  const [totalMenus, setTotalMenus] = useState(0);
-
+  const [totalCount, setTotalCount] = useState(0);
   const [columnDefs] = useState([
     { headerName: '코드', field: 'menu_code', width: 80, align: 'center' },
     { headerName: '메뉴구분', field: 'menu_kind', width: 80, align: 'center' },
@@ -18,6 +20,7 @@ const RegisterMenu = ({ onClick }) => {
     { headerName: '중분류', field: 'menu_sub', width: 80, align: 'center' },
     { headerName: '소분류', field: 'menu_small', width: 80, align: 'center' },
     { headerName: '분류구분', field: 'menu_type', width: 80, align: 'center' },
+    { headerName: '권한', field: 'menu_role', width: 100, align: 'center' },
     { headerName: '메뉴명', field: 'menu_name', width: 300, align: 'left' },
     { headerName: '프로그램명', field: 'menu_component', width: 200, align: 'left' },
     { headerName: '작업', field: '', width: 200, align: 'center' },
@@ -29,12 +32,18 @@ const RegisterMenu = ({ onClick }) => {
   const [menuSub, setMenuSub] = useState("");
   const [menuSmall, setMenuSmall] = useState("");
   const [menuType, setMenuType] = useState("");
+  const [menuRole, setMenuRole] = useState("");
   const [menuName, setMenuName] = useState("");
   const [menuComponent, setMenuComponent] = useState("");
 
   const optionsMenuKind = [
     { value: '1', label: '사용자메뉴' },
     { value: '2', label: '관리자메뉴' },
+  ];
+
+  const optionsMenuRole = [
+    { value: '1', label: '시스템메뉴' },
+    { value: '2', label: '사용자메뉴' },
   ];
 
   const optionsMenuType = [
@@ -45,43 +54,88 @@ const RegisterMenu = ({ onClick }) => {
 
   const pageingMenus = async () => {
     try {
-      const params = {
-        pageSize,
-        pageNumber,
-      };
-  
-      if (searchName && searchName.trim() !== '') {
-        params.menuName = searchName;
-      }
-  
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/paged`, { params });
-      if (response.data) {
-        setMenus(response.data);
-      }
+      const token = localStorage.getItem('accessToken');
+      await getMenus(token);
     } catch (error) {
-      console.error('There was an error fetching the menus pageing!', error);
+      if (error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getMenus(newToken);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the menus pageing!', error);
+      }
     }
   };
 
-  const getTotalMenusCount = async () => {
-    try {
+  const getMenus = async (token) => {
+    const params = {
+      pageSize,
+      pageNumber,
+    };
 
-      const params = searchName ? { menuName: searchName } : {};
-  
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/count`, { params });
-      if (typeof response.data === 'number') {
-        setTotalMenus(response.data);
-      } else {
-        console.error('Unexpected response:', response.data);
-      }
+    if (searchName && searchName.trim() !== '') {
+      params.menuName = searchName;
+    }
+
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/paged`, 
+      {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+
+    if (response.data) {
+      setMenus(response.data);
+    }
+  };
+
+  const getTotalCount = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      await getCount(token);
     } catch (error) {
-      console.error('Error fetching total menus count', error);
+      if (error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getCount(newToken);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the Menus count!', error);
+      }
+    }
+  };
+
+  const getCount = async (token) => {
+    const params = searchName ? { menuName: searchName } : {};
+
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/count`,
+      {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+
+    if (typeof response.data === 'number') {
+      setTotalCount(response.data);
+    } else {
+      console.error('Unexpected response:', response.data);
     }
   };
 
   useEffect(() => {
     pageingMenus();
-    getTotalMenusCount();
+    getTotalCount();
   }, [pageNumber, pageSize]);
 
   const handleUpdateClick = (updateData, workMode) => {
@@ -93,6 +147,7 @@ const RegisterMenu = ({ onClick }) => {
     setMenuSub(updateData.menu_sub);
     setMenuSmall(updateData.menu_small);
     setMenuType(updateData.menu_type);
+    setMenuRole(updateData.menu_role);
     setMenuName(updateData.menu_name);
     setMenuComponent(updateData.menu_component);
   };
@@ -104,13 +159,14 @@ const RegisterMenu = ({ onClick }) => {
     setMenuSub("");
     setMenuSmall("");
     setMenuType("1");
+    setMenuRole("2");
     setMenuName("");
     setMenuComponent("");
   };
 
   const handleSearchClick = async () => {
     pageingMenus();
-    getTotalMenusCount();
+    getTotalCount();
   };
 
   const handleInsertClick = (workMode) => {
@@ -122,13 +178,33 @@ const RegisterMenu = ({ onClick }) => {
   const handleDeleteClick = async (menuCode) => {
     if (window.confirm('자료를 정말로 삭제하시겠습니까?')) {
       try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${menuCode}`);
-        setMenus((prevMenus) => prevMenus.filter(menu => menu.menu_code !== menuCode));
-        alert("자료가 삭제되었습니다.");
+        const token = localStorage.getItem('accessToken');
+        await deleteMenu(token, menuCode);
       } catch (error) {
-        alert("삭제 중 오류가 발생했습니다." + error);
+        if (error.response && error.response.status === 403) {
+          try {
+            const newToken = await refreshAccessToken();
+            await deleteMenu(newToken, menuCode);
+          } catch (error) {
+            alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+            handleLogout();
+          }
+        } else {
+          alert("삭제 중 오류가 발생했습니다." + error);
+        }
       }
     }
+  };
+
+  const deleteMenu = async (token, menuCode) => {
+    await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${menuCode}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      withCredentials: true,
+    });
+    setMenus((prevMenus) => prevMenus.filter(menu => menu.menu_code !== menuCode));
+    alert("자료가 삭제되었습니다.");
   };
 
   const handleDataSaveClick = async () => {
@@ -143,29 +219,84 @@ const RegisterMenu = ({ onClick }) => {
       menu_sub: menuSub,
       menu_small: menuSmall,
       menu_type: menuType,
+      menu_role: menuRole,
       menu_name: menuName,
       menu_component: menuComponent,
     };
 
     if (workMode === "수정") {
       try {
-        await axios.put(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${menuCode}`, newMenu);
-        setMenus((prevMenus) => prevMenus.map(menu => menu.menu_code === menuCode ? newMenu : menu));
-        alert("자료가 수정되었습니다.");
+        setLoading(true);
+        const token = localStorage.getItem('accessToken');
+        await updateMenu(token, newMenu);
       } catch (error) {
-        alert("수정 중 오류가 발생했습니다." + error);
+        if (error.response && error.response.status === 403) {
+          try {
+            const newToken = await refreshAccessToken();
+            await updateMenu(newToken, newMenu);
+          } catch (error) {
+            alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
+            handleLogout();
+          }
+        } else {
+          alert("수정 중 오류가 발생했습니다." + error);
+        }
+      } finally {
+        setLoading(false);
       }
     } else {
       try {
-        await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus`, newMenu);
-        setMenus((prevMenus) => [...prevMenus, newMenu]);
-        alert("자료가 등록되었습니다.");
+        setLoading(true);
+        const token = localStorage.getItem('accessToken');
+        await createMenu(token, newMenu);
       } catch (error) {
-        alert("등록 중 오류가 발생했습니다." + error);
+        if (error.response && error.response.status === 403) {
+          try {
+            const newToken = await refreshAccessToken();
+            await createMenu(newToken, newMenu);
+          } catch (error) {
+            alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
+            handleLogout();
+          }
+        } else {
+          alert("등록 중 오류가 발생했습니다." + error);
+        }
+      } finally {
+        setLoading(false);
       }
     }
 
     setIsPopUp(false);
+  };
+
+  const updateMenu = async (token, newMenu) => {
+    await axios.put(
+      `${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${menuCode}`,
+      newMenu,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+    setMenus((prevMenu) => prevMenu.map(menu => menu.mMenu_code === menuCode ? newMenu : menu));
+    alert("자료가 수정되었습니다.");
+  };
+
+  const createMenu = async (token, newMenu) => {
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus`, 
+      newMenu,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+    newMenu.menu_code = response.data.menu_code;
+    newMenu.menu_password = response.data.menu_password;
+    setMenus((prevMenu) => [...prevMenu, newMenu]);
+    alert("자료가 등록되었습니다.");
   };
 
   const handlePopupClodeClick = () => {
@@ -207,7 +338,10 @@ const RegisterMenu = ({ onClick }) => {
     setPageNumber(newPageNumber);
   };
 
-  const totalPages = Math.ceil(totalMenus / pageSize);
+  let totalPages = Math.ceil(totalCount / pageSize);
+  if (totalPages < 1) {
+    totalPages = 1;
+  }
 
   return (
     <div className='register-menu-wrap'>
@@ -223,7 +357,7 @@ const RegisterMenu = ({ onClick }) => {
             <label className='manager-label' htmlFor="">메뉴명</label>
             <input className='width200' type="text" value={searchName} onChange={(e) => (setSearchName(e.target.value))}/>
             <button className='manager-button manager-button-search' onClick={() => handleSearchClick()}>검색</button>
-            <span>[검색건수 : {totalMenus}건]</span>
+            <span>[검색건수 : {totalCount}건]</span>
           </div>
           <div>
             <button className='manager-button manager-button-insert' onClick={() => handleInsertClick("등록")}>추가</button>
@@ -257,7 +391,10 @@ const RegisterMenu = ({ onClick }) => {
                       <button className='manager-button manager-button-delete' onClick={() => handleDeleteClick(row.menu_code)}>삭제</button>
                     </>
                   ) : (
-                    row[title.field]
+                    title.field === 'menu_role' ? (
+                      optionsMenuRole.find(option => option.value === row[title.field])?.label || row[title.field]
+                    ) :
+                      row[title.field]
                   )}
                 </div>
               ))}
@@ -311,6 +448,16 @@ const RegisterMenu = ({ onClick }) => {
                 </select>
               </div>
               <div className='register-menu-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="">메뉴권한</label>
+                <select className='width150' id="comboBox" value={menuRole} onChange={(e) => (setMenuRole(e.target.value))}>
+                  {optionsMenuRole.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='register-menu-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">메뉴명</label>
                 <input className='width300' type="text" value={menuName} maxLength={30} onChange={(e) => setMenuName(e.target.value)} />
               </div>
@@ -337,6 +484,9 @@ const RegisterMenu = ({ onClick }) => {
           disabled={pageNumber === totalPages}
         >다음</button>
       </div>
+      {loading && (
+        <Loading />
+      )}
     </div>
   );
 }

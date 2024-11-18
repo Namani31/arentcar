@@ -17,9 +17,11 @@ public class PostsService {
 
     public List<Notices> getPostsAll() {return postsMapper.getPostsAll();}
 
-    public List<Notices> getAllNotices() { return postsMapper.getAllNotices(); }
+    public List<Notices> getAllNotices(Integer pageSize, Integer pageNumber) { return postsMapper.getAllNotices(pageSize, pageNumber); }
+    public int countAllNotices() { return postsMapper.countAllNotices(); }
     public Notices getNotice(Integer postCode) { return postsMapper.getNotice(postCode); }
-    public List<Notices> getsSarchNotices(String keyword) { return postsMapper.getsSarchNotices(keyword); }
+    public List<Notices> getSarchNotices(String keyword, Integer pageSize, Integer pageNumber) { return postsMapper.getsSarchNotices(keyword, pageSize, pageNumber); }
+    public int countSarchNotices(String keyword) { return postsMapper.countSarchNotices(keyword); }
     public void create(Notices notices) {
         postsMapper.createNotice(notices);
     }

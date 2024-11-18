@@ -1,14 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import 'manager/reservation/posts/PostNotices.css';
+import { refreshAccessToken, handleLogout } from 'common/Common';
+import 'manager/system/posts/PostNotices.css';
 
 const PostNotices = ({ onClick }) => {
   const [notices, setNotices] = useState([]);
   const [totalNotices, setTotalNotices] = useState(0);
 
-  const [pageNumber, setPageNumber] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+  const [searchName, setSearchName] = useState("");
+  const [pageNumber, setPageNumber] = useState(0);
   const pageSize = 10;
+  // const [totalPages, setTotalPages] = useState(0);
+  const [isPopUp, setIsPopUp] = useState(false);
 
   const [columnNotices] = useState([
     { columnName: '코드', field: 'post_code', width: 100, align: 'center'},
@@ -19,11 +22,32 @@ const PostNotices = ({ onClick }) => {
     { columnName: '작업', field: '', width: 230, align: 'center'},
   ]);
 
+  const [postCode,setPostCode] = useState();
+  const [postType,setPostType] = useState();
+  const [postTitle,setPostTitle] = useState();
+  const [postContent,setPostContent] = useState();
+  const [authorCode,setAuthorCode] = useState();
+  const [authorType,setAuthorType] = useState();
+
+
   const fetchNotices = async () => {
+    const params = {
+      pageSize,
+      pageNumber,
+    };
+
+    if(searchName && searchName.trim() !== "") {
+      params.postName = searchName;
+    }
+
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/notices`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/notices`,
+        {
+          params,
+        }
+      );
       if(response.data) {
-        console.log(response.data)
+        console.log(response.data);
         setNotices(response.data);
       }
     } catch (error) {
@@ -31,10 +55,37 @@ const PostNotices = ({ onClick }) => {
     }
   }
 
-  useEffect(()=>{
+  const getCount = async () => {
+    const params = searchName && searchName.trim() !== "" ? { postName: searchName } : {}
 
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/notices/count`,
+        {
+          params,
+        }
+      );
+      if(typeof response.data === "number") {
+        setTotalNotices(response.data);
+      }
+    } catch (error) {
+      console.error('There was an error fetching the movies!', error);
+    }
+  }
+
+  useEffect(()=>{
     fetchNotices();
-  }, [])
+    getCount();
+  }, [totalNotices, pageNumber])
+
+  const handleSearchClick = async () => {
+    fetchNotices();
+    getCount();
+    setPageNumber(0);
+  }
+
+  let totalPages = Math.ceil(totalNotices / pageSize);
+  if (totalPages < 1) { totalPages = 1; }
+  if (totalNotices === 0) { totalPages = 0; }
 
   const handleCloseClick = () => {
     if (onClick) {
@@ -56,13 +107,15 @@ const PostNotices = ({ onClick }) => {
         <div className='manager-post-notice-table-head'>
           <div className='flex-align-center'>
             <label className='manager-label' htmlFor="manager-post-serch">제목</label>
-            <input id='manager-post-serch' className='width200' type="text" ></input>
-            <button className='manager-button manager-button-search'> 검색 </button>
+            <input id='manager-post-serch' className='width200' type="text" 
+              onChange={(e)=>(setSearchName(e.target.value))} 
+              onKeyDown={(e)=>{if(e.key === "Enter") {handleSearchClick()} }}></input>
+            <button className='manager-button manager-button-search' onClick={()=>handleSearchClick()}> 검색 </button>
             <span> [ 검색건수 : {totalNotices}건 ] </span>
           </div>
 
           <div>
-              <button className='manager-button manager-button-insert'> 추가</button>
+              <button className='manager-button manager-button-insert' onClick={()=>setIsPopUp(!isPopUp)}> 추가</button>
               <button className='manager-button manager-button-close' onClick={() => handleCloseClick()}> 닫기</button>
           </div>
         </div>
@@ -101,16 +154,21 @@ const PostNotices = ({ onClick }) => {
           </tbody>
         </table>
         <div className='manager-post-notice-table-paging flex-align-center'>
-          <button className='manager-button'
-            style={{color: pageNumber === 1 ? '#aaa' : '#26319b'}}
-            disabled={pageNumber === 1}
+          <button className='manager-button' onClick={()=>setPageNumber(pageNumber - 1)}
+            style={{color: pageNumber === 0 ? '#aaa' : '#26319b'}}
+            disabled={pageNumber === 0}
           >이전</button>
-          <div className='manager-post-notice-table-paging-page'>{pageNumber} / {totalPages}</div>
-          <button className='manager-button'
-            style={{color: pageNumber >= totalPages ? '#aaa' : '#26319b'}}
-            disabled={ pageNumber >= totalPages }
+          <div className='manager-post-notice-table-paging-page'>{(pageNumber+1)} / {totalPages}</div>
+          <button className='manager-button' onClick={()=>setPageNumber(pageNumber + 1)}
+            style={{color: (pageNumber + 1) >= totalPages ? '#aaa' : '#26319b'}}
+            disabled={ (pageNumber + 1) >= totalPages }
           >다음 </button>
         </div>
+        {isPopUp && (
+          <div className='manager-post-notice-popup'>
+            <button onClick={()=>{setIsPopUp(!isPopUp)}}> 닫기 </button>
+          </div>
+        )}
 
       </div>
 
