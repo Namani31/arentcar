@@ -41,8 +41,8 @@ public class MenusController {
 
     @PostMapping("/manager/menus")
     public ResponseEntity<Menus> createMenus(@RequestBody Menus menus) {
-        menusService.createMenus(menus);
-        return ResponseEntity.status(HttpStatus.CREATED).body(menus);
+        Menus savedMenus = menusService.createMenus(menus);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedMenus);
     }
 
 
