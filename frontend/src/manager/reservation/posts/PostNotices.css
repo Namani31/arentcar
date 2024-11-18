@@ -1,31 +1,37 @@
-.manager-post-notice-header-h1{
+.manager-post-notice-wrap{
+    margin: 20px;
+}
+
+.manager-post-notice-header-h5{
     font-weight: bold;
+    padding-left: 15px;
 }
 
-.manager-post-notice-table-wrap table{
-    width: 1280px;
+.manager-post-notice-table-head{
+    width: 1180px;
+    display: flex;
+    justify-content: space-between;
 }
 
-.manager-post-notice-table-wrap td, .manager-post-notice-table-wrap th{
-    border: 1px solid black;
-    text-align: center;
-    padding: 5px;
+.manager-post-notice-table-body{
+    width: 1180px;
+    margin-top: 10px;
+    box-sizing : border-box;
 }
 
-.manager-post-notice-table-wrap th:nth-of-type(1) {
-    width: 5%;
+.manager-post-notice-table-paging{
+    margin-top: 5px;
 }
-.manager-post-notice-table-wrap th:nth-of-type(2) {
-    width: 50%;
+
+.manager-post-notice-table-head-colmn{
+    background-color: aliceblue;
 }
-.manager-post-notice-table-wrap th:nth-of-type(3) {
-    width: 15%;
-}
-.manager-post-notice-table-wrap th:nth-of-type(4) {
-    width: 15%;
-}
-.manager-post-notice-table-wrap th:nth-of-type(5) {
-    width: 15%;
+
+.manager-post-notice-table-row-colmn, 
+.manager-post-notice-table-head-colmn{
+    border: 1px solid #ededf0;
+    height: 30px;
+    padding-left: 5px;
 }
 
 .post-btn1{
@@ -33,27 +39,27 @@
     background-color: #ee0a0a;
     color: #eeeeee;
     text-align: center;
-    width: 50px;
-    height: 25px;
-    line-height: 25px;
+    width: 45px;
+    height: 23px;
+    line-height: 23px;
 }
 .post-btn2{
     display: inline-block;
     background-color: #3b70d6;
     color: #eeeeee;
     text-align: center;
-    width: 50px;
-    height: 25px;
-    line-height: 25px;
+    width: 45px;
+    height: 23px;
+    line-height: 23px;
 }
 .post-btn3{
     display: inline-block;
     background-color: #ededf0;
     color: #77777a;
     text-align: center;
-    width: 50px;
-    height: 25px;
-    line-height: 25px;
+    width: 45px;
+    height: 23px;
+    line-height: 23px;
 }
 
 

@@ -23,6 +23,8 @@ public class Inquirys {
 
     private String authorType;
 
+    private String author;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -19,6 +19,9 @@ public class PostsController {
     @Autowired
     PostsService postsService;
 
+    @GetMapping("/user/post")
+    public List<Notices> getPostsAll(){ return postsService.getPostsAll(); }
+
     @GetMapping("/user/post/notices")
     public List<Notices> getAllNotices(){ return postsService.getAllNotices(); }
 

@@ -18,7 +18,7 @@ const ManagerMenu = () => {
   const componentMap = {
     RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
     //게시판 메뉴로 수정
-    managementCustomer: <PostNotices />,
+    managementCustomer: <PostNotices onClick={handleCloseClick}/>,
   };
 
   useEffect(() => {

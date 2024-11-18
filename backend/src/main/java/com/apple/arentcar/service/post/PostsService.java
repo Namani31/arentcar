@@ -15,6 +15,8 @@ public class PostsService {
     @Autowired
     PostsMapper postsMapper;
 
+    public List<Notices> getPostsAll() {return postsMapper.getPostsAll();}
+
     public List<Notices> getAllNotices() { return postsMapper.getAllNotices(); }
     public Notices getNotice(Integer postCode) { return postsMapper.getNotice(postCode); }
     public void create(Notices notices) {
