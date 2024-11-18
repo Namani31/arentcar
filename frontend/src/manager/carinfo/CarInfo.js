@@ -44,26 +44,31 @@ const CarInfo = ({ onClick }) => {
   const [branchName, setBranchName] = useState("");
 
   const optionsMenuCarTypeCategory = [
-    { value: '01', label: '전기차' },
-    { value: '02', label: '소형/경차' },
-    { value: '03', label: '중형' },
-    { value: '04', label: '준대형' },
-    { value: '05', label: '대형' },
+    { value: '01', label: '경형/소형' },
+    { value: '02', label: '중형/대형' },
+    { value: '03', label: 'SUV' },
+    { value: '04', label: '승합' },
   ];
 
   const optionsMenuSeatingCapacity = [
-    { value: '01', label: '5인승' },
-    { value: '02', label: '6인승' },
-    { value: '03', label: '7인승' },
-    { value: '04', label: '9인승' },
+    { value: '01', label: '4인승' },
+    { value: '02', label: '5인승' },
+    { value: '03', label: '6인승' },
+    { value: '04', label: '7인승' },
+    { value: '01', label: '8인승' },
+    { value: '02', label: '9인승' },
+    { value: '03', label: '10인승' },
+    { value: '04', label: '11인승' },
+    { value: '01', label: '12인승' },
+    { value: '02', label: '15인승' },
   ];
 
   const optionsMenuFuelType = [
-    { value: '01', label: '휘발유' },
-    { value: '02', label: '경유' },
+    { value: '01', label: '가솔린' },
+    { value: '02', label: '디젤' },
     { value: '03', label: 'LPG' },
-    { value: '04', label: '전기' },
-    { value: '05', label: '휘발유+전기' },
+    { value: '04', label: '전기차' },
+    { value: '05', label: '하이브리드' },
   ];
 
   const optionsMenuSpeedLimit = [
@@ -85,6 +90,13 @@ const CarInfo = ({ onClick }) => {
     { value: '06', label: '쉐보레' },
     { value: '07', label: '테슬라' },
     { value: '08', label: '벤츠' },
+    { value: '09', label: 'BMW' },
+    { value: '10', label: 'Jeep' },
+    { value: '11', label: 'MINI' },
+    { value: '12', label: '아우디' },
+    { value: '13', label: '포르쉐' },
+    { value: '14', label: '폭스바겐' },
+    { value: '15', label: '폴스타' },
   ];
 
   const optionsMenuBranchName = [
@@ -129,7 +141,7 @@ const CarInfo = ({ onClick }) => {
     };
 
     if (searchName && searchName.trim() !== '') {
-      params.menuName = searchName;
+      params.carNumber = searchName;
     }
 
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/paged`, 
@@ -166,7 +178,7 @@ const CarInfo = ({ onClick }) => {
   };
 
   const getCount = async (token) => {
-    const params = searchName ? { menuName: searchName } : {};
+    const params = searchName ? { carNumber: searchName } : {};
 
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/count`,
       {
@@ -206,19 +218,19 @@ const CarInfo = ({ onClick }) => {
     setBranchName(updateData.branch_name);
   };
 
-  const viewDataInit = () => {
-    setVehicleCode("")
-    setCarNumber("")
-    setCarTypeCategory("")
-    setCarTypeName("")
-    setBranchName("")
-    setFuelType("")
-    setSeatingCapacity("")
-    setSpeedLimit("")
-    setLicenseRestriction("")
-    setCarManufacturer("")
-    setModelYear("")
-  };
+  // const viewDataInit = () => {
+  //   setVehicleCode("")
+  //   setCarNumber("")
+  //   setCarTypeCategory("")
+  //   setCarTypeName("")
+  //   setBranchName("")
+  //   setFuelType("")
+  //   setSeatingCapacity("")
+  //   setSpeedLimit("")
+  //   setLicenseRestriction("")
+  //   setCarManufacturer("")
+  //   setModelYear("")
+  // };
 
   const handleSearchClick = async () => {
    pageingVehicles();
@@ -418,7 +430,7 @@ const CarInfo = ({ onClick }) => {
           style={{ width: `${totalWidth}px` }}
         >
           <div className='flex-align-center'>
-            <label className='manager-label' htmlFor="">차량검색</label>
+            <label className='manager-label' htmlFor="">차량번호</label>
             <input className='width200' type="text" value={searchName} onChange={(e) => (setSearchName(e.target.value))}/>
             <button className='manager-button manager-button-search' onClick={() => handleSearchClick()}>검색</button>
             <button className='manager-button manager-button-search' onClick={() => handleDetailSearchClick()}>상세검색</button>
@@ -493,7 +505,7 @@ const CarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">차종명</label>
-                <input className='width100 word-center' type="text" placeholder="KG모빌리티" maxLength={6} value={carTypeName} onChange={(e) => setCarTypeName(e.target.value)} />
+                <input className='width100 word-center' type="text" placeholder="모닝" maxLength={6} value={carTypeName} onChange={(e) => setCarTypeName(e.target.value)} />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">수용인원</label>
@@ -555,7 +567,7 @@ const CarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">년식</label>
-                <input className='width100  word-center' type="text" placeholder="2024" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
+                <input className='width100  word-center' type="text" placeholder="2020년식" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">지점명</label>
