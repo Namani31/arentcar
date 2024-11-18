@@ -9,6 +9,7 @@ import RevenueAndSales from './charts/RevenueAndSales';
 import SalesChart from './charts/SalesChart';
 
 const ReservationStatistics = () => {
+
     const [filter, setFilter] = useState('daily'); // 선택된 필터 상태
     const [chartType, setChartType] = useState('reservation'); // 선택된 차트 타입 상태
 
@@ -35,11 +36,18 @@ const ReservationStatistics = () => {
 
             <div className="chart-buttons-container">
                 <div className="chart-buttons">
-                <button onClick={() => handleChartSwitch('reservation')}>예약 통계 </button>
+                    <button onClick={() => handleChartSwitch('reservation')}>예약 통계</button>
                     <button onClick={() => handleChartSwitch('sales')}>수익 및 매출</button>
+                    <button onClick={() => handleChartSwitch('location')}>지역별 통계</button>
                     <button onClick={() => handleChartSwitch('customer')}>고객 분석</button>
                     <button onClick={() => handleChartSwitch('vehicle')}>차량 운용</button>
+                    <button onClick={() => handleChartSwitch('rentDate')}>대여 기간 통계</button>
+                    <button onClick={() => handleChartSwitch('carType')}>차량 유형 통계</button>
+                    <button onClick={() => handleChartSwitch('promotion')}>프로모션 할인</button>
+                    <button onClick={() => handleChartSwitch('cancellation')}>예약 취소율</button>
                     <button onClick={() => handleChartSwitch('report')}>리포트 출력 및 공유</button>
+                    
+                    
                 </div>
             </div>
 
@@ -48,8 +56,14 @@ const ReservationStatistics = () => {
                 {/* 필터와 차트 타입에 따라 차트를 렌더링 */}
                 {chartType === 'reservation' && <DateReservationChart filter={filter} />}
                 {chartType === 'sales' && <SalesChart filter={filter} />}
+                {chartType === 'location' && <LocationReservationChart filter={filter} />}
                 {chartType === 'customer' && <RevenueAndSales filter={filter} />}
                 {chartType === 'vehicle' && <CarTypeReservationChart filter={filter} />}
+                {chartType === 'rentDate' && <RentDateReservationChart filter={filter} />}
+                {chartType === 'carType' && <CarTypeReservationChart filter={filter} />}
+                {chartType === 'promotion' && <PromotionDiscountChart filter={filter} />}
+                {chartType === 'cancellation' && < ReservationCancellationRateChart filter={filter} />}
+                {/* {chartType === 'report' && <ReportChart filter={filter} />} */}
             </div>
         </div>
     );
