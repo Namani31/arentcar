@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import DateReservationChart from './charts/DateReservationChart';
-import BarChart from './charts/BarChart';
-import PieChart from './charts/PieChart';
+import LocationReservationChart from './charts/LocationReservationChart';
+import RentDateReservationChart from './charts/RentDateReservationChart';
 import CarTypeReservationChart from './charts/CarTypeReservationChart';
 import PromotionDiscountChart from './charts/PromotionDiscountChart';
 import ReservationCancellationRateChart from './charts/ReservationCancellationRateChart';
