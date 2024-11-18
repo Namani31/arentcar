@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { refreshAccessToken, handleLogout } from 'common/Common';
+import Loading from 'common/Loading';
 import "manager/carinfo/CarInfo.css";
 
 const CarInfo = ({ onClick }) => {
-  const [menus, setMenus] = useState([])
+  const [vehicles, setVehicles] = useState([])
   const [isPopUp, setIsPopUp] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [workMode, setWorkMode] = useState("");
   const [searchName, setSearchName] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
@@ -13,7 +15,7 @@ const CarInfo = ({ onClick }) => {
   const [totalCount, setTotalCount] = useState(0);
 
   const [columnDefs] = useState([
-    { headerName: '코드', field: 'menu_code', width: 80, align: 'center' },
+    { headerName: '코드', field: 'vehicle_code', width: 80, align: 'center' },
     { headerName: '차량번호', field: 'car_number', width: 80, align: 'center' },
     { headerName: '차종구분', field: 'car_type_category', width: 80, align: 'center' },
     { headerName: '차종명', field: 'car_type_name', width: 80, align: 'center' },
@@ -28,7 +30,7 @@ const CarInfo = ({ onClick }) => {
     { headerName: '작업', field: '', width: 200, align: 'center' },
   ]);
 
-  const [menuCode, setMenuCode] = useState("");
+  const [vehicleCode, setVehicleCode] = useState("");
   const [carTypeCategory, setCarTypeCategory] = useState("");
   const [carTypeName, setCarTypeName] = useState("");
   const [seatingCapacity, setSeatingCapacity] = useState("");
@@ -101,10 +103,96 @@ const CarInfo = ({ onClick }) => {
     { value: '13', label: '춘천점' },
   ];
 
+  const pageingVehicles = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      await getVehicles(token);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getVehicles(newToken);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the vehicles pageing!', error);
+      }
+    }
+  };
+
+  const getVehicles = async (token) => {
+    const params = {
+      pageSize,
+      pageNumber,
+    };
+
+    if (searchName && searchName.trim() !== '') {
+      params.menuName = searchName;
+    }
+
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/paged`, 
+      {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+
+    if (response.data) {
+      setVehicles(response.data);
+    }
+  };
+
+  const getTotalCount = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      await getCount(token);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getCount(newToken);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the vehicles count!', error);
+      }
+    }
+  };
+
+  const getCount = async (token) => {
+    const params = searchName ? { menuName: searchName } : {};
+
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/count`,
+      {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+
+    if (typeof response.data === 'number') {
+      setTotalCount(response.data);
+    } else {
+      console.error('Unexpected response:', response.data);
+    }
+  };
+
+  useEffect(() => {
+    pageingVehicles();
+    getTotalCount();
+  }, [pageNumber]);
+
   const handleUpdateClick = (updateData, workMode) => {
     setIsPopUp(true);
     setWorkMode(workMode);
-    setMenuCode(updateData.menu_code);
+    setVehicleCode(updateData.vehicle_code);
     setCarTypeCategory(updateData.car_type_category);
     setCarTypeName(updateData.car_type_name);
     setSeatingCapacity(updateData.seating_capacity);
@@ -119,7 +207,7 @@ const CarInfo = ({ onClick }) => {
   };
 
   const viewDataInit = () => {
-    setMenuCode("")
+    setVehicleCode("")
     setCarNumber("")
     setCarTypeCategory("")
     setCarTypeName("")
@@ -133,13 +221,13 @@ const CarInfo = ({ onClick }) => {
   };
 
   const handleSearchClick = async () => {
-   // pageingMenus();
-   // getTotalMenusCount();
+   pageingVehicles();
+   getTotalCount();
   };
 
   const handleDetailSearchClick = async () => {
-    // pageingMenus();
-    // getTotalMenusCount();
+    pageingVehicles();
+    getTotalCount();
    };
 
   const handleInsertClick = (workMode) => {
@@ -148,16 +236,16 @@ const CarInfo = ({ onClick }) => {
     // viewDataInit();
   };
 
-  const handleDeleteClick = async (menuCode) => {
+  const handleDeleteClick = async (vehicleCode) => {
     if (window.confirm('자료를 정말로 삭제하시겠습니까?')) {
       try {
         const token = localStorage.getItem('accessToken');
-        await deleteMenu(token, menuCode);
+        await deleteVehicle(token, vehicleCode);
       } catch (error) {
         if (error.response && error.response.status === 403) {
           try {
             const newToken = await refreshAccessToken();
-            await deleteMenu(newToken, menuCode);
+            await deleteVehicle(newToken, vehicleCode);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
             handleLogout();
@@ -169,14 +257,14 @@ const CarInfo = ({ onClick }) => {
     }
   };
 
-  const deleteMenu = async (token, menuCode) => {
-    await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${menuCode}`, {
+  const deleteVehicle = async (token, vehicleCode) => {
+    await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${vehicleCode}`, {
       headers: {
         Authorization: `Bearer ${token}`
       },
       withCredentials: true,
     });
-    setMenus((prevMenus) => prevMenus.filter(menu => menu.menu_code !== menuCode));
+    setVehicles((prevVehicle) => prevVehicle.filter(vehicle => vehicle.vehicle_code !== vehicleCode));
     alert("자료가 삭제되었습니다.");
   };
 
@@ -185,8 +273,8 @@ const CarInfo = ({ onClick }) => {
       return; 
     }
 
-    const newMenu = {
-      menu_code: menuCode,
+    const newVehicle = {
+      vehicle_code: vehicleCode,
       car_number: carNumber,
       car_type_category: carTypeCategory,
       car_type_name: carTypeName,
@@ -204,12 +292,12 @@ const CarInfo = ({ onClick }) => {
       try {
         setLoading(true);
         const token = localStorage.getItem('accessToken');
-        await updateMenu(token, newMenu);
+        await updateVehicle(token, newVehicle);
       } catch (error) {
         if (error.response && error.response.status === 403) {
           try {
             const newToken = await refreshAccessToken();
-            await updateMenu(newToken, newMenu);
+            await updateVehicle(newToken, newVehicle);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
             handleLogout();
@@ -224,12 +312,12 @@ const CarInfo = ({ onClick }) => {
       try {
         setLoading(true);
         const token = localStorage.getItem('accessToken');
-        await createMenu(token, newMenu);
+        await createVehicle(token, newVehicle);
       } catch (error) {
         if (error.response && error.response.status === 403) {
           try {
             const newToken = await refreshAccessToken();
-            await createMenu(newToken, newMenu);
+            await createVehicle(newToken, newVehicle);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
             handleLogout();
@@ -245,35 +333,35 @@ const CarInfo = ({ onClick }) => {
     setIsPopUp(false);
   };
 
-  // const updateMenu = async (token, newMenu) => {
-  //   await axios.put(
-  //     `${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${menuCode}`,
-  //     newMenu,
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       withCredentials: true,
-  //     }
-  //   );
-  //   setMenus((prevMenu) => prevMenu.map(menu => menu.mMenu_code === menuCode ? newMenu : menu));
-  //   alert("자료가 수정되었습니다.");
-  // };
+  const updateVehicle = async (token, newVehicle) => {
+    await axios.put(
+      `${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${vehicleCode}`,
+      newVehicle,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+    setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.vehicle_code === vehicleCode ? newVehicle : vehicle));
+    alert("자료가 수정되었습니다.");
+  };
   
-  // const createMenu = async (token, newMenu) => {
-  //   const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus`, 
-  //     newMenu,
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`
-  //       },
-  //       withCredentials: true,
-  //     });
-  //   newMenu.menu_code = response.data.menu_code;
-  //   newMenu.menu_password = response.data.menu_password;
-  //   setMenus((prevMenu) => [...prevMenu, newMenu]);
-  //   alert("자료가 등록되었습니다.");
-  // };
+  const createVehicle = async (token, newVehicle) => {
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus`, 
+      newVehicle,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+    newVehicle.vehicle_code = response.data.vehicle_code;
+    newVehicle.vehicle_password = response.data.vehicle_password;
+    setVehicles((prevVehicle) => [...prevVehicle, newVehicle]);
+    alert("자료가 등록되었습니다.");
+  };
 
   const handlePopupCloseClick = () => {
     setIsPopUp(false);
@@ -287,7 +375,7 @@ const CarInfo = ({ onClick }) => {
 
   const validateCheck = () => {
     if (!carTypeName || carTypeName.trim() === '') {
-      alert("차종구분을 입력해주세요.");
+      alert("차종명을 입력해주세요.");
       return false;
     };
     if (!carImageName || carImageName.trim() === '') {
@@ -350,7 +438,7 @@ const CarInfo = ({ onClick }) => {
           ))}
         </div>
         <div className="car-info-content-row-wrap">
-          {menus.map((row, index) => (
+          {vehicles.map((row, index) => (
             <div key={index} className='register-menu-content-row'>
               {columnDefs.map((title, index) => (
                 <div
@@ -366,7 +454,7 @@ const CarInfo = ({ onClick }) => {
                   {title.field === '' ? (
                     <>
                       <button className='manager-button manager-button-update' onClick={() => handleUpdateClick(row, "수정")}>수정</button>
-                      <button className='manager-button manager-button-delete' onClick={() => handleDeleteClick(row.menu_code)}>삭제</button>
+                      <button className='manager-button manager-button-delete' onClick={() => handleDeleteClick(row.vehicle_code)}>삭제</button>
                     </>
                   ) : (
                       row[title.field]
@@ -391,7 +479,7 @@ const CarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">메뉴코드</label>
-                <input className='width50  word-center' type="text" value={menuCode} disabled />
+                <input className='width50  word-center' type="text" value={vehicleCode} disabled />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">차종구분</label>
@@ -498,6 +586,9 @@ const CarInfo = ({ onClick }) => {
           disabled={pageNumber === totalPages}
         >다음</button>
       </div>
+      {loading && (
+        <Loading />
+      )}
     </div>
   );
 };
