@@ -1,3 +1,4 @@
+// 렌트 기간 별 통계
 import React from 'react';
 import {
     Chart as ChartJS,

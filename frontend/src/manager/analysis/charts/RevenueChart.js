@@ -1,3 +1,4 @@
+// 수익 차트
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 

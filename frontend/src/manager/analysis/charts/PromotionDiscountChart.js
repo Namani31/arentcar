@@ -1,3 +1,4 @@
+// 프로모션, 할인 적용 시 예약 건수
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import {

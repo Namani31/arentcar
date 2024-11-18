@@ -1,4 +1,4 @@
-// RevenueAndSales.js
+// 매출 차트, 수익 차트.js
 import React from 'react';
 import SalesChart from './SalesChart'; // 매출 차트
 import RevenueChart from './RevenueChart'; // 수익 차트

@@ -1,3 +1,4 @@
+// 예약 취소율
 import React from 'react';
 import {
     Chart as ChartJS,

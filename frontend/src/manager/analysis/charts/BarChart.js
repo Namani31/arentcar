@@ -1,3 +1,4 @@
+// 지역별 예약 건수
 import React from 'react';
 import {
     Chart as ChartJS,
