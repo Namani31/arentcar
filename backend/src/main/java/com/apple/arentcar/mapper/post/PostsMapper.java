@@ -13,6 +13,7 @@ public interface PostsMapper {
     List<Notices> getPostsAll();
     List<Notices> getAllNotices();
     Notices getNotice(Integer postCode);
+    List<Notices> getsSarchNotices(String keyword);
     void createNotice(Notices notice);
 
     List<Reviews> getAllReviews();

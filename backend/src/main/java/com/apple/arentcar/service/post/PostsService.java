@@ -19,6 +19,7 @@ public class PostsService {
 
     public List<Notices> getAllNotices() { return postsMapper.getAllNotices(); }
     public Notices getNotice(Integer postCode) { return postsMapper.getNotice(postCode); }
+    public List<Notices> getsSarchNotices(String keyword) { return postsMapper.getsSarchNotices(keyword); }
     public void create(Notices notices) {
         postsMapper.createNotice(notices);
     }

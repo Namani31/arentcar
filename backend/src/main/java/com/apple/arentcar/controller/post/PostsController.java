@@ -19,13 +19,19 @@ public class PostsController {
     @Autowired
     PostsService postsService;
 
-    @GetMapping("/user/post")
+    @GetMapping("/manager/post")
     public List<Notices> getPostsAll(){ return postsService.getPostsAll(); }
 
-    @GetMapping("/user/post/notices")
+    @GetMapping("/manager/post/notices")
     public List<Notices> getAllNotices(){ return postsService.getAllNotices(); }
 
-    @GetMapping("/user/post/notices/{postCode}")
+    @GetMapping("/manager/post/sarch")//RequestParam
+    public List<Notices> getsSarchNotices( ){
+
+        return postsService.getsSarchNotices("리뷰");
+    }
+
+    @GetMapping("/manager/post/notices/{postCode}")
     public ResponseEntity<Notices> getNotice(@PathVariable Integer postCode) {
         Notices notices = postsService.getNotice(postCode);
 
