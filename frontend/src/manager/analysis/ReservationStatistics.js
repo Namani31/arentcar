@@ -2,27 +2,27 @@ import React, { useState } from 'react';
 import DateReservationChart from './charts/DateReservationChart';
 import BarChart from './charts/BarChart';
 import PieChart from './charts/PieChart';
-import CarTypeReservationChart from './charts/CarTypeReservationChart'; // 차량 종류별 예약 건수 차트
-import PromotionDiscountChart from './charts/PromotionDiscountChart'; // 프로모션/할인 차트
-import ReservationCancellationRateChart from './charts/ReservationCancellationRateChart'; // 예약 취소율 차트
-import RevenueAndSales from './charts/RevenueAndSales'; // 수익 및 매출 버튼
-import SalesChart from './charts/SalesChart'; // 매출 차트
-
+import CarTypeReservationChart from './charts/CarTypeReservationChart';
+import PromotionDiscountChart from './charts/PromotionDiscountChart';
+import ReservationCancellationRateChart from './charts/ReservationCancellationRateChart';
+import RevenueAndSales from './charts/RevenueAndSales';
+import SalesChart from './charts/SalesChart';
 
 const ReservationStatistics = () => {
-    const [filter, setFilter] = useState('daily'); // 기간 필터
-    const [selectedChart, setSelectedChart] = useState('total'); // 수익/매출 차트 상태
+    const [filter, setFilter] = useState('daily'); // 선택된 필터 상태
+    const [chartType, setChartType] = useState('sales'); // 선택된 차트 타입 상태
 
     const handleFilterChange = (event) => {
-        setFilter(event.target.value); // 필터 상태 변경
+        setFilter(event.target.value); // 선택된 값을 상태에 반영
     };
 
-    const handleChartSwitch = (chartType) => {
-        setSelectedChart(chartType); // 수익/매출 차트 상태 변경
+    const handleChartSwitch = (type) => {
+        setChartType(type); // 버튼 클릭 시 차트 타입 변경
     };
 
     return (
         <div className="reservation-stats">
+            {/* 통계 필터 */}
             <div className="manager-head-column">통계 필터</div>
             <div className="manager-row-column">
                 <label className="manager-label">기간 선택:</label>
@@ -32,32 +32,24 @@ const ReservationStatistics = () => {
                     <option value="monthly">월별</option>
                 </select>
             </div>
-            
-            {/* 차트 필터 및 버튼 */}
-            <div className="chart-buttons">
-                <button onClick={() => handleChartSwitch('total')}>전체 매출</button>
-                <button onClick={() => handleChartSwitch('vehicle')}>차량별 매출</button>
-                <button onClick={() => handleChartSwitch('period')}>기간별 매출</button>
+
+            <div className="chart-buttons-container">
+                <div className="chart-buttons">
+                <button onClick={() => handleChartSwitch('reservation')}>예약 통계 </button>
+                    <button onClick={() => handleChartSwitch('sales')}>수익 및 매출</button>
+                    <button onClick={() => handleChartSwitch('customer')}>고객 분석</button>
+                    <button onClick={() => handleChartSwitch('vehicle')}>차량 운용</button>
+                    <button onClick={() => handleChartSwitch('report')}>리포트 출력 및 공유</button>
+                </div>
             </div>
-            
+
+            {/* 차트 렌더링 */}
             <div className="charts">
-                {/* 필터 값에 따른 DateReservationChart */}
-                <DateReservationChart filter={filter} />
-
-                {/* 선택된 수익/매출 차트 */}
-                {selectedChart === 'total' && <RevenueAndSales type="total" />}
-                {selectedChart === 'vehicle' && <RevenueAndSales type="vehicle" />}
-                {selectedChart === 'period' && <RevenueAndSales type="period" />}
-
-                {/* 그 외 차트들 */}
-                <CarTypeReservationChart />
-                <PromotionDiscountChart />
-                <ReservationCancellationRateChart />
-                <SalesChart />
-
-                {/* BarChart와 PieChart */}
-                <BarChart />
-                <PieChart />
+                {/* 필터와 차트 타입에 따라 차트를 렌더링 */}
+                {chartType === 'reservation' && <DateReservationChart filter={filter} />}
+                {chartType === 'sales' && <SalesChart filter={filter} />}
+                {chartType === 'customer' && <RevenueAndSales filter={filter} />}
+                {chartType === 'vehicle' && <CarTypeReservationChart filter={filter} />}
             </div>
         </div>
     );

@@ -26,7 +26,9 @@ const PieChart = () => {
     return (
         <div className="chart-container">
             <h3>렌트 기간별 통계</h3>
-            <Pie data={data} />
+            <div className="pie-chart-wrapper">
+                <Pie data={data} />
+            </div>
         </div>
     );
 };

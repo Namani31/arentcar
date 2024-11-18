@@ -14,8 +14,7 @@ import {
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const SalesChart = () => {
-    const [chartType, setChartType] = useState('total'); // 차트 종류 선택
-
+    const [chartType, setChartType] = useState('total'); // 차트 종류를 전체 매출로 기본 선택
     const handleChartSwitch = (type) => {
         setChartType(type); // 버튼 클릭 시 차트 변경
     };
@@ -23,7 +22,7 @@ const SalesChart = () => {
     const data =
         chartType === 'total'
             ? {
-                  labels: ['2023', '2024'],
+                  labels: ['2021', '2022', '2023', '2024'],
                   datasets: [
                       {
                           label: '전체 매출',
