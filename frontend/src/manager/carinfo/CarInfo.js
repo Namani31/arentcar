@@ -16,29 +16,31 @@ const CarInfo = ({ onClick }) => {
 
   const [columnDefs] = useState([
     { headerName: '코드', field: 'vehicle_code', width: 80, align: 'center' },
-    { headerName: '차량번호', field: 'car_number', width: 80, align: 'center' },
     { headerName: '차종구분', field: 'car_type_category', width: 80, align: 'center' },
+    { headerName: '국산/수입', field: 'origin_type', width: 80, align: 'center' },
     { headerName: '차종명', field: 'car_type_name', width: 80, align: 'center' },
-    { headerName: '지점', field: 'branch_name', width: 80, align: 'center' },
     { headerName: '연료', field: 'fuel_type', width: 80, align: 'center' },
     { headerName: '인승', field: 'seating_capacity', width: 80, align: 'left' },
     { headerName: '속도제한', field: 'speed_limit', width: 80, align: 'left' },
     { headerName: '면허제한', field: 'license_restriction', width: 80, align: 'center' },
     { headerName: '제조사', field: 'car_manufacturer', width: 80, align: 'center' },
-    { headerName: '차량이미지명', field: 'car_image_name', width: 80, align: 'center' },
+    // { headerName: '차량이미지명', field: 'car_image_name', width: 80, align: 'center' },
+    { headerName: '차량번호', field: 'car_number', width: 80, align: 'center' },
     { headerName: '년식', field: 'model_year', width: 80, align: 'center' },
+    { headerName: '지점', field: 'branch_name', width: 80, align: 'center' },
     { headerName: '작업', field: '', width: 200, align: 'center' },
   ]);
 
   const [vehicleCode, setVehicleCode] = useState("");
   const [carTypeCategory, setCarTypeCategory] = useState("");
+  const [originType, setOriginType] = useState("");
   const [carTypeName, setCarTypeName] = useState("");
   const [seatingCapacity, setSeatingCapacity] = useState("");
   const [fuelType, setFuelType] = useState("");
   const [speedLimit, setSpeedLimit] = useState("");
   const [licenseRestriction, setLicenseRestriction] = useState("");
   const [carManufacturer, setCarManufacturer] = useState("");
-  const [carImageName, setCarImageName] = useState("");
+  // const [carImageName, setCarImageName] = useState("");
   const [carNumber, setCarNumber] = useState("");
   const [modelYear, setModelYear] = useState("");
   const [branchName, setBranchName] = useState("");
@@ -49,6 +51,11 @@ const CarInfo = ({ onClick }) => {
     { value: '03', label: 'SUV' },
     { value: '04', label: '승합' },
   ];
+
+  const optionsMenuOriginType = [
+    { value: '01', label: '국산'},
+    { value: '02', label: '수입'},
+  ]
 
   const optionsMenuSeatingCapacity = [
     { value: '01', label: '4인승' },
@@ -206,13 +213,14 @@ const CarInfo = ({ onClick }) => {
     setWorkMode(workMode);
     setVehicleCode(updateData.vehicle_code);
     setCarTypeCategory(updateData.car_type_category);
+    setOriginType(updateData.origin_type);
     setCarTypeName(updateData.car_type_name);
     setSeatingCapacity(updateData.seating_capacity);
     setFuelType(updateData.fuel_type);
     setSpeedLimit(updateData.speed_limit);
     setLicenseRestriction(updateData.license_restriction);
     setCarManufacturer(updateData.car_manufacturer)
-    setCarImageName(updateData.car_image_name)
+    // setCarImageName(updateData.car_image_name)
     setCarNumber(updateData.car_number);
     setModelYear(updateData.model_year)
     setBranchName(updateData.branch_name);
@@ -289,6 +297,7 @@ const CarInfo = ({ onClick }) => {
       vehicle_code: vehicleCode,
       car_number: carNumber,
       car_type_category: carTypeCategory,
+      origin_type: originType,
       car_type_name: carTypeName,
       branch_name: branchName,
       fuel_type: fuelType,
@@ -296,7 +305,7 @@ const CarInfo = ({ onClick }) => {
       speed_limit: speedLimit,
       license_restriction: licenseRestriction,
       car_manufacturer: carManufacturer,
-      car_image_name: carImageName,
+      // car_image_name: carImageName,
       model_year: modelYear,
     };
 
@@ -390,10 +399,10 @@ const CarInfo = ({ onClick }) => {
       alert("차종명을 입력해주세요.");
       return false;
     };
-    if (!carImageName || carImageName.trim() === '') {
-      alert("차량이미지명을 입력해주세요.");
-      return false;
-    };
+    // if (!carImageName || carImageName.trim() === '') {
+    //   alert("차량이미지명을 입력해주세요.");
+    //   return false;
+    // };
     if (!carNumber || carNumber.trim() === '') {
       alert("차량번호를 입력해주세요.");
       return false;
@@ -504,6 +513,16 @@ const CarInfo = ({ onClick }) => {
                 </select>
               </div>
               <div className='car-info-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="">국산/수입</label>
+                <select className='width100' id="comboBox" value={originType} onChange={(e) => (setOriginType(e.target.value))}>
+                  {optionsMenuOriginType.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">차종명</label>
                 <input className='width100 word-center' type="text" placeholder="모닝" maxLength={6} value={carTypeName} onChange={(e) => setCarTypeName(e.target.value)} />
               </div>
@@ -557,17 +576,17 @@ const CarInfo = ({ onClick }) => {
                   ))}
                 </select>
               </div>
-              <div className='car-info-content-popup-line'>
+              {/* <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">차량이미지명</label>
-                <input className='width100  word-center' type="text" placeholder="kia2024morning.png" value={carImageName} onChange={(e) => (setCarImageName(e.target.value))} />
-              </div>
+                <input className='width100  word-center' type="text" placeholder="2c816ce3-5f30-4d7d-b159-2cdd2307021f.png" value={carImageName} onChange={(e) => (setCarImageName(e.target.value))} />
+              </div> */}
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">차량번호</label>
-                <input className='width100  word-center' type="text" placeholder="가12345" value={carNumber} onChange={(e) => {setCarNumber(e.target.value)}} />
+                <input className='width100  word-center' type="text" placeholder="01가1001" value={carNumber} onChange={(e) => {setCarNumber(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">년식</label>
-                <input className='width100  word-center' type="text" placeholder="2020년식" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
+                <input className='width100  word-center' type="text" placeholder="2024" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">지점명</label>
