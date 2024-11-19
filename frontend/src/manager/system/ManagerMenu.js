@@ -5,6 +5,7 @@ import { setAdminState } from '../../redux/AdminState';
 import { refreshAccessToken, handleLogout } from 'common/Common';
 import 'manager/system/ManagerMenu.css';
 import RegisterMenu from 'manager/system/RegisterMenu';
+import RentalCarInfo from 'manager/carinfo/RentalCarInfo';
 import CarInfo from 'manager/carinfo/CarInfo';
 
 const ManagerMenu = () => {
@@ -24,6 +25,7 @@ const ManagerMenu = () => {
 
   const componentMap = {
     RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
+    managerRentalCar: <RentalCarInfo onClick={handleCloseClick} />,
     managerCar: <CarInfo onClick={handleCloseClick} />,
   };
 

@@ -5,9 +5,38 @@
 
 <mapper namespace="com.apple.arentcar.mapper.CarsMapper">
 
-    <!-- 모든 조회 -->
+    <!-- 모든 차량 조회 -->
     <select id="getAllCars" resultType="com.apple.arentcar.model.CarTypes">
         SELECT * FROM car_types
+    </select>
+
+    <!-- key 단건 차량 조회 -->
+    <select id="getCarsById" resultType="com.apple.arentcar.model.CarTypes">
+        SELECT * FROM car_types WHERE car_type_code = #{carTypeCode}
+    </select>
+
+    <!-- 차량 페이징 조회 -->
+    <select id="getCarsWithPaging" resultType="com.apple.arentcar.model.CarTypes">
+        SELECT * FROM car_types ORDER BY car_type_code LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <!-- 검색조건에 맞게 차량 페이징 조회 -->
+    <select id="getCarsByNumWithPaging" resultType="com.apple.arentcar.model.CarTypes">
+        SELECT * FROM car_types
+        WHERE car_type_name LIKE CONCAT('%', #{carTypeName}, '%')
+        ORDER BY car_type_code
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <!-- 차량 수 조회 -->
+    <select id="countAllCars" resultType="int">
+        SELECT COUNT(*) FROM car_types
+    </select>
+
+    <!-- 검색조건에 맞는 차량 수 조회 -->
+    <select id="countByNameCars" resultType="int">
+        SELECT COUNT(*) FROM car_types
+        WHERE car_type_name LIKE CONCAT('%', #{carTypeName}, '%')
     </select>
 
 </mapper>

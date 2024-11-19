@@ -4,7 +4,7 @@ import { refreshAccessToken, handleLogout } from 'common/Common';
 import Loading from 'common/Loading';
 import "manager/carinfo/CarInfo.css";
 
-const CarInfo = ({ onClick }) => {
+const RentalCarInfo = ({ onClick }) => {
   const [vehicles, setVehicles] = useState([])
   const [isPopUp, setIsPopUp] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -148,7 +148,7 @@ const CarInfo = ({ onClick }) => {
     };
 
     if (searchName && searchName.trim() !== '') {
-      params.carTypeName = searchName;
+      params.carNumber = searchName;
     }
 
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/paged`, 
@@ -185,7 +185,7 @@ const CarInfo = ({ onClick }) => {
   };
 
   const getCount = async (token) => {
-    const params = searchName ? { carTypeName: searchName } : {};
+    const params = searchName ? { carNumber: searchName } : {};
 
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/count`,
       {
@@ -432,7 +432,7 @@ const CarInfo = ({ onClick }) => {
     <div className="car-info-wrap">
       <div className="car-info-header-wrap">
         <div className="car-info-title-wrap">
-          <div className="manager-title">● 차종관리</div>
+          <div className="manager-title">● 차량관리</div>
         </div>
         <div
           className='car-info-button-wrap'
@@ -624,4 +624,4 @@ const CarInfo = ({ onClick }) => {
   );
 };
 
-export default CarInfo;
+export default RentalCarInfo;
