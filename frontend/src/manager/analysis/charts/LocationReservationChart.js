@@ -14,7 +14,7 @@ import './Charts.css';
 // 필요한 요소를 등록
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const BarChart = () => {
+const LocationReservationChart = () => {
     const data = {
         labels: ['서울', '부산', '대구', '광주', '대전'],
         datasets: [
@@ -34,4 +34,4 @@ const BarChart = () => {
     );
 };
 
-export default BarChart;
+export default LocationReservationChart;

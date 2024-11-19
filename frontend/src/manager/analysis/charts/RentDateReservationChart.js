@@ -12,7 +12,7 @@ import './Charts.css';
 // 필요한 요소를 등록
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PieChart = () => {
+const RentDateReservationChart = () => {
     const data = {
         labels: ['1일', '2-3일', '4-7일', '8일 이상'],
         datasets: [
@@ -34,4 +34,4 @@ const PieChart = () => {
     );
 };
 
-export default PieChart;
+export default RentDateReservationChart;
