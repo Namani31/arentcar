@@ -15,17 +15,17 @@ const CarInfo = ({ onClick }) => {
   const [totalCount, setTotalCount] = useState(0);
 
   const [columnDefs] = useState([
-    { headerName: '코드', field: 'car_type_code', width: 80, align: 'center' },
-    { headerName: '차종구분', field: 'car_type_category', width: 80, align: 'center' },
-    { headerName: '국산/수입', field: 'origin_type', width: 80, align: 'center' },
-    { headerName: '차종명', field: 'car_type_name', width: 150, align: 'center' },
-    { headerName: '인승', field: 'seating_capacity', width: 80, align: 'center' },
-    { headerName: '연료', field: 'fuel_type', width: 80, align: 'center' },
-    { headerName: '속도제한', field: 'speed_limit', width: 80, align: 'center' },
-    { headerName: '면허제한', field: 'license_restriction', width: 80, align: 'center' },
-    { headerName: '제조사', field: 'car_manufacturer', width: 80, align: 'center' },
-    { headerName: '년식', field: 'model_year', width: 80, align: 'center' },
-    { headerName: '차량이미지명', field: 'car_image_name', width: 350, align: 'center' },
+    { headerName: '코드', field: 'car_type_code', width: 70, align: 'center' },
+    { headerName: '차종구분', field: 'car_type_category', width: 70, align: 'center' },
+    { headerName: '국산/수입', field: 'origin_type', width: 70, align: 'center' },
+    { headerName: '차종명', field: 'car_type_name', width: 145, align: 'center' },
+    { headerName: '인승', field: 'seating_capacity', width: 70, align: 'center' },
+    { headerName: '연료', field: 'fuel_type', width: 70, align: 'center' },
+    { headerName: '속도제한', field: 'speed_limit', width: 70, align: 'center' },
+    { headerName: '면허제한', field: 'license_restriction', width: 70, align: 'center' },
+    { headerName: '제조사', field: 'car_manufacturer', width: 70, align: 'center' },
+    { headerName: '년식', field: 'model_year', width: 75, align: 'center' },
+    { headerName: '차량이미지명', field: 'car_image_name', width: 300, align: 'center' },
     { headerName: '작업', field: '', width: 200, align: 'center' },
   ]);
 

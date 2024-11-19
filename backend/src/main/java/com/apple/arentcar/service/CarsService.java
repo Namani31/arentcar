@@ -21,27 +21,35 @@ public class CarsService {
         return carsMapper.getCarsById(carTypeCode);
     }
 
+    // 차종 조회 및 페이지네이션
     public List<CarTypes> getCarsWithPaging(int pageSize, int pageNumber) {
         int offset = (pageNumber - 1) * pageSize;
         return carsMapper.getCarsWithPaging(pageSize, offset);
     }
 
+    // 차종 조회 및 페이지네이션(검색 기능 포함)
     public List<CarTypes> getCarsByNameWithPaging(String carTypeName, int pageSize, int pageNumber) {
         int offset = (pageNumber - 1) * pageSize;
         return carsMapper.getCarsByNameWithPaging(carTypeName, pageSize, offset);
     }
 
+    // 전체 차종 수 조회
     public int countAllCars() {
         return carsMapper.countAllCars();
     }
 
+    // 전체 차종 수 조회(검색 기능 포함)
     public int countByNameCars(String carTypeName) {
         return carsMapper.countByNameCars(carTypeName);
     }
 
+    // 차종 등록
     public CarTypes createCars(CarTypes carTypes) {
         carsMapper.createCars(carTypes);
         return carTypes;
     }
+
+    // 차종 삭제
+    public void deleteCarsById(Integer carTypeCode) { carsMapper.deleteCarsById(carTypeCode); }
 
 }

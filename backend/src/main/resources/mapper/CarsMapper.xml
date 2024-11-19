@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.apple.arentcar.mapper.CarsMapper">
-
-    <!-- 모든 차량 조회 -->
+    <!-- 모든 차종 조회 -->
     <select id="getAllCars" resultType="com.apple.arentcar.model.CarTypes">
         SELECT * FROM car_types
     </select>
 
-    <!-- key 단건 차량 조회 -->
+    <!-- key 단건 차종 조회 -->
     <select id="getCarsById" resultType="com.apple.arentcar.model.CarTypes">
         SELECT * FROM car_types WHERE car_type_code = #{carTypeCode}
     </select>
 
-    <!-- 차량 페이징 조회 -->
+    <!-- 차종 페이징 조회 -->
     <select id="getCarsWithPaging" resultType="com.apple.arentcar.model.CarTypes">
         SELECT * FROM car_types ORDER BY car_type_code LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
-    <!-- 검색조건에 맞게 차량 페이징 조회 -->
+    <!-- 검색조건에 맞게 차종 페이징 조회 -->
     <select id="getCarsByNameWithPaging" resultType="com.apple.arentcar.model.CarTypes">
         SELECT * FROM car_types
         WHERE car_type_name LIKE CONCAT('%', #{carTypeName}, '%')
@@ -28,17 +25,18 @@
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
-    <!-- 차량 수 조회 -->
+    <!-- 전체 차종 수 조회 -->
     <select id="countAllCars" resultType="int">
         SELECT COUNT(*) FROM car_types
     </select>
 
-    <!-- 검색조건에 맞는 차량 수 조회 -->
+    <!-- 검색조건에 맞게 전체 차종 수 조회 -->
     <select id="countByNameCars" resultType="int">
         SELECT COUNT(*) FROM car_types
         WHERE car_type_name LIKE CONCAT('%', #{carTypeName}, '%')
     </select>
 
+    <!-- 차종 등록 -->
     <insert id="createCars" parameterType="com.apple.arentcar.model.CarTypes" useGeneratedKeys="true" keyProperty="carTypeCode">
         INSERT INTO car_types
         (car_type_code, car_type_category, origin_type, car_type_name, seating_capacity,
@@ -50,4 +48,8 @@
         #{carImageName}, NOW(), NOW())
     </insert>
 
+    <!-- 차종 삭제 -->
+    <delete id="deleteCarsById" >
+        DELETE FROM car_types WHERE car_type_code = #{carTypeCode};
+    </delete>
 </mapper>

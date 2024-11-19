@@ -29,6 +29,7 @@ public class CarsController {
         }
     }
 
+    // 차종 조회 및 페이지네이션(검색 기능 포함)
     @GetMapping("/manager/cars/paged")
     public ResponseEntity<List<CarTypes>> getCarsWithPaging(@RequestParam int pageSize,
                                                             @RequestParam int pageNumber,
@@ -42,6 +43,7 @@ public class CarsController {
         return ResponseEntity.ok(carTypes);
     }
 
+    // 전체 차종 수 조회(검색 기능 포함)
     @GetMapping("/manager/cars/count")
     public ResponseEntity<Integer> getTotalCarsCount(@RequestParam(required = false) String carTypeName) {
         int count;
@@ -53,9 +55,17 @@ public class CarsController {
         return ResponseEntity.ok(count);
     }
 
+    // 차종 등록
     @PostMapping("/manager/cars")
     public ResponseEntity<CarTypes> createCars(@RequestBody CarTypes carTypes) {
         CarTypes savedCars = carsService.createCars(carTypes);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCars);
+    }
+
+    // 차종 삭제
+    @DeleteMapping("/manager/cars/{carTypeCode}")
+    public ResponseEntity<Void> deleteCarsById(@PathVariable Integer carTypeCode) {
+        carsService.deleteCarsById(carTypeCode);
+        return ResponseEntity.noContent().build();
     }
 }
