@@ -72,3 +72,49 @@
     z-index: 9999;
 }
 
+.manager-post-notice-popup-wrap{
+    background-color: #fdfdfd;
+    width: 600px;
+    margin: 150px auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.manager-post-notice-popup-header{
+    display: flex;
+    justify-content: space-between;
+}
+.manager-post-notice-h6{
+    font-weight: bold;
+
+}
+
+.manager-post-notice-popup-close{
+    color: #ee0a0a;
+}
+
+.manager-post-notice-popup-save{
+    color: #3b70d6;
+}
+
+.manager-post-notice-popup-line{
+    margin: 10px 0px;
+}
+
+.manager-post-notice-popup-line-label{
+    font-weight: bold;
+    width: 80px;
+    margin-right: 10px;
+    text-align: end;
+    vertical-align: middle;
+}
+
+.manager-post-notice-popup-line-textarea{
+    resize: none;
+    overflow:hidden;
+    padding: 5px;
+    display: inline-block;
+}
+.manager-post-notice-popup-line-textarea:focus {
+    outline: none;
+  }

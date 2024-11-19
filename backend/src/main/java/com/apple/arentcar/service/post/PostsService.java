@@ -22,9 +22,7 @@ public class PostsService {
     public Notices getNotice(Integer postCode) { return postsMapper.getNotice(postCode); }
     public List<Notices> getSarchNotices(String keyword, Integer pageSize, Integer pageNumber) { return postsMapper.getsSarchNotices(keyword, pageSize, pageNumber); }
     public int countSarchNotices(String keyword) { return postsMapper.countSarchNotices(keyword); }
-    public void create(Notices notices) {
-        postsMapper.createNotice(notices);
-    }
+    public void createNotices(Notices notices) { postsMapper.createNotice(notices); }
 
     public List<Reviews> getAllReviews() { return postsMapper.getAllReviews(); }
 

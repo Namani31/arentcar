@@ -47,6 +47,15 @@ public class PostsController {
         return ResponseEntity.ok(count);
     }
 
+    @PostMapping("/manager/post/notices")
+    public ResponseEntity<Notices> createNotice(@RequestBody Notices notices) {
+        System.out.println(notices.getPostTitle());
+        System.out.println(notices.getPostContent());
+        System.out.println(notices.getAuthorCode());
+
+        postsService.createNotices(notices);
+        return ResponseEntity.ok(notices);
+    }
 
     @GetMapping("/manager/post/notices/{postCode}")
     public ResponseEntity<Notices> getNotice(@PathVariable Integer postCode) {
@@ -59,12 +68,7 @@ public class PostsController {
         }
     }
 
-    @PostMapping("/manager/post/notices")
-    public ResponseEntity<Notices> createNotice(@RequestBody Notices notices) {
-        System.out.println(notices);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(notices);
-    }
 
     @GetMapping("/user/post/reviews")
     public List<Reviews> getAllReviews(){ return postsService.getAllReviews(); }

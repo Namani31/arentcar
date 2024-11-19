@@ -17,7 +17,7 @@ public interface PostsMapper {
     int countSarchNotices(String keyword);
     Notices getNotice(Integer postCode);
     void createNotice(Notices notice);
-
+    void deleteNotice(int postCode);
     List<Reviews> getAllReviews();
     List<Inquirys> getAllInquirys();
 }

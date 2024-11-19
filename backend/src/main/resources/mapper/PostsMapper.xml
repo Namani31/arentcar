@@ -59,8 +59,12 @@
 
     <insert id="createNotice" parameterType="com.apple.arentcar.model.post.Notices">
         INSERT INTO posts (post_type, post_title, post_content, author_code, author_type)
-        values('NT', #{notice.postTitle}, #{notice.postContent}, #{notice.authorCode},'AM');
+        values('NT', #{postTitle}, #{postContent}, #{authorCode},'AM');
     </insert>
+
+    <delete id="deleteNotice" parameterType="int">
+        DELETE FROM posts where post_code = #{postCode};
+    </delete>
 
     <select id="getAllReviews" resultType="com.apple.arentcar.model.post.Reviews">
         SELECT p.*, rv.review_rating  from posts p

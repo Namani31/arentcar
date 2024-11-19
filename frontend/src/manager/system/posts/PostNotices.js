@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { refreshAccessToken, handleLogout } from 'common/Common';
 import 'manager/system/posts/PostNotices.css';
 
@@ -11,7 +11,6 @@ const PostNotices = ({ onClick }) => {
   const [pageNumber, setPageNumber] = useState(0);
   const pageSize = 10;
   // const [totalPages, setTotalPages] = useState(0);
-  const [isPopUp, setIsPopUp] = useState(false);
 
   const [columnNotices] = useState([
     { columnName: '코드', field: 'post_code', width: 100, align: 'center'},
@@ -22,15 +21,17 @@ const PostNotices = ({ onClick }) => {
     { columnName: '작업', field: '', width: 230, align: 'center'},
   ]);
 
+  const [isPopUp, setIsPopUp] = useState(false);
+  const [popupType, setPopupType] = useState()
+
   const [postCode,setPostCode] = useState();
   const [postType,setPostType] = useState();
-  const [postTitle,setPostTitle] = useState();
-  const [postContent,setPostContent] = useState();
-  const [authorCode,setAuthorCode] = useState();
-  const [authorType,setAuthorType] = useState();
+  const [postTitle,setPostTitle] = useState("");
+  const [postContent,setPostContent] = useState("");
+  const [authorCode,setAuthorCode] = useState(18);
+  const [authorType,setAuthorType] = useState("AM");
 
-
-  const fetchNotices = async () => {
+  const fetchNotices = async () => { 
     const params = {
       pageSize,
       pageNumber,
@@ -47,7 +48,6 @@ const PostNotices = ({ onClick }) => {
         }
       );
       if(response.data) {
-        console.log(response.data);
         setNotices(response.data);
       }
     } catch (error) {
@@ -72,15 +72,64 @@ const PostNotices = ({ onClick }) => {
     }
   }
 
+  const handleSaveData = async (e) => {
+    if(e === "추가") {
+      const newPost = {
+        post_code: postCode,
+        post_type: postType,
+        post_title: postTitle,
+        post_content: postContent,
+        author_code: authorCode,
+        author_type: authorType,
+        author: null,
+        created_at: null,
+        updated_at: null,
+      }
+      postCreateNotice(newPost)
+    }
+  }
+
+  const postCreateNotice = async (newPost) => {
+
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/notices`,
+        newPost
+
+      );
+      console.log(response.data);
+      alert("공지사항이 등록되었습니다.");
+      fetchNotices();
+      // setNotices((prevNotice)=>[...prevNotice, response.data])
+    } catch (error) {
+      console.error('There was an error fetching the movies!', error);
+    }
+
+  }
+
   useEffect(()=>{
     fetchNotices();
     getCount();
   }, [totalNotices, pageNumber])
 
+  const textarea = useRef();
+  const handleResizeHeight = (e) => {
+    setPostContent(e.target.value);
+    textarea.current.style.height = "auto";
+    textarea.current.style.height = textarea.current.scrollHeight + "px";
+  }
+
   const handleSearchClick = async () => {
     fetchNotices();
     getCount();
     setPageNumber(0);
+  }
+
+  const handleCreateClick = (e) => {
+    setIsPopUp(true);
+    setPopupType(e);
+    setPostTitle("");
+    setPostContent("");
+
   }
 
   let totalPages = Math.ceil(totalNotices / pageSize);
@@ -115,7 +164,7 @@ const PostNotices = ({ onClick }) => {
           </div>
 
           <div>
-              <button className='manager-button manager-button-insert' onClick={()=>setIsPopUp(!isPopUp)}> 추가</button>
+              <button className='manager-button manager-button-insert' onClick={()=> handleCreateClick("추가")}> 추가</button>
               <button className='manager-button manager-button-close' onClick={() => handleCloseClick()}> 닫기</button>
           </div>
         </div>
@@ -153,6 +202,47 @@ const PostNotices = ({ onClick }) => {
           )}
           </tbody>
         </table>
+        {isPopUp && (
+          <div className='manager-post-notice-popup'>
+            <div className='manager-post-notice-popup-wrap'>
+              <div className='manager-post-notice-popup-header'>
+                <div className='manager-post-notice-popup-title'> <h6 className='manager-post-notice-h6'>공지사항 {popupType}</h6> </div>
+                <div className='manager-post-notice-popup-buttons'>
+                  <button className='manager-button manager-post-notice-popup-save' onClick={()=>{handleSaveData(popupType)}}> {popupType} </button>
+                  <button className='manager-button manager-post-notice-popup-close' onClick={()=>{setIsPopUp(!isPopUp)}}> 닫기 </button>
+                </div>
+              </div>
+              <div className='manager-post-notice-popup-line'>
+                <label className='manager-post-notice-popup-line-label'>제목</label>
+                <input className='width400' value={postTitle} onChange={(e)=>setPostTitle(e.target.value)}/>
+              </div>
+              <div className='manager-post-notice-popup-line'>
+                <label className='manager-post-notice-popup-line-label' style={{verticalAlign: 'top'}}>내용</label>
+                <textarea className='width400 manager-post-notice-popup-line-textarea' 
+                rows={2} ref={textarea} value={postContent} onChange={(e)=>{handleResizeHeight(e)}}/>
+              </div>
+              <div className='manager-post-notice-popup-line'>
+                <label className='manager-post-notice-popup-line-label'>게시물 코드</label>
+                <input className='width30 word-center' type="text" value={postCode} disabled/>
+              </div>
+              <div className='manager-post-notice-popup-line'>
+                <label className='manager-post-notice-popup-line-label'>게시물 유형</label>
+                <input className='width50 word-center' type="text" value={postType} disabled/>
+              </div>
+              <div className='manager-post-notice-popup-line'>
+                <label className='manager-post-notice-popup-line-label'>작성자</label>
+                <input className='width50 word-center' type="text" value={authorCode} disabled/>
+              </div>
+              <div className='manager-post-notice-popup-line'>
+                <label className='manager-post-notice-popup-line-label'>작성자 유형</label>
+                <input className='width50 word-center' type="text" value={authorType} disabled/>
+              </div>
+
+              {/* postCode postType postTitle postContent authorCode authorType postContent가 넘어갔을때 문제 */}
+            </div>
+
+          </div>
+        )}
         <div className='manager-post-notice-table-paging flex-align-center'>
           <button className='manager-button' onClick={()=>setPageNumber(pageNumber - 1)}
             style={{color: pageNumber === 0 ? '#aaa' : '#26319b'}}
@@ -164,11 +254,7 @@ const PostNotices = ({ onClick }) => {
             disabled={ (pageNumber + 1) >= totalPages }
           >다음 </button>
         </div>
-        {isPopUp && (
-          <div className='manager-post-notice-popup'>
-            <button onClick={()=>{setIsPopUp(!isPopUp)}}> 닫기 </button>
-          </div>
-        )}
+
 
       </div>
 
