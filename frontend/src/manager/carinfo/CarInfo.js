@@ -15,24 +15,21 @@ const CarInfo = ({ onClick }) => {
   const [totalCount, setTotalCount] = useState(0);
 
   const [columnDefs] = useState([
-    { headerName: '코드', field: 'vehicle_code', width: 80, align: 'center' },
-    { headerName: '차량번호', field: 'car_number', width: 80, align: 'center' },
+    { headerName: '코드', field: 'car_type_code', width: 80, align: 'center' },
     { headerName: '차종구분', field: 'car_type_category', width: 80, align: 'center' },
     { headerName: '국산/수입', field: 'origin_type', width: 80, align: 'center' },
-    { headerName: '차종명', field: 'car_type_name', width: 80, align: 'center' },
+    { headerName: '차종명', field: 'car_type_name', width: 150, align: 'center' },
+    { headerName: '인승', field: 'seating_capacity', width: 80, align: 'center' },
     { headerName: '연료', field: 'fuel_type', width: 80, align: 'center' },
-    { headerName: '인승', field: 'seating_capacity', width: 80, align: 'left' },
-    { headerName: '속도제한', field: 'speed_limit', width: 80, align: 'left' },
+    { headerName: '속도제한', field: 'speed_limit', width: 80, align: 'center' },
     { headerName: '면허제한', field: 'license_restriction', width: 80, align: 'center' },
     { headerName: '제조사', field: 'car_manufacturer', width: 80, align: 'center' },
-    // { headerName: '차량이미지명', field: 'car_image_name', width: 80, align: 'center' },
     { headerName: '년식', field: 'model_year', width: 80, align: 'center' },
-    { headerName: '지점', field: 'branch_name', width: 80, align: 'center' },
+    { headerName: '차량이미지명', field: 'car_image_name', width: 350, align: 'center' },
     { headerName: '작업', field: '', width: 200, align: 'center' },
   ]);
 
-  const [vehicleCode, setVehicleCode] = useState("");
-  const [carNumber, setCarNumber] = useState("");
+  const [carTypeCode, setCarTypeCode] = useState("");
   const [carTypeCategory, setCarTypeCategory] = useState("");
   const [originType, setOriginType] = useState("");
   const [carTypeName, setCarTypeName] = useState("");
@@ -41,9 +38,8 @@ const CarInfo = ({ onClick }) => {
   const [speedLimit, setSpeedLimit] = useState("");
   const [licenseRestriction, setLicenseRestriction] = useState("");
   const [carManufacturer, setCarManufacturer] = useState("");
-  // const [carImageName, setCarImageName] = useState("");
   const [modelYear, setModelYear] = useState("");
-  const [branchName, setBranchName] = useState("");
+  const [carImageName, setCarImageName] = useState("");
 
   const optionsMenuCarTypeCategory = [
     { value: '01', label: '경형/소형' },
@@ -106,22 +102,6 @@ const CarInfo = ({ onClick }) => {
     { value: '15', label: '폴스타' },
   ];
 
-  const optionsMenuBranchName = [
-    { value: '01', label: '수원 본점' },
-    { value: '02', label: '용인점' },
-    { value: '03', label: '오산점' },
-    { value: '04', label: '화성점' },
-    { value: '05', label: '평택점' },
-    { value: '06', label: '광명점' },
-    { value: '07', label: '제주점' },
-    { value: '08', label: '대구 본점' },
-    { value: '09', label: '부산점' },
-    { value: '10', label: '대전점' },
-    { value: '11', label: '전주점' },
-    { value: '12', label: '순창점' },
-    { value: '13', label: '춘천점' },
-  ];
-
   const pageingVehicles = async () => {
     try {
       const token = localStorage.getItem('accessToken');
@@ -151,7 +131,7 @@ const CarInfo = ({ onClick }) => {
       params.carTypeName = searchName;
     }
 
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/paged`, 
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars/paged`, 
       {
         params,
         headers: {
@@ -187,7 +167,7 @@ const CarInfo = ({ onClick }) => {
   const getCount = async (token) => {
     const params = searchName ? { carTypeName: searchName } : {};
 
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/count`,
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars/count`,
       {
         params,
         headers: {
@@ -211,8 +191,7 @@ const CarInfo = ({ onClick }) => {
   const handleUpdateClick = (updateData, workMode) => {
     setIsPopUp(true);
     setWorkMode(workMode);
-    setVehicleCode(updateData.vehicle_code);
-    setCarNumber(updateData.car_number);
+    setCarTypeCode(updateData.car_type_code);
     setCarTypeCategory(updateData.car_type_category);
     setOriginType(updateData.origin_type);
     setCarTypeName(updateData.car_type_name);
@@ -221,24 +200,9 @@ const CarInfo = ({ onClick }) => {
     setSpeedLimit(updateData.speed_limit);
     setLicenseRestriction(updateData.license_restriction);
     setCarManufacturer(updateData.car_manufacturer)
-    // setCarImageName(updateData.car_image_name)
     setModelYear(updateData.model_year)
-    setBranchName(updateData.branch_name);
+    setCarImageName(updateData.car_image_name)
   };
-
-  // const viewDataInit = () => {
-  //   setVehicleCode("")
-  //   setCarNumber("")
-  //   setCarTypeCategory("")
-  //   setCarTypeName("")
-  //   setBranchName("")
-  //   setFuelType("")
-  //   setSeatingCapacity("")
-  //   setSpeedLimit("")
-  //   setLicenseRestriction("")
-  //   setCarManufacturer("")
-  //   setModelYear("")
-  // };
 
   const handleSearchClick = async () => {
    pageingVehicles();
@@ -253,19 +217,18 @@ const CarInfo = ({ onClick }) => {
   const handleInsertClick = (workMode) => {
     setIsPopUp(true);
     setWorkMode(workMode);
-    // viewDataInit();
   };
 
-  const handleDeleteClick = async (vehicleCode) => {
+  const handleDeleteClick = async (carTypeCode) => {
     if (window.confirm('자료를 정말로 삭제하시겠습니까?')) {
       try {
         const token = localStorage.getItem('accessToken');
-        await deleteVehicle(token, vehicleCode);
+        await deleteVehicle(token, carTypeCode);
       } catch (error) {
         if (error.response && error.response.status === 403) {
           try {
             const newToken = await refreshAccessToken();
-            await deleteVehicle(newToken, vehicleCode);
+            await deleteVehicle(newToken, carTypeCode);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
             handleLogout();
@@ -277,14 +240,14 @@ const CarInfo = ({ onClick }) => {
     }
   };
 
-  const deleteVehicle = async (token, vehicleCode) => {
-    await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${vehicleCode}`, {
+  const deleteVehicle = async (token, carTypeCode) => {
+    await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${carTypeCode}`, {
       headers: {
         Authorization: `Bearer ${token}`
       },
       withCredentials: true,
     });
-    setVehicles((prevVehicle) => prevVehicle.filter(vehicle => vehicle.vehicle_code !== vehicleCode));
+    setVehicles((prevVehicle) => prevVehicle.filter(vehicle => vehicle.car_type_code !== carTypeCode));
     alert("자료가 삭제되었습니다.");
   };
 
@@ -294,19 +257,17 @@ const CarInfo = ({ onClick }) => {
     }
 
     const newVehicle = {
-      vehicle_code: vehicleCode,
-      car_number: carNumber,
+      car_type_code: carTypeCode,
       car_type_category: carTypeCategory,
       origin_type: originType,
       car_type_name: carTypeName,
-      branch_name: branchName,
-      fuel_type: fuelType,
       seating_capacity: seatingCapacity,
+      fuel_type: fuelType,
       speed_limit: speedLimit,
       license_restriction: licenseRestriction,
       car_manufacturer: carManufacturer,
-      // car_image_name: carImageName,
       model_year: modelYear,
+      car_image_name: carImageName,
     };
 
     if (workMode === "수정") {
@@ -356,7 +317,7 @@ const CarInfo = ({ onClick }) => {
 
   const updateVehicle = async (token, newVehicle) => {
     await axios.put(
-      `${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${vehicleCode}`,
+      `${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${carTypeCode}`,
       newVehicle,
       {
         headers: {
@@ -365,7 +326,7 @@ const CarInfo = ({ onClick }) => {
         withCredentials: true,
       }
     );
-    setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.vehicle_code === vehicleCode ? newVehicle : vehicle));
+    setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.car_type_code === carTypeCode ? newVehicle : vehicle));
     alert("자료가 수정되었습니다.");
   };
   
@@ -378,8 +339,8 @@ const CarInfo = ({ onClick }) => {
         },
         withCredentials: true,
       });
-    newVehicle.vehicle_code = response.data.vehicle_code;
-    newVehicle.vehicle_password = response.data.vehicle_password;
+    newVehicle.car_type_code = response.data.car_type_code;
+    newVehicle.car_type_password = response.data.car_type_password;
     setVehicles((prevVehicle) => [...prevVehicle, newVehicle]);
     alert("자료가 등록되었습니다.");
   };
@@ -399,12 +360,8 @@ const CarInfo = ({ onClick }) => {
       alert("차종명을 입력해주세요.");
       return false;
     };
-    // if (!carImageName || carImageName.trim() === '') {
-    //   alert("차량이미지명을 입력해주세요.");
-    //   return false;
-    // };
-    if (!carNumber || carNumber.trim() === '') {
-      alert("차량번호를 입력해주세요.");
+    if (!carImageName || carImageName.trim() === '') {
+      alert("차량이미지명을 입력해주세요.");
       return false;
     };
     if (!modelYear || modelYear.trim() === '') {
@@ -439,7 +396,7 @@ const CarInfo = ({ onClick }) => {
           style={{ width: `${totalWidth}px` }}
         >
           <div className='flex-align-center'>
-            <label className='manager-label' htmlFor="">차량번호</label>
+            <label className='manager-label' htmlFor="">차종명</label>
             <input className='width200' type="text" value={searchName} onChange={(e) => (setSearchName(e.target.value))}/>
             <button className='manager-button manager-button-search' onClick={() => handleSearchClick()}>검색</button>
             <button className='manager-button manager-button-search' onClick={() => handleDetailSearchClick()}>상세검색</button>
@@ -492,7 +449,7 @@ const CarInfo = ({ onClick }) => {
           <div className='manager-popup'>
             <div className='car-info-content-popup-wrap'>
               <div className='car-info-content-popup-close'>
-                <div className='manager-popup-title'>● 차량{workMode}</div>
+                <div className='manager-popup-title'>● 차종{workMode}</div>
                 <div className='car-info-content-popup-button'>
                   <button className='manager-button manager-button-save' onClick={handleDataSaveClick}>저장</button>
                   <button className='manager-button manager-button-close' onClick={handlePopupCloseClick}>닫기</button>
@@ -500,11 +457,7 @@ const CarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">차량코드</label>
-                <input className='width50  word-center' type="text" value={vehicleCode} disabled />
-              </div>
-              <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차량번호</label>
-                <input className='width100  word-center' type="text" placeholder="01가1001" value={carNumber} onChange={(e) => {setCarNumber(e.target.value)}} />
+                <input className='width50  word-center' type="text" value={carTypeCode} disabled />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">차종구분</label>
@@ -580,23 +533,13 @@ const CarInfo = ({ onClick }) => {
                   ))}
                 </select>
               </div>
-              {/* <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차량이미지명</label>
-                <input className='width100  word-center' type="text" placeholder="2c816ce3-5f30-4d7d-b159-2cdd2307021f.png" value={carImageName} onChange={(e) => (setCarImageName(e.target.value))} />
-              </div> */}
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">년식</label>
-                <input className='width100  word-center' type="text" placeholder="2024" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
+                <input className='width100  word-center' type="text" placeholder="2020년식" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">지점명</label>
-                <select className='width100' id="comboBox" value={branchName} onChange={(e) => (setBranchName(e.target.value))}>
-                  {optionsMenuBranchName.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                <label className='width80 word-right label-margin-right' htmlFor="">차량이미지명</label>
+                <input className='width300  word-center' type="text" placeholder="2c816ce3-5f30-4d7d-b159-2cdd2307021f.png" value={carImageName} onChange={(e) => (setCarImageName(e.target.value))} />
               </div>
             </div>
           </div>

@@ -21,7 +21,7 @@
     </select>
 
     <!-- 검색조건에 맞게 차량 페이징 조회 -->
-    <select id="getCarsByNumWithPaging" resultType="com.apple.arentcar.model.CarTypes">
+    <select id="getCarsByNameWithPaging" resultType="com.apple.arentcar.model.CarTypes">
         SELECT * FROM car_types
         WHERE car_type_name LIKE CONCAT('%', #{carTypeName}, '%')
         ORDER BY car_type_code
@@ -38,5 +38,16 @@
         SELECT COUNT(*) FROM car_types
         WHERE car_type_name LIKE CONCAT('%', #{carTypeName}, '%')
     </select>
+
+    <insert id="createCars" parameterType="com.apple.arentcar.model.CarTypes" useGeneratedKeys="true" keyProperty="carTypeCode">
+        INSERT INTO car_types
+        (car_type_code, car_type_category, origin_type, car_type_name, seating_capacity,
+        fuel_type, speed_limit, license_restriction, car_manufacturer, model_year,
+        car_image_name, created_at, updated_at)
+        VALUES
+        (#{carTypeCode}, #{carTypeCategory}, #{originType}, #{carTypeName}, #{seatingCapacity},
+        #{fuelType}, #{speedLimit}, #{licenseRestriction}, #{carManufacturer}, #{modelYear},
+        #{carImageName}, NOW(), NOW())
+    </insert>
 
 </mapper>

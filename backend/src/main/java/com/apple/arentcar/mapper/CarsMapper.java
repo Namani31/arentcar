@@ -17,9 +17,11 @@ public interface CarsMapper {
 
     List<CarTypes> getCarsWithPaging(@Param("pageSize") int pageSize, @Param("offset") int offset);
 
-    List<CarTypes> getCarsByNumWithPaging(@Param("carTypeName") String carTypeName, @Param("pageSize") int pageSize, @Param("offset") int offset);
+    List<CarTypes> getCarsByNameWithPaging(@Param("carTypeName") String carTypeName, @Param("pageSize") int pageSize, @Param("offset") int offset);
 
     int countAllCars();
 
     int countByNameCars(@Param("carTypeName") String carTypeName);
+
+    void createCars(CarTypes carTypes);
 }

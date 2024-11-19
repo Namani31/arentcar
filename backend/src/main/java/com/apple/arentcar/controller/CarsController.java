@@ -3,6 +3,7 @@ package com.apple.arentcar.controller;
 import com.apple.arentcar.model.CarTypes;
 import com.apple.arentcar.service.CarsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,16 +30,15 @@ public class CarsController {
     }
 
     @GetMapping("/manager/cars/paged")
-    public ResponseEntity<List<CarTypes>> getCarsWithPaging(@RequestParam(defaultValue = "10") int pageSize,
-                                                            @RequestParam(defaultValue = "1") int pageNumber,
+    public ResponseEntity<List<CarTypes>> getCarsWithPaging(@RequestParam int pageSize,
+                                                            @RequestParam int pageNumber,
                                                             @RequestParam(required = false) String carTypeName) {
         List<CarTypes> carTypes;
         if (carTypeName != null && !carTypeName.isEmpty()) {
-            carTypes = carsService.getCarsByNumWithPaging(carTypeName, pageSize, pageNumber);
+            carTypes = carsService.getCarsByNameWithPaging(carTypeName, pageSize, pageNumber);
         } else {
             carTypes = carsService.getCarsWithPaging(pageSize, pageNumber);
         }
-
         return ResponseEntity.ok(carTypes);
     }
 
@@ -51,5 +51,11 @@ public class CarsController {
             count = carsService.countAllCars();
         }
         return ResponseEntity.ok(count);
+    }
+
+    @PostMapping("/manager/cars")
+    public ResponseEntity<CarTypes> createCars(@RequestBody CarTypes carTypes) {
+        CarTypes savedCars = carsService.createCars(carTypes);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCars);
     }
 }
