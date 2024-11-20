@@ -14,4 +14,9 @@ public class RentalCarsService {
     private RentalCarsMapper rentalCarsMapper;
 
     public List<RentalCars> getAllRentalCars() { return rentalCarsMapper.getAllRentalCars(); }
+
+    public RentalCars getRentalCarsById(Integer carCode) { return rentalCarsMapper.getRentalCarsById(carCode); }
+
+
+
 }

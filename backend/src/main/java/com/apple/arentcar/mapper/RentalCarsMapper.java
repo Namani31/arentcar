@@ -9,4 +9,6 @@ import java.util.List;
 public interface RentalCarsMapper {
 
     List<RentalCars> getAllRentalCars();
+
+    RentalCars getRentalCarsById(Integer carCode);
 }

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.apple.arentcar.mapper.RentalCarsMapper">
     <!-- 모든 차량 조회 -->
     <select id="getAllRentalCars" resultType="com.apple.arentcar.model.RentalCars">
-        SELECT * FROM rental_cars;
+        SELECT * FROM rental_cars
+    </select>
+
+    <!-- PK로 단건 차량 조회 -->
+    <select id="getRentalCarsById" resultType="com.apple.arentcar.model.RentalCars">
+        SELECT * FROM rental_cars where car_code = #{carCode}
     </select>
 </mapper>

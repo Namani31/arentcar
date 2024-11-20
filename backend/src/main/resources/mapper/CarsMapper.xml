@@ -7,7 +7,7 @@
         SELECT * FROM car_types
     </select>
 
-    <!-- key 단건 차종 조회 -->
+    <!-- PK로 단건 차종 조회 -->
     <select id="getCarsById" resultType="com.apple.arentcar.model.CarTypes">
         SELECT * FROM car_types WHERE car_type_code = #{carTypeCode}
     </select>
