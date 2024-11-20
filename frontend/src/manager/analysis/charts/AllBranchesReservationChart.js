@@ -1,4 +1,4 @@
-// 예약 건수
+// 전체 지점 예약 건수
 import React from 'react';
 import {
     Chart as ChartJS,
@@ -10,6 +10,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import './DateReservationChart.css'
 
 // 필요한 요소를 등록
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
