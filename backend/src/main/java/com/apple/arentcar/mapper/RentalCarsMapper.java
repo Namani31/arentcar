@@ -11,4 +11,7 @@ public interface RentalCarsMapper {
     List<RentalCars> getAllRentalCars();
 
     RentalCars getRentalCarsById(Integer carCode);
+
+    // 차량 등록
+    void createRentalCars(RentalCars rentalCars);
 }

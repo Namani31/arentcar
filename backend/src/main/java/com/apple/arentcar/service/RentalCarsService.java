@@ -17,6 +17,10 @@ public class RentalCarsService {
 
     public RentalCars getRentalCarsById(Integer carCode) { return rentalCarsMapper.getRentalCarsById(carCode); }
 
-
+    // 차량 등록
+    public RentalCars createRentalCars(RentalCars rentalCars) {
+        rentalCarsMapper.createRentalCars(rentalCars);
+        return rentalCars;
+    }
 
 }

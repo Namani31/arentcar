@@ -11,4 +11,13 @@
     <select id="getRentalCarsById" resultType="com.apple.arentcar.model.RentalCars">
         SELECT * FROM rental_cars where car_code = #{carCode}
     </select>
+
+    <!-- 차량 입력 -->
+    <insert id="createRentalCars" parameterType="com.apple.arentcar.model.RentalCars"
+            useGeneratedKeys="true" keyProperty="carCode">
+        INSERT INTO rental_cars
+        (car_code, car_type_code, car_number, model_year, branch_code, car_status, created_at, updated_at)
+        VALUES
+        (#{carCode}, #{carTypeCode}, #{carNumber}, #{modelYear}, #{branchCode}, #{carStatus}, NOW(), NOW())
+    </insert>
 </mapper>

@@ -37,7 +37,8 @@
     </select>
 
     <!-- 차종 등록 -->
-    <insert id="createCars" parameterType="com.apple.arentcar.model.CarTypes" useGeneratedKeys="true" keyProperty="carTypeCode">
+    <insert id="createCars" parameterType="com.apple.arentcar.model.CarTypes"
+            useGeneratedKeys="true" keyProperty="carTypeCode">
         INSERT INTO car_types
         (car_type_code, car_type_category, origin_type, car_type_name, seating_capacity,
         fuel_type, speed_limit, license_restriction, car_manufacturer, model_year,

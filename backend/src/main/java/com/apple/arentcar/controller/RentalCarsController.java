@@ -3,11 +3,9 @@ package com.apple.arentcar.controller;
 import com.apple.arentcar.model.RentalCars;
 import com.apple.arentcar.service.RentalCarsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +27,13 @@ public class RentalCarsController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // 차량 등록
+    @PostMapping("/manager/rentalcars")
+    public ResponseEntity<RentalCars> createRentalCars(@RequestBody RentalCars rentalCars) {
+        RentalCars savedRentalCars = rentalCarsService.createRentalCars(rentalCars);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedRentalCars);
     }
 
 }
