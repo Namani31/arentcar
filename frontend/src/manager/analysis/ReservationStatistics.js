@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DateReservationChart from './charts/DateReservationChart';
+import AllBranchesReservationChart from './charts/AllBranchesReservationChart';
 import LocationReservationChart from './charts/LocationReservationChart';
 
 const ReservationStatistics = () => {
@@ -40,7 +40,7 @@ const ReservationStatistics = () => {
             {/* 차트 렌더링 */}
             <div className="charts">
                 {/* 필터와 차트 타입에 따라 차트를 렌더링 */}
-                {chartType === 'reservation' && <DateReservationChart filter={filter} />}
+                {chartType === 'reservation' && <AllBranchesReservationChart filter={filter} />}
                 {chartType === 'location' && <LocationReservationChart filter={filter} />}
             </div>
         </div>

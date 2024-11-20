@@ -10,7 +10,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import './DateReservationChart.css'
+import './AllBranchesReservationChart.css'
 
 // 필요한 요소를 등록
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
