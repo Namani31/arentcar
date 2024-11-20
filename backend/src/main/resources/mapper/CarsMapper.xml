@@ -52,4 +52,22 @@
     <delete id="deleteCarsById" >
         DELETE FROM car_types WHERE car_type_code = #{carTypeCode};
     </delete>
+
+    <!-- 차종 수정 -->
+    <update id="updateCarsById" parameterType="com.apple.arentcar.model.CarTypes">
+        UPDATE car_types
+        SET
+        car_type_category = #{carTypeCategory},
+        origin_type = #{originType},
+        car_type_name = #{carTypeName},
+        seating_capacity = #{seatingCapacity},
+        fuel_type = #{fuelType},
+        speed_limit = #{speedLimit},
+        license_restriction = #{licenseRestriction},
+        car_manufacturer = #{carManufacturer},
+        model_year = #{modelYear},
+        car_image_name = #{carImageName},
+        updated_at = NOW()
+        WHERE car_type_code = #{carTypeCode}
+    </update>
 </mapper>

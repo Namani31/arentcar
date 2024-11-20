@@ -68,4 +68,13 @@ public class CarsController {
         carsService.deleteCarsById(carTypeCode);
         return ResponseEntity.noContent().build();
     }
+
+    // 차종 수정
+    @PutMapping("/manager/cars/{carTypeCode}")
+    public ResponseEntity<Void> updateCarsById(@PathVariable Integer carTypeCode,
+                                               @RequestBody CarTypes carTypes) {
+        carTypes.setCarTypeCode(carTypeCode);
+        carsService.updateCarsById(carTypes);
+        return ResponseEntity.noContent().build();
+    }
 }

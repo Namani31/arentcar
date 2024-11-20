@@ -1,10 +1,8 @@
 package com.apple.arentcar.mapper;
 
 import com.apple.arentcar.model.CarTypes;
-import com.apple.arentcar.model.Menus;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -27,4 +25,6 @@ public interface CarsMapper {
     void createCars(CarTypes carTypes);
     // 차종 삭제
     void deleteCarsById(@Param("carTypeCode") Integer carTypeCode);
+    // 차종 수정
+    void updateCarsById(CarTypes carTypes);
 }

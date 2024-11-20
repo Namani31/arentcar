@@ -2,9 +2,7 @@ package com.apple.arentcar.service;
 
 import com.apple.arentcar.mapper.CarsMapper;
 import com.apple.arentcar.model.CarTypes;
-import com.apple.arentcar.model.Menus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,4 +50,6 @@ public class CarsService {
     // 차종 삭제
     public void deleteCarsById(Integer carTypeCode) { carsMapper.deleteCarsById(carTypeCode); }
 
+    // 차종 수정
+    public void updateCarsById(CarTypes carTypes) { carsMapper.updateCarsById(carTypes); }
 }
