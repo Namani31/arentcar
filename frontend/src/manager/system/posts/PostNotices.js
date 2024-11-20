@@ -108,6 +108,7 @@ const PostNotices = ({ onClick }) => {
       setPostCode(response.data.post_code);
       setPostTitle(response.data.post_title);
       setPostContent(response.data.post_content);
+      setAuthorCode(response.data.author_code);
       setAuthorName(response.data.author);
     }
   }
@@ -345,7 +346,6 @@ const PostNotices = ({ onClick }) => {
     setAuthorType("AM");
     setPostType("NT");
     getByCodeNotices(i); //setPostTitle() setPostContent()
-    handleAdminCode(); //setAuthorCode()
   }
   //보기 팝업창
   const handleReadClick = async (e,i) => {

@@ -21,10 +21,16 @@ public class PostsService {
 
     public List<Notices> getPostsAll() {return postsMapper.getPostsAll();}
 
-    public List<Notices> getAllNotices(Integer pageSize, Integer pageNumber) { return postsMapper.getAllNotices(pageSize, pageNumber); }
+    public List<Notices> getAllNotices(Integer pageSize, Integer pageNumber) {
+        int offset = pageNumber * pageSize;
+        return postsMapper.getAllNotices(pageSize, offset);
+    }
     public int countAllNotices() { return postsMapper.countAllNotices(); }
     public Notices getNotice(Integer postCode) { return postsMapper.getNotice(postCode); }
-    public List<Notices> getSarchNotices(String keyword, Integer pageSize, Integer pageNumber) { return postsMapper.getsSarchNotices(keyword, pageSize, pageNumber); }
+    public List<Notices> getSarchNotices(String keyword, Integer pageSize, Integer pageNumber) {
+        int offset = pageNumber * pageSize;
+        return postsMapper.getsSarchNotices(keyword, pageSize, offset);
+    }
     public int countSarchNotices(String keyword) { return postsMapper.countSarchNotices(keyword); }
     public int getAdminCode(String token) { //어드민 코드문
         String adminid = jwtUtil.extractUsername(token);
