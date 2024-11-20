@@ -117,4 +117,14 @@
 }
 .manager-post-notice-popup-line-textarea:focus {
     outline: none;
-  }
+}
+
+.manager-post-notice-popup-read {
+    width: 750px;
+}
+
+.manager-post-notice-popup-author{
+    display: inline-block;
+    margin: 3px 5px;
+}
+

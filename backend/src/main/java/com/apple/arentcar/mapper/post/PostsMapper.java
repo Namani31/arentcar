@@ -10,6 +10,7 @@ import java.util.List;
 
 @Mapper
 public interface PostsMapper {
+    int adminCode(String adminid);
     List<Notices> getPostsAll();
     List<Notices> getAllNotices(Integer pageSize, Integer pageNumber);
     int countAllNotices();
@@ -17,7 +18,8 @@ public interface PostsMapper {
     int countSarchNotices(String keyword);
     Notices getNotice(Integer postCode);
     void createNotice(Notices notice);
-    void deleteNotice(int postCode);
+    void updateNotice(Notices notice);
+    void deleteNotice(Integer postCode);
     List<Reviews> getAllReviews();
     List<Inquirys> getAllInquirys();
 }
