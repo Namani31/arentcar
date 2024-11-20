@@ -26,7 +26,7 @@ const ManagerMenu = () => {
   const componentMap = {
     RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
     RegisterUser: <RegisterUser onClick={handleCloseClick} />,
-    managementCustomer: <PostNotices onClick={handleCloseClick}/>,
+    manageNotices: <PostNotices onClick={handleCloseClick} />,
   };
 
   useEffect(() => {
