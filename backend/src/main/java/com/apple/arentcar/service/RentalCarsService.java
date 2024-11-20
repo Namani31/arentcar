@@ -1,0 +1,17 @@
+package com.apple.arentcar.service;
+
+import com.apple.arentcar.mapper.RentalCarsMapper;
+import com.apple.arentcar.model.RentalCars;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class RentalCarsService {
+
+    @Autowired
+    private RentalCarsMapper rentalCarsMapper;
+
+    public List<RentalCars> getAllRentalCars() { return rentalCarsMapper.getAllRentalCars(); }
+}

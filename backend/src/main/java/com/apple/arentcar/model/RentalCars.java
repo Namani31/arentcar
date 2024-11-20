@@ -21,6 +21,8 @@ public class RentalCars {
 
     private Integer branchCode;
 
+    private String carStatus;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
