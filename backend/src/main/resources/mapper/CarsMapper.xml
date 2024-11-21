@@ -12,17 +12,16 @@
         SELECT * FROM car_types WHERE car_type_code = #{carTypeCode}
     </select>
 
-    <!-- 차종 페이징 조회 -->
+    <!-- 차종 조회 및 페이지네이션 -->
     <select id="getCarsWithPaging" resultType="com.apple.arentcar.model.CarTypes">
         SELECT * FROM car_types ORDER BY car_type_code LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
-    <!-- 검색조건에 맞게 차종 페이징 조회 -->
+    <!-- 차종 조회 및 페이지네이션(검색 기능 포함) -->
     <select id="getCarsByNameWithPaging" resultType="com.apple.arentcar.model.CarTypes">
         SELECT * FROM car_types
         WHERE car_type_name LIKE CONCAT('%', #{carTypeName}, '%')
-        ORDER BY car_type_code
-        LIMIT #{pageSize} OFFSET #{offset}
+        ORDER BY car_type_code LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
     <!-- 전체 차종 수 조회 -->
@@ -31,7 +30,7 @@
     </select>
 
     <!-- 검색조건에 맞게 전체 차종 수 조회 -->
-    <select id="countByNameCars" resultType="int">
+    <select id="countCarsByName" resultType="int">
         SELECT COUNT(*) FROM car_types
         WHERE car_type_name LIKE CONCAT('%', #{carTypeName}, '%')
     </select>

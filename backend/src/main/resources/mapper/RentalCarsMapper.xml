@@ -30,7 +30,7 @@
     <update id="updateRentalCarsById" parameterType="com.apple.arentcar.model.RentalCars">
         UPDATE rental_cars
         SET
-        car_type_code= #{carTypeCode},
+        car_type_code = #{carTypeCode},
         car_number = #{carNumber},
         model_year = #{modelYear},
         branch_code = #{branchCode},
@@ -38,4 +38,27 @@
         updated_at = NOW()
         WHERE car_code = #{carCode}
     </update>
+
+    <!-- 차량 조회 및 페이지네이션 -->
+    <select id="getRentalCarsWithPaging" resultType="com.apple.arentcar.model.RentalCars">
+        SELECT * FROM rental_cars ORDER BY car_code LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <!-- 차량 조회 및 페이지네이션(검색 기능 포함) -->
+    <select id="getRentalCarsByNumWithPaging" resultType="com.apple.arentcar.model.RentalCars">
+        SELECT * FROM rental_cars
+        WHERE car_number LIKE CONCAT('%', #{carNumber}, '%')
+        ORDER BY car_code LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <!-- 전체 차량 수 조회 -->
+    <select id="countAllRentalCars" resultType="int">
+        SELECT COUNT(*) FROM rental_cars
+    </select>
+
+    <!-- 전체 차량 수 조회(검색 기능 포함) -->
+    <select id="countRentalCarsByNum" resultType="int">
+        SELECT COUNT(*) FROM rental_cars
+        WHERE car_number LIKE CONCAT('%', #{carNumber}, '%')
+    </select>
 </mapper>

@@ -13,14 +13,16 @@ public interface CarsMapper {
 
     CarTypes getCarsById(Integer carTypeCode);
 
-    // 차종 페이징 조회
+    // 차량 조회 및 페이지네이션
     List<CarTypes> getCarsWithPaging(@Param("pageSize") int pageSize, @Param("offset") int offset);
-    // 차종 페이징 조회(검색 기능 포함)
-    List<CarTypes> getCarsByNameWithPaging(@Param("carTypeName") String carTypeName, @Param("pageSize") int pageSize, @Param("offset") int offset);
+    // 차량 조회 및 페이지네이션(검색 기능 포함)
+    List<CarTypes> getCarsByNameWithPaging(@Param("carTypeName") String carTypeName,
+                                           @Param("pageSize") int pageSize,
+                                           @Param("offset") int offset);
     // 전체 차종 수 조회
     int countAllCars();
     // 전체 차종 수 조회(검색 기능 포함)
-    int countByNameCars(@Param("carTypeName") String carTypeName);
+    int countCarsByName(@Param("carTypeName") String carTypeName);
     // 차종 추가
     void createCars(CarTypes carTypes);
     // 차종 삭제

@@ -29,4 +29,23 @@ public class RentalCarsService {
     // 차량 수정
     public void updateRentalCarsById(RentalCars rentalCars) { rentalCarsMapper.updateRentalCarsById(rentalCars); }
 
+    // 차량 조회 및 페이지네이션
+    public List<RentalCars> getRentalCarsWithPaging(int pageSize, int pageNumber) {
+        int offset = (pageNumber - 1) * pageSize;
+        return rentalCarsMapper.getRentalCarsWithPaging(pageSize, offset);
+    }
+
+    // 차량 조회 및 페이지네이션(검색 기능 포함)
+    public List<RentalCars> getRentalCarsByNumWithPaging(String carNumber,
+                                                         int pageSize,
+                                                         int pageNumber) {
+        int offset = (pageNumber - 1) * pageSize;
+        return rentalCarsMapper.getRentalCarsByNumWithPaging(carNumber, pageSize, offset);
+    }
+
+    // 전체 차량 수 조회
+    public int countAllRentalCars() { return rentalCarsMapper.countAllRentalCars(); }
+
+    // 전체 차량 수 조회(검색 기능 포함)
+    public int countRentalCarsByNum(String carNumber) { return rentalCarsMapper.countRentalCarsByNum(carNumber); }
 }

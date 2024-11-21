@@ -51,4 +51,32 @@ public class RentalCarsController {
         rentalCarsService.updateRentalCarsById(rentalCars);
         return ResponseEntity.noContent().build();
     }
+
+    // 차량 조회 및 페이지네이션(검색 기능 포함)
+    @GetMapping("/manager/rentalcars/paged")
+    public ResponseEntity<List<RentalCars>>  getRentalCarsWithPaging(
+                                                @RequestParam int pageSize,
+                                                @RequestParam int pageNumber,
+                                                @RequestParam(required = false) String carNumber) {
+        List<RentalCars> rentalCars;
+        if (carNumber != null && !carNumber.isEmpty()) {
+            rentalCars = rentalCarsService.getRentalCarsByNumWithPaging(carNumber, pageSize, pageNumber);
+        } else {
+            rentalCars = rentalCarsService.getRentalCarsWithPaging(pageSize, pageNumber);
+        }
+        return ResponseEntity.ok(rentalCars);
+    }
+
+    // 전체 차량 수 조회(검색 기능 포함)
+    @GetMapping("/manager/rentalcars/count")
+    public ResponseEntity<Integer> getTotalRentalCarsCount(@RequestParam(required = false) String carNumber) {
+
+        int count;
+        if (carNumber != null && !carNumber.isEmpty()) {
+            count = rentalCarsService.countRentalCarsByNum(carNumber);
+        } else {
+            count = rentalCarsService.countAllRentalCars();
+        }
+        return ResponseEntity.ok(count);
+    }
 }

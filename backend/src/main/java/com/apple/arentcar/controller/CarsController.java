@@ -31,9 +31,10 @@ public class CarsController {
 
     // 차종 조회 및 페이지네이션(검색 기능 포함)
     @GetMapping("/manager/cars/paged")
-    public ResponseEntity<List<CarTypes>> getCarsWithPaging(@RequestParam int pageSize,
-                                                            @RequestParam int pageNumber,
-                                                            @RequestParam(required = false) String carTypeName) {
+    public ResponseEntity<List<CarTypes>> getCarsWithPaging(
+                                             @RequestParam int pageSize,
+                                             @RequestParam int pageNumber,
+                                             @RequestParam(required = false) String carTypeName) {
         List<CarTypes> carTypes;
         if (carTypeName != null && !carTypeName.isEmpty()) {
             carTypes = carsService.getCarsByNameWithPaging(carTypeName, pageSize, pageNumber);
@@ -48,7 +49,7 @@ public class CarsController {
     public ResponseEntity<Integer> getTotalCarsCount(@RequestParam(required = false) String carTypeName) {
         int count;
         if (carTypeName != null && !carTypeName.isEmpty()) {
-            count = carsService.countByNameCars(carTypeName);
+            count = carsService.countCarsByName(carTypeName);
         } else {
             count = carsService.countAllCars();
         }
