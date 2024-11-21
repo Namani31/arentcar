@@ -6,7 +6,6 @@ import { refreshAccessToken, handleLogout } from 'common/Common';
 import 'manager/system/ManagerMenu.css';
 import RegisterMenu from 'manager/system/RegisterMenu';
 import RegisterUser from 'manager/system/RegisterUser';
-import AnalysisAndStatistics from 'manager/analysis/AnalysisAndStatistics';
 import ReservationStatistics from 'manager/analysis/ReservationStatistics';
 
 const ManagerMenu = () => {
@@ -27,7 +26,6 @@ const ManagerMenu = () => {
   const componentMap = {
     RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
     RegisterUser: <RegisterUser onClick={handleCloseClick} />,
-    AnalysisAndStatistics: <AnalysisAndStatistics onClick={handleCloseClick} />,
     ReservationStatistics: <ReservationStatistics onClick={handleCloseClick} />,
   };
 
