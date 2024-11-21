@@ -456,7 +456,7 @@ const CarInfo = ({ onClick }) => {
                 </div>
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차량코드</label>
+                <label className='width80 word-right label-margin-right' htmlFor="">차종코드</label>
                 <input className='width50  word-center' type="text" value={carTypeCode} disabled />
               </div>
               <div className='car-info-content-popup-line'>

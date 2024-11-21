@@ -79,4 +79,11 @@ public class RentalCarsController {
         }
         return ResponseEntity.ok(count);
     }
+
+    // 렌탈가능/렌탈중/정비중 전체 차량 수 조회
+    @GetMapping("/manager/rentalcars/count/{carStatus}")
+    public ResponseEntity<Integer> getTotalAvailableRentalCars(@PathVariable String carStatus) {
+        int count = rentalCarsService.countAvailableRentalCars(carStatus);
+        return ResponseEntity.ok(count);
+    }
 }

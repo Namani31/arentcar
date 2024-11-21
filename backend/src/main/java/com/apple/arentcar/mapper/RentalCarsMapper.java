@@ -29,4 +29,6 @@ public interface RentalCarsMapper {
     int countAllRentalCars();
     // 전체 차량 수 조회(검색 기능 포함)
     int countRentalCarsByNum(@Param("carNumber") String carNumber);
+    // 렌탈가능/렌탈중/정비중 전체 차량 수 조회
+    int countAvailableRentalCars(@Param("carStatus") String carStatus);
 }

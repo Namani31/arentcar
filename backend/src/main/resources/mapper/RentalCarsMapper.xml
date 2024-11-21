@@ -61,4 +61,9 @@
         SELECT COUNT(*) FROM rental_cars
         WHERE car_number LIKE CONCAT('%', #{carNumber}, '%')
     </select>
+
+    <!-- 렌탈가능/렌탈중/정비중 전체 차량 수 조회 -->
+    <select id="countAvailableRentalCars" resultType="int">
+        SELECT COUNT(*) FROM rental_cars WHERE car_status = #{carStatus}
+    </select>
 </mapper>

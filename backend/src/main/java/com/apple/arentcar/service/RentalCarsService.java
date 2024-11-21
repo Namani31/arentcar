@@ -48,4 +48,7 @@ public class RentalCarsService {
 
     // 전체 차량 수 조회(검색 기능 포함)
     public int countRentalCarsByNum(String carNumber) { return rentalCarsMapper.countRentalCarsByNum(carNumber); }
+
+    // 렌탈가능/렌탈중/정비중 전체 차량 수 조회
+    public int countAvailableRentalCars(String carStatus) { return rentalCarsMapper.countAvailableRentalCars(carStatus); }
 }

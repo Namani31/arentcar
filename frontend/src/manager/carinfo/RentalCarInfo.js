@@ -15,111 +15,50 @@ const RentalCarInfo = ({ onClick }) => {
   const [totalCount, setTotalCount] = useState(0);
 
   const [columnDefs] = useState([
-    { headerName: '코드', field: 'vehicle_code', width: 80, align: 'center' },
-    { headerName: '차량번호', field: 'car_number', width: 80, align: 'center' },
-    { headerName: '차종구분', field: 'car_type_category', width: 80, align: 'center' },
-    { headerName: '국산/수입', field: 'origin_type', width: 80, align: 'center' },
-    { headerName: '차종명', field: 'car_type_name', width: 80, align: 'center' },
-    { headerName: '연료', field: 'fuel_type', width: 80, align: 'center' },
-    { headerName: '인승', field: 'seating_capacity', width: 80, align: 'left' },
-    { headerName: '속도제한', field: 'speed_limit', width: 80, align: 'left' },
-    { headerName: '면허제한', field: 'license_restriction', width: 80, align: 'center' },
-    { headerName: '제조사', field: 'car_manufacturer', width: 80, align: 'center' },
-    // { headerName: '차량이미지명', field: 'car_image_name', width: 80, align: 'center' },
+    { headerName: '코드', field: 'car_code', width: 80, align: 'center' },
+    { headerName: '차종코드', field: 'car_type_code', width: 150, align: 'center' },
+    { headerName: '차량번호', field: 'car_number', width: 150, align: 'center' },
     { headerName: '년식', field: 'model_year', width: 80, align: 'center' },
-    { headerName: '지점', field: 'branch_name', width: 80, align: 'center' },
+    { headerName: '지점코드', field: 'branch_code', width: 80, align: 'center' },
+    { headerName: '차량상태', field: 'car_status', width: 80, align: 'center' },
     { headerName: '작업', field: '', width: 200, align: 'center' },
   ]);
 
-  const [vehicleCode, setVehicleCode] = useState("");
+  const [carCode, setCarCode] = useState("");
+  const [carTypeCode, setCarTypeCode] = useState("");
   const [carNumber, setCarNumber] = useState("");
-  const [carTypeCategory, setCarTypeCategory] = useState("");
-  const [originType, setOriginType] = useState("");
-  const [carTypeName, setCarTypeName] = useState("");
-  const [seatingCapacity, setSeatingCapacity] = useState("");
-  const [fuelType, setFuelType] = useState("");
-  const [speedLimit, setSpeedLimit] = useState("");
-  const [licenseRestriction, setLicenseRestriction] = useState("");
-  const [carManufacturer, setCarManufacturer] = useState("");
-  // const [carImageName, setCarImageName] = useState("");
   const [modelYear, setModelYear] = useState("");
-  const [branchName, setBranchName] = useState("");
+  const [branchCode, setBranchCode] = useState("");
+  const [carStatus, setCarStatus] = useState("");
 
-  const optionsMenuCarTypeCategory = [
-    { value: '01', label: '경형/소형' },
-    { value: '02', label: '중형/대형' },
-    { value: '03', label: 'SUV' },
-    { value: '04', label: '승합' },
+  const optionsMenuCarTypeCode = [
+    { value: 5, label: '레이' },
+    { value: 6, label: '캐스퍼' },
+    { value: 7, label: '모닝' },
+    { value: 8, label: '스파크' },
+    { value: 9, label: '레이(더뉴)' },
   ];
 
-  const optionsMenuOriginType = [
-    { value: '01', label: '국산'},
-    { value: '02', label: '수입'},
-  ]
-
-  const optionsMenuSeatingCapacity = [
-    { value: '01', label: '4인승' },
-    { value: '02', label: '5인승' },
-    { value: '03', label: '6인승' },
-    { value: '04', label: '7인승' },
-    { value: '01', label: '8인승' },
-    { value: '02', label: '9인승' },
-    { value: '03', label: '10인승' },
-    { value: '04', label: '11인승' },
-    { value: '01', label: '12인승' },
-    { value: '02', label: '15인승' },
+  const optionsMenuBranchCode = [
+    { value: 1, label: '수원 본점' },
+    { value: 2, label: '용인점' },
+    { value: 3, label: '오산점' },
+    { value: 4, label: '화성점' },
+    { value: 5, label: '평택점' },
+    { value: 6, label: '광명점' },
+    { value: 7, label: '제주점' },
+    { value: 8, label: '대구 본점' },
+    { value: 9, label: '부산점' },
+    { value: 10, label: '대전점' },
+    { value: 11, label: '전주점' },
+    { value: 12, label: '순창점' },
+    { value: 13, label: '춘천점' },
   ];
 
-  const optionsMenuFuelType = [
-    { value: '01', label: '가솔린' },
-    { value: '02', label: '디젤' },
-    { value: '03', label: 'LPG' },
-    { value: '04', label: '전기차' },
-    { value: '05', label: '하이브리드' },
-  ];
-
-  const optionsMenuSpeedLimit = [
-    { value: '01', label: '110km' },
-    { value: '02', label: '180km' },
-  ];
-
-  const optionsMenuLicenseRestriction = [
-    { value: '01', label: '2종보통' },
-    { value: '02', label: '1종보통' },
-  ];
-
-  const optionsMenuCarManufacturer = [
-    { value: '01', label: '기아' },
-    { value: '02', label: '현대' },
-    { value: '03', label: '제네시스' },
-    { value: '04', label: '르노' },
-    { value: '05', label: 'KG모빌리티' },
-    { value: '06', label: '쉐보레' },
-    { value: '07', label: '테슬라' },
-    { value: '08', label: '벤츠' },
-    { value: '09', label: 'BMW' },
-    { value: '10', label: 'Jeep' },
-    { value: '11', label: 'MINI' },
-    { value: '12', label: '아우디' },
-    { value: '13', label: '포르쉐' },
-    { value: '14', label: '폭스바겐' },
-    { value: '15', label: '폴스타' },
-  ];
-
-  const optionsMenuBranchName = [
-    { value: '01', label: '수원 본점' },
-    { value: '02', label: '용인점' },
-    { value: '03', label: '오산점' },
-    { value: '04', label: '화성점' },
-    { value: '05', label: '평택점' },
-    { value: '06', label: '광명점' },
-    { value: '07', label: '제주점' },
-    { value: '08', label: '대구 본점' },
-    { value: '09', label: '부산점' },
-    { value: '10', label: '대전점' },
-    { value: '11', label: '전주점' },
-    { value: '12', label: '순창점' },
-    { value: '13', label: '춘천점' },
+  const optionsMenuCarStatus = [
+    { value: '01', label: '렌탈가능' },
+    { value: '02', label: '렌탈중' },
+    { value: '03', label: '정비중' },
   ];
 
   const pageingVehicles = async () => {
@@ -151,7 +90,7 @@ const RentalCarInfo = ({ onClick }) => {
       params.carNumber = searchName;
     }
 
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/paged`, 
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/paged`, 
       {
         params,
         headers: {
@@ -187,7 +126,7 @@ const RentalCarInfo = ({ onClick }) => {
   const getCount = async (token) => {
     const params = searchName ? { carNumber: searchName } : {};
 
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/count`,
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/count`,
       {
         params,
         headers: {
@@ -211,34 +150,12 @@ const RentalCarInfo = ({ onClick }) => {
   const handleUpdateClick = (updateData, workMode) => {
     setIsPopUp(true);
     setWorkMode(workMode);
-    setVehicleCode(updateData.vehicle_code);
-    setCarNumber(updateData.car_number);
-    setCarTypeCategory(updateData.car_type_category);
-    setOriginType(updateData.origin_type);
-    setCarTypeName(updateData.car_type_name);
-    setSeatingCapacity(updateData.seating_capacity);
-    setFuelType(updateData.fuel_type);
-    setSpeedLimit(updateData.speed_limit);
-    setLicenseRestriction(updateData.license_restriction);
-    setCarManufacturer(updateData.car_manufacturer)
-    // setCarImageName(updateData.car_image_name)
+    setCarCode(updateData.car_code);
+    setCarTypeCode(updateData.car_type_code);
     setModelYear(updateData.model_year)
-    setBranchName(updateData.branch_name);
+    setBranchCode(updateData.branch_code);
+    setCarStatus(updateData.car_status);
   };
-
-  // const viewDataInit = () => {
-  //   setVehicleCode("")
-  //   setCarNumber("")
-  //   setCarTypeCategory("")
-  //   setCarTypeName("")
-  //   setBranchName("")
-  //   setFuelType("")
-  //   setSeatingCapacity("")
-  //   setSpeedLimit("")
-  //   setLicenseRestriction("")
-  //   setCarManufacturer("")
-  //   setModelYear("")
-  // };
 
   const handleSearchClick = async () => {
    pageingVehicles();
@@ -253,19 +170,18 @@ const RentalCarInfo = ({ onClick }) => {
   const handleInsertClick = (workMode) => {
     setIsPopUp(true);
     setWorkMode(workMode);
-    // viewDataInit();
   };
 
-  const handleDeleteClick = async (vehicleCode) => {
+  const handleDeleteClick = async (carCode) => {
     if (window.confirm('자료를 정말로 삭제하시겠습니까?')) {
       try {
         const token = localStorage.getItem('accessToken');
-        await deleteVehicle(token, vehicleCode);
+        await deleteVehicle(token, carCode);
       } catch (error) {
         if (error.response && error.response.status === 403) {
           try {
             const newToken = await refreshAccessToken();
-            await deleteVehicle(newToken, vehicleCode);
+            await deleteVehicle(newToken, carCode);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
             handleLogout();
@@ -277,14 +193,14 @@ const RentalCarInfo = ({ onClick }) => {
     }
   };
 
-  const deleteVehicle = async (token, vehicleCode) => {
-    await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${vehicleCode}`, {
+  const deleteVehicle = async (token, carCode) => {
+    await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${carCode}`, {
       headers: {
         Authorization: `Bearer ${token}`
       },
       withCredentials: true,
     });
-    setVehicles((prevVehicle) => prevVehicle.filter(vehicle => vehicle.vehicle_code !== vehicleCode));
+    setVehicles((prevVehicle) => prevVehicle.filter(vehicle => vehicle.car_code !== carCode));
     alert("자료가 삭제되었습니다.");
   };
 
@@ -294,19 +210,12 @@ const RentalCarInfo = ({ onClick }) => {
     }
 
     const newVehicle = {
-      vehicle_code: vehicleCode,
+      car_code: carCode,
+      car_type_code: carTypeCode,
       car_number: carNumber,
-      car_type_category: carTypeCategory,
-      origin_type: originType,
-      car_type_name: carTypeName,
-      branch_name: branchName,
-      fuel_type: fuelType,
-      seating_capacity: seatingCapacity,
-      speed_limit: speedLimit,
-      license_restriction: licenseRestriction,
-      car_manufacturer: carManufacturer,
-      // car_image_name: carImageName,
       model_year: modelYear,
+      branch_code: branchCode,
+      car_status: carStatus,
     };
 
     if (workMode === "수정") {
@@ -356,7 +265,7 @@ const RentalCarInfo = ({ onClick }) => {
 
   const updateVehicle = async (token, newVehicle) => {
     await axios.put(
-      `${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${vehicleCode}`,
+      `${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${carCode}`,
       newVehicle,
       {
         headers: {
@@ -365,7 +274,7 @@ const RentalCarInfo = ({ onClick }) => {
         withCredentials: true,
       }
     );
-    setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.vehicle_code === vehicleCode ? newVehicle : vehicle));
+    setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.car_code === carCode ? newVehicle : vehicle));
     alert("자료가 수정되었습니다.");
   };
   
@@ -378,8 +287,8 @@ const RentalCarInfo = ({ onClick }) => {
         },
         withCredentials: true,
       });
-    newVehicle.vehicle_code = response.data.vehicle_code;
-    newVehicle.vehicle_password = response.data.vehicle_password;
+    newVehicle.car_code = response.data.car_code;
+    newVehicle.car_password = response.data.car_password;
     setVehicles((prevVehicle) => [...prevVehicle, newVehicle]);
     alert("자료가 등록되었습니다.");
   };
@@ -395,20 +304,20 @@ const RentalCarInfo = ({ onClick }) => {
   };
 
   const validateCheck = () => {
-    if (!carTypeName || carTypeName.trim() === '') {
-      alert("차종명을 입력해주세요.");
+    if (!carTypeCode || carTypeCode.trim() === '') {
+      alert("차종코드를 선택해주세요.");
       return false;
     };
-    // if (!carImageName || carImageName.trim() === '') {
-    //   alert("차량이미지명을 입력해주세요.");
-    //   return false;
-    // };
     if (!carNumber || carNumber.trim() === '') {
       alert("차량번호를 입력해주세요.");
       return false;
     };
     if (!modelYear || modelYear.trim() === '') {
       alert("년식을 입력해주세요.");
+      return false;
+    };
+    if (!branchCode || branchCode.trim() === '') {
+      alert("지점코드를 선택해주세요.");
       return false;
     };
   
@@ -475,7 +384,7 @@ const RentalCarInfo = ({ onClick }) => {
                   {title.field === '' ? (
                     <>
                       <button className='manager-button manager-button-update' onClick={() => handleUpdateClick(row, "수정")}>수정</button>
-                      <button className='manager-button manager-button-delete' onClick={() => handleDeleteClick(row.vehicle_code)}>삭제</button>
+                      <button className='manager-button manager-button-delete' onClick={() => handleDeleteClick(row.car_code)}>삭제</button>
                     </>
                   ) : (
                       row[title.field]
@@ -500,98 +409,40 @@ const RentalCarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">차량코드</label>
-                <input className='width50  word-center' type="text" value={vehicleCode} disabled />
+                <input className='width50  word-center' type="text" value={carCode} disabled />
+              </div>
+              <div className='car-info-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="">차종코드</label>
+                <select className='width100' id="comboBox" value={carTypeCode} onChange={(e) => (setCarTypeCode(e.target.value))}>
+                  {optionsMenuCarTypeCode.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">차량번호</label>
                 <input className='width100  word-center' type="text" placeholder="01가1001" value={carNumber} onChange={(e) => {setCarNumber(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차종구분</label>
-                <select className='width100' id="comboBox" value={carTypeCategory} onChange={(e) => (setCarTypeCategory(e.target.value))}>
-                  {optionsMenuCarTypeCategory.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">국산/수입</label>
-                <select className='width100' id="comboBox" value={originType} onChange={(e) => (setOriginType(e.target.value))}>
-                  {optionsMenuOriginType.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차종명</label>
-                <input className='width100 word-center' type="text" placeholder="모닝" maxLength={6} value={carTypeName} onChange={(e) => setCarTypeName(e.target.value)} />
-              </div>
-              <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">수용인원</label>
-                <select className='width100' id="comboBox" value={seatingCapacity} onChange={(e) => (setSeatingCapacity(e.target.value))}>
-                  {optionsMenuSeatingCapacity.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">연료</label>
-                <select className='width100' id="comboBox" value={fuelType} onChange={(e) => (setFuelType(e.target.value))}>
-                  {optionsMenuFuelType.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">속도제한</label>
-                <select className='width100' id="comboBox" value={speedLimit} onChange={(e) => (setSpeedLimit(e.target.value))}>
-                  {optionsMenuSpeedLimit.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">면허제한</label>
-                <select className='width100' id="comboBox" value={licenseRestriction} onChange={(e) => (setLicenseRestriction(e.target.value))}>
-                  {optionsMenuLicenseRestriction.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">제조사</label>
-                <select className='width100' id="comboBox" value={carManufacturer} onChange={(e) => (setCarManufacturer(e.target.value))}>
-                  {optionsMenuCarManufacturer.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {/* <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차량이미지명</label>
-                <input className='width100  word-center' type="text" placeholder="2c816ce3-5f30-4d7d-b159-2cdd2307021f.png" value={carImageName} onChange={(e) => (setCarImageName(e.target.value))} />
-              </div> */}
-              <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">년식</label>
                 <input className='width100  word-center' type="text" placeholder="2024" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">지점명</label>
-                <select className='width100' id="comboBox" value={branchName} onChange={(e) => (setBranchName(e.target.value))}>
-                  {optionsMenuBranchName.map((option) => (
+                <label className='width80 word-right label-margin-right' htmlFor="">지점코드</label>
+                <select className='width100' id="comboBox" value={branchCode} onChange={(e) => (setBranchCode(e.target.value))}>
+                  {optionsMenuBranchCode.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='car-info-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="">차량상태</label>
+                <select className='width100' id="comboBox" value={carStatus} onChange={(e) => (setCarStatus(e.target.value))}>
+                  {optionsMenuCarStatus.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
