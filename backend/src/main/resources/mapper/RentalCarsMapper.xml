@@ -20,4 +20,22 @@
         VALUES
         (#{carCode}, #{carTypeCode}, #{carNumber}, #{modelYear}, #{branchCode}, #{carStatus}, NOW(), NOW())
     </insert>
+
+    <!-- 차량 삭제 -->
+    <delete id="deleteRentalCarsById">
+        DELETE FROM rental_cars where car_code = #{carCode}
+    </delete>
+
+    <!-- 차량 수정 -->
+    <update id="updateRentalCarsById" parameterType="com.apple.arentcar.model.RentalCars">
+        UPDATE rental_cars
+        SET
+        car_type_code= #{carTypeCode},
+        car_number = #{carNumber},
+        model_year = #{modelYear},
+        branch_code = #{branchCode},
+        car_status = #{carStatus},
+        updated_at = NOW()
+        WHERE car_code = #{carCode}
+    </update>
 </mapper>

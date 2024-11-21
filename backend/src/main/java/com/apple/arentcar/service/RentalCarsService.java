@@ -23,4 +23,10 @@ public class RentalCarsService {
         return rentalCars;
     }
 
+    // 차량 삭제
+    public void deleteRentalCarsById(Integer carCode) { rentalCarsMapper.deleteRentalCarsById(carCode); }
+
+    // 차량 수정
+    public void updateRentalCarsById(RentalCars rentalCars) { rentalCarsMapper.updateRentalCarsById(rentalCars); }
+
 }

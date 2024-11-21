@@ -36,4 +36,19 @@ public class RentalCarsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedRentalCars);
     }
 
+    // 차량 삭제
+    @DeleteMapping("/manager/rentalcars/{carCode}")
+    public ResponseEntity<Void> deleteRentalCars(@PathVariable Integer carCode) {
+        rentalCarsService.deleteRentalCarsById((carCode));
+        return ResponseEntity.noContent().build();
+    }
+
+    // 차량 수정
+    @PutMapping("/manager/rentalcars/{carCode}")
+    public ResponseEntity<Void> updateRentalCarsById(@PathVariable Integer carCode,
+                                                     @RequestBody RentalCars rentalCars) {
+        rentalCars.setCarCode(carCode);
+        rentalCarsService.updateRentalCarsById(rentalCars);
+        return ResponseEntity.noContent().build();
+    }
 }
