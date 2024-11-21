@@ -443,8 +443,6 @@ const CarInfo = ({ onClick }) => {
           ))}
         </div>
 
-        <div className="car-info-row-content-wrap"></div>
-
         {isPopUp &&
           <div className='manager-popup'>
             <div className='car-info-content-popup-wrap'>
@@ -545,6 +543,7 @@ const CarInfo = ({ onClick }) => {
           </div>
         }
       </div>
+
       <div className='car-info-pageing-wrap flex-align-center'>
         <button 
           className='manager-button'
@@ -560,9 +559,8 @@ const CarInfo = ({ onClick }) => {
           disabled={pageNumber === totalPages}
         >다음</button>
       </div>
-      {loading && (
-        <Loading />
-      )}
+
+      {loading && (<Loading />)}
     </div>
   );
 };

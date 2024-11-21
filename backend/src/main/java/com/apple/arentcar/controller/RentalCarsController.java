@@ -1,5 +1,6 @@
 package com.apple.arentcar.controller;
 
+import com.apple.arentcar.dto.RentalCarsDTO;
 import com.apple.arentcar.model.RentalCars;
 import com.apple.arentcar.service.RentalCarsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +55,11 @@ public class RentalCarsController {
 
     // 차량 조회 및 페이지네이션(검색 기능 포함)
     @GetMapping("/manager/rentalcars/paged")
-    public ResponseEntity<List<RentalCars>>  getRentalCarsWithPaging(
+    public ResponseEntity<List<RentalCarsDTO>>  getRentalCarsWithPaging(
                                                 @RequestParam int pageSize,
                                                 @RequestParam int pageNumber,
                                                 @RequestParam(required = false) String carNumber) {
-        List<RentalCars> rentalCars;
+        List<RentalCarsDTO> rentalCars;
         if (carNumber != null && !carNumber.isEmpty()) {
             rentalCars = rentalCarsService.getRentalCarsByNumWithPaging(carNumber, pageSize, pageNumber);
         } else {

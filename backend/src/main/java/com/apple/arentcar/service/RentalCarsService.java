@@ -1,5 +1,6 @@
 package com.apple.arentcar.service;
 
+import com.apple.arentcar.dto.RentalCarsDTO;
 import com.apple.arentcar.mapper.RentalCarsMapper;
 import com.apple.arentcar.model.RentalCars;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +31,13 @@ public class RentalCarsService {
     public void updateRentalCarsById(RentalCars rentalCars) { rentalCarsMapper.updateRentalCarsById(rentalCars); }
 
     // 차량 조회 및 페이지네이션
-    public List<RentalCars> getRentalCarsWithPaging(int pageSize, int pageNumber) {
+    public List<RentalCarsDTO> getRentalCarsWithPaging(int pageSize, int pageNumber) {
         int offset = (pageNumber - 1) * pageSize;
         return rentalCarsMapper.getRentalCarsWithPaging(pageSize, offset);
     }
 
     // 차량 조회 및 페이지네이션(검색 기능 포함)
-    public List<RentalCars> getRentalCarsByNumWithPaging(String carNumber,
+    public List<RentalCarsDTO> getRentalCarsByNumWithPaging(String carNumber,
                                                          int pageSize,
                                                          int pageNumber) {
         int offset = (pageNumber - 1) * pageSize;

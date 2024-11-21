@@ -1,5 +1,6 @@
 package com.apple.arentcar.mapper;
 
+import com.apple.arentcar.dto.RentalCarsDTO;
 import com.apple.arentcar.model.RentalCars;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,9 +21,9 @@ public interface RentalCarsMapper {
     // 차량 수정
     void updateRentalCarsById(RentalCars rentalCars);
     // 차량 조회 및 페이지네이션
-    List<RentalCars> getRentalCarsWithPaging(@Param("pageSize") int pageSize, @Param("offset") int offset);
+    List<RentalCarsDTO> getRentalCarsWithPaging(@Param("pageSize") int pageSize, @Param("offset") int offset);
     // 차량 조회 및 페이지네이션(검색 기능 포함)
-    List<RentalCars> getRentalCarsByNumWithPaging(@Param("carNumber") String carNumber,
+    List<RentalCarsDTO> getRentalCarsByNumWithPaging(@Param("carNumber") String carNumber,
                                                   @Param("pageSize") int pageSize,
                                                   @Param("offset") int offset);
     // 전체 차량 수 조회
