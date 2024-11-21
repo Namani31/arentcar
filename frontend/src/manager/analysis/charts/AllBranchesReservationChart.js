@@ -2,20 +2,21 @@
 import React, { useState } from 'react';
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import DatePicker from 'react-datepicker';
+import DatePicker from 'react-datepicker'; // 달력 라이브러리
 import { ko } from 'date-fns/locale'; // 달력을 한글로 바꾸기
 import 'react-datepicker/dist/react-datepicker.css';
 import './AllBranchesReservationChart.css';
 import 'index.css';
 
-// 필요한 요소를 등록
+// 차트 라이브러리의 필요한 요소를 등록
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-// filter 값을 props로 받음 (daily, monthly)
+// 일별, 월별의 filter 값을 props로 받음 (daily, monthly)
 const AllBranchesReservationChart = () => {
 
-    const [startDate, setStartDate] = useState(null); // 시작 날짜
-    const [endDate, setEndDate] = useState(null); // 종료 날짜
+    // 캘린더 시작 날짜와 종료 날짜
+    const [startDate, setStartDate] = useState(null); 
+    const [endDate, setEndDate] = useState(null); 
 
     // 선택된 필터 상태
     const [filter, setFilter] = useState('daily');
@@ -93,6 +94,7 @@ const AllBranchesReservationChart = () => {
                     />
                 </div>
             </div>
+            
             <div className="chart-container">
                 <h3>{filterText}</h3>
                 <Bar data={data} />
