@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { refreshAccessToken, handleLogout } from 'common/Common';
 import 'manager/system/posts/PostReviews.css';
+import ReviewPopup from 'manager/system/posts/ReviewPopup';
 
 const PostReviews = ({ onClick }) => {
   //고객후기
@@ -110,6 +111,8 @@ const PostReviews = ({ onClick }) => {
       
     } else if(e[0] === "통계") {
       setPopupType(e[0]);
+    } else if(e[0] === "추가") {
+      setPopupType(e[0]);
     }
     
     setIsPopUp(true)
@@ -136,6 +139,9 @@ const PostReviews = ({ onClick }) => {
     }
   };
 
+  const handleClosePopup = () => {
+    setPopupType("")
+  };
   return (
     <div className='manager-post-reviews-wrap'>
       <div className='manager-post-reviews-header-wrap'>
@@ -158,6 +164,7 @@ const PostReviews = ({ onClick }) => {
 
           <div>
               <button className='manager-button manager-button-insert' onClick={()=> handlePopupClick(["통계"])}> 통계 </button>
+              <button className='manager-button manager-button-insert' onClick={()=> setPopupType("추가")}> 추가 </button>
               <button className='manager-button manager-button-close' onClick={() => handleCloseClick()}> 닫기</button>
           </div>
         </div>
@@ -181,9 +188,9 @@ const PostReviews = ({ onClick }) => {
                       style={{width:`${column.width}`, textAlign:`${column.align}`}}>
                       {column.field === '' ? (
                         <>
-                          <button className='post-btn3' onClick={()=> handlePopupClick([ "보기", review["post_code"] ])}> 보기 </button>
-                          <button className='post-btn2' > 수정 </button> 
-                          <button className='post-btn1' > 삭제 </button> 
+                          <button className='manager-button post-btn3' onClick={()=> handlePopupClick([ "보기", review["post_code"] ])}> 보기 </button>
+                          <button className='manager-button post-btn2' > 수정 </button> 
+                          <button className='manager-button post-btn1' > 삭제 </button> 
                         </>
                       ) : (
                         review[column.field]
@@ -232,9 +239,9 @@ const PostReviews = ({ onClick }) => {
                   {/* 대분류  리뷰수 편균점수 */}
                   {/* 소분류  날짜별   성별 */}
                   <ul>
-                    <li onClick={()=>{setStats(0)}} className={`${stats == 0 ? 'on' : ''}`}> 날짜별 </li>
-                    <li onClick={()=>{setStats(1)}} className={`${stats == 1 ? 'on' : ''}`}> 연령별 </li>
-                    <li onClick={()=>{setStats(2)}} className={`${stats == 2 ? 'on' : ''}`}> 성별 </li>
+                    <li onClick={()=>{setStats(0)}} className={`${stats === 0 ? 'on' : ''}`}> 날짜별 </li>
+                    <li onClick={()=>{setStats(1)}} className={`${stats === 1 ? 'on' : ''}`}> 연령별 </li>
+                    <li onClick={()=>{setStats(2)}} className={`${stats === 2 ? 'on' : ''}`}> 성별 </li>
                   </ul>
                 </div>
                 <div className='manager-post-review-popup-line manager-post-review-popup-content'>
@@ -249,6 +256,7 @@ const PostReviews = ({ onClick }) => {
                 </div>
               </div>
             )}
+
           </div>
         )}
         <div className='manager-post-reviews-table-paging flex-align-center'>
@@ -265,6 +273,9 @@ const PostReviews = ({ onClick }) => {
 
       </div>
       
+      {popupType === "추가" && (
+      <ReviewPopup colse={handleClosePopup} />
+      )}
     </div>
   )
 }

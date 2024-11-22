@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { refreshAccessToken, handleLogout } from 'common/Common';
 import 'manager/system/posts/PostNotices.css';
 import { store } from '../../../redux/store';
+// import { store } from 'redux/store'; 왜 안될까?
 
 
 const PostNotices = ({ onClick }) => {
@@ -403,9 +404,9 @@ const PostNotices = ({ onClick }) => {
                     style={{width:`${column.width}`, textAlign:`${column.align}`}}
                   > 
                     {column.field === '' ? (<>
-                      <button className='post-btn3' onClick={()=>handlePopupClick([ "보기", notice["post_code"] ])}> 보기 </button> 
-                      <button className='post-btn2' onClick={()=>handlePopupClick([ "수정", notice["post_code"] ])}> 수정 </button> 
-                      <button className='post-btn1' onClick={()=>handleDeleteClick(notice["post_code"])}> 삭제 </button> 
+                      <button className='manager-button post-btn3' onClick={()=>handlePopupClick([ "보기", notice["post_code"] ])}> 보기 </button> 
+                      <button className='manager-button post-btn2' onClick={()=>handlePopupClick([ "수정", notice["post_code"] ])}> 수정 </button> 
+                      <button className='manager-button post-btn1' onClick={()=>handleDeleteClick(notice["post_code"])}> 삭제 </button> 
                     </>) : (
                       notice[column.field]
                     )}
