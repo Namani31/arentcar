@@ -48,3 +48,15 @@
 .car-info-pageing-display {
   margin: 0px 10px;
 }
+
+.car-info-file-button {
+  width: 250px;
+  height: 26px;
+  text-align: center;
+  border: 1px solid #ddd;
+  background-color: white;
+  border-radius: 6px;
+  font-weight: bold;
+  margin: 0px 2px;
+  color: rgb(38, 49, 155);
+}

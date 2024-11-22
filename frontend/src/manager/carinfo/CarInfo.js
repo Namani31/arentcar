@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { refreshAccessToken, handleLogout } from 'common/Common';
 import Loading from 'common/Loading';
 import "manager/carinfo/CarInfo.css";
@@ -15,17 +15,16 @@ const CarInfo = ({ onClick }) => {
   const [totalCount, setTotalCount] = useState(0);
 
   const [columnDefs] = useState([
-    { headerName: '코드', field: 'car_type_code', width: 70, align: 'center' },
-    { headerName: '차종구분', field: 'car_type_category', width: 70, align: 'center' },
-    { headerName: '국산/수입', field: 'origin_type', width: 70, align: 'center' },
-    { headerName: '차종명', field: 'car_type_name', width: 145, align: 'center' },
-    { headerName: '인승', field: 'seating_capacity', width: 70, align: 'center' },
-    { headerName: '연료', field: 'fuel_type', width: 70, align: 'center' },
-    { headerName: '속도제한', field: 'speed_limit', width: 70, align: 'center' },
-    { headerName: '면허제한', field: 'license_restriction', width: 70, align: 'center' },
-    { headerName: '제조사', field: 'car_manufacturer', width: 70, align: 'center' },
-    { headerName: '년식', field: 'model_year', width: 75, align: 'center' },
-    { headerName: '차량이미지명', field: 'car_image_name', width: 300, align: 'center' },
+    { headerName: '코드', field: 'car_type_code', width: 80, align: 'center' },
+    { headerName: '차종구분', field: 'car_type_category', width: 80, align: 'center' },
+    { headerName: '국산/수입', field: 'origin_type', width: 80, align: 'center' },
+    { headerName: '차종명', field: 'car_type_name', width: 150, align: 'center' },
+    { headerName: '인승', field: 'seating_capacity', width: 80, align: 'center' },
+    { headerName: '연료', field: 'fuel_type', width: 80, align: 'center' },
+    { headerName: '속도제한', field: 'speed_limit', width: 80, align: 'center' },
+    { headerName: '면허제한', field: 'license_restriction', width: 80, align: 'center' },
+    { headerName: '제조사', field: 'car_manufacturer', width: 80, align: 'center' },
+    { headerName: '년식', field: 'model_year', width: 85, align: 'center' },
     { headerName: '작업', field: '', width: 200, align: 'center' },
   ]);
 
@@ -39,7 +38,7 @@ const CarInfo = ({ onClick }) => {
   const [licenseRestriction, setLicenseRestriction] = useState("");
   const [carManufacturer, setCarManufacturer] = useState("");
   const [modelYear, setModelYear] = useState("");
-  const [carImageName, setCarImageName] = useState("");
+  const [carImage, setCarImage] = useState("");
 
   const optionsMenuCarTypeCategory = [
     { value: '01', label: '경형/소형' },
@@ -85,10 +84,10 @@ const CarInfo = ({ onClick }) => {
   ];
 
   const optionsMenuCarManufacturer = [
-    { value: '01', label: '기아' },
-    { value: '02', label: '현대' },
+    { value: '01', label: '기아자동차' },
+    { value: '02', label: '현대자동차' },
     { value: '03', label: '제네시스' },
-    { value: '04', label: '르노' },
+    { value: '04', label: '르노코리아' },
     { value: '05', label: 'KG모빌리티' },
     { value: '06', label: '쉐보레' },
     { value: '07', label: '테슬라' },
@@ -201,7 +200,21 @@ const CarInfo = ({ onClick }) => {
     setLicenseRestriction(updateData.license_restriction);
     setCarManufacturer(updateData.car_manufacturer)
     setModelYear(updateData.model_year)
-    setCarImageName(updateData.car_image_name)
+    setCarImage(updateData.car_image)
+  };
+
+  const viewDataInit = () => {
+    setCarTypeCode("");
+    setCarTypeCategory("01");
+    setOriginType("01");
+    setCarTypeName("");
+    setSeatingCapacity("01");
+    setFuelType("01");
+    setSpeedLimit("01");
+    setLicenseRestriction("01");
+    setCarManufacturer("01");
+    setModelYear("")
+    setCarImage("");
   };
 
   const handleSearchClick = async () => {
@@ -217,6 +230,7 @@ const CarInfo = ({ onClick }) => {
   const handleInsertClick = (workMode) => {
     setIsPopUp(true);
     setWorkMode(workMode);
+    viewDataInit();
   };
 
   const handleDeleteClick = async (carTypeCode) => {
@@ -241,7 +255,7 @@ const CarInfo = ({ onClick }) => {
   };
 
   const deleteVehicle = async (token, carTypeCode) => {
-    await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${carTypeCode}`, {
+    await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars/${carTypeCode}`, {
       headers: {
         Authorization: `Bearer ${token}`
       },
@@ -267,8 +281,11 @@ const CarInfo = ({ onClick }) => {
       license_restriction: licenseRestriction,
       car_manufacturer: carManufacturer,
       model_year: modelYear,
-      car_image_name: carImageName,
     };
+
+    const newVehicleImage = {
+      car_image: carImage,
+    }
 
     if (workMode === "수정") {
       try {
@@ -294,12 +311,12 @@ const CarInfo = ({ onClick }) => {
       try {
         setLoading(true);
         const token = localStorage.getItem('accessToken');
-        await createVehicle(token, newVehicle);
+        await createVehicle(token, newVehicle, newVehicleImage);
       } catch (error) {
         if (error.response && error.response.status === 403) {
           try {
             const newToken = await refreshAccessToken();
-            await createVehicle(newToken, newVehicle);
+            await createVehicle(newToken, newVehicle, newVehicleImage);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
             handleLogout();
@@ -317,7 +334,7 @@ const CarInfo = ({ onClick }) => {
 
   const updateVehicle = async (token, newVehicle) => {
     await axios.put(
-      `${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${carTypeCode}`,
+      `${process.env.REACT_APP_API_URL}/arentcar/manager/cars/${carTypeCode}`,
       newVehicle,
       {
         headers: {
@@ -330,8 +347,27 @@ const CarInfo = ({ onClick }) => {
     alert("자료가 수정되었습니다.");
   };
   
-  const createVehicle = async (token, newVehicle) => {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus`, 
+  const uploadImage = async (token, newVehicleImage) => {
+    console.log(newVehicleImage);
+    // FormData 객체 생성
+    const formData = new FormData();
+    // 이미지 파일을 FormData에 추가
+    formData.append('file', newVehicleImage);
+
+    await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars/image`,
+      formData,
+      {
+        headers: {
+          'Content-type': 'multipart/form-data', // 명시적으로 설정하지 않아도 axios가 객체를 전송할 때 자동으로 적절한 타입을 설정해줌
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+  };
+
+  const createVehicle = async (token, newVehicle, newVehicleImage) => {
+    uploadImage(token, newVehicleImage);
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars`, 
       newVehicle,
       {
         headers: {
@@ -344,6 +380,16 @@ const CarInfo = ({ onClick }) => {
     setVehicles((prevVehicle) => [...prevVehicle, newVehicle]);
     alert("자료가 등록되었습니다.");
   };
+
+  const onChangeImageUpload = (e) => {
+    const {files} = e.target;
+    const uploadFile = files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(uploadFile);
+    reader.onloadend = () => {
+      setCarImage(reader.result);
+    }
+  }
 
   const handlePopupCloseClick = () => {
     setIsPopUp(false);
@@ -360,12 +406,12 @@ const CarInfo = ({ onClick }) => {
       alert("차종명을 입력해주세요.");
       return false;
     };
-    if (!carImageName || carImageName.trim() === '') {
-      alert("차량이미지명을 입력해주세요.");
-      return false;
-    };
     if (!modelYear || modelYear.trim() === '') {
       alert("년식을 입력해주세요.");
+      return false;
+    };
+    if (!carImage || carImage.trim() === '') {
+      alert("차량이미지를 등록해주세요.");
       return false;
     };
   
@@ -536,8 +582,9 @@ const CarInfo = ({ onClick }) => {
                 <input className='width100  word-center' type="text" placeholder="2020년식" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차량이미지명</label>
-                <input className='width300  word-center' type="text" placeholder="2c816ce3-5f30-4d7d-b159-2cdd2307021f.png" value={carImageName} onChange={(e) => (setCarImageName(e.target.value))} />
+                <label className='width80 word-right label-margin-right' htmlFor="">차량이미지</label>
+                <input className='car-info-file-button' name="file" type="file" accept="image/*" onChange={onChangeImageUpload} />
+                <img className="width350" src = {carImage} alt={carImage}  />
               </div>
             </div>
           </div>

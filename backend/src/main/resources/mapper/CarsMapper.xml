@@ -45,7 +45,7 @@
         VALUES
         (#{carTypeCode}, #{carTypeCategory}, #{originType}, #{carTypeName}, #{seatingCapacity},
         #{fuelType}, #{speedLimit}, #{licenseRestriction}, #{carManufacturer}, #{modelYear},
-        #{carImageName}, NOW(), NOW())
+        'sample_img', NOW(), NOW())
     </insert>
 
     <!-- 차종 삭제 -->

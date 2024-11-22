@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { refreshAccessToken, handleLogout } from 'common/Common';
 import Loading from 'common/Loading';
@@ -157,9 +157,19 @@ const RentalCarInfo = ({ onClick }) => {
     setWorkMode(workMode);
     setCarCode(updateData.car_code);
     setCarTypeCode(updateData.car_type_code);
+    setCarNumber(updateData.car_number);
     setModelYear(updateData.model_year)
     setBranchCode(updateData.branch_code);
     setCarStatus(updateData.car_status);
+  };
+
+  const viewDataInit = () => {
+    setCarCode("");
+    setCarTypeCode("");
+    setCarNumber("")
+    setModelYear("");
+    setBranchCode("");
+    setCarStatus("01");
   };
 
   const handleSearchClick = async () => {
@@ -175,6 +185,7 @@ const RentalCarInfo = ({ onClick }) => {
   const handleInsertClick = (workMode) => {
     setIsPopUp(true);
     setWorkMode(workMode);
+    viewDataInit();
   };
 
   const handleDeleteClick = async (carCode) => {
@@ -199,7 +210,7 @@ const RentalCarInfo = ({ onClick }) => {
   };
 
   const deleteVehicle = async (token, carCode) => {
-    await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${carCode}`, {
+    await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/${carCode}`, {
       headers: {
         Authorization: `Bearer ${token}`
       },
@@ -270,7 +281,7 @@ const RentalCarInfo = ({ onClick }) => {
 
   const updateVehicle = async (token, newVehicle) => {
     await axios.put(
-      `${process.env.REACT_APP_API_URL}/arentcar/manager/menus/${carCode}`,
+      `${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/${carCode}`,
       newVehicle,
       {
         headers: {
@@ -284,7 +295,7 @@ const RentalCarInfo = ({ onClick }) => {
   };
   
   const createVehicle = async (token, newVehicle) => {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus`, 
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars`, 
       newVehicle,
       {
         headers: {

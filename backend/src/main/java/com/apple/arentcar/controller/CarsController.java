@@ -3,11 +3,19 @@ package com.apple.arentcar.controller;
 import com.apple.arentcar.model.CarTypes;
 import com.apple.arentcar.service.CarsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/arentcar")
@@ -77,5 +85,19 @@ public class CarsController {
         carTypes.setCarTypeCode(carTypeCode);
         carsService.updateCarsById(carTypes);
         return ResponseEntity.noContent().build();
+    }
+
+    @Value("${file.upload-dir.arentcar}")
+    private String uploadDirectory;
+
+    // 차종 이미지 업로드
+    @PostMapping("/manager/cars/image")
+    public ResponseEntity<String> uploadCarImage(@RequestParam("file") MultipartFile file) throws IOException {
+        String originalFilename = file.getOriginalFilename();
+        String uniqueFilename = UUID.randomUUID().toString() + "-" + originalFilename;
+
+        Path filePath = Paths.get(uploadDirectory, uniqueFilename);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        return ResponseEntity.ok("success");
     }
 }
