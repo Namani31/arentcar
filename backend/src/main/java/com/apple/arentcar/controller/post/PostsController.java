@@ -5,7 +5,6 @@ import com.apple.arentcar.model.post.Inquirys;
 import com.apple.arentcar.model.post.Notices;
 import com.apple.arentcar.model.post.Reviews;
 import com.apple.arentcar.service.post.PostsService;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +23,12 @@ public class PostsController {
 
     @GetMapping("/manager/post/notices")
     public ResponseEntity<List<Notices>> getAllNotices(
-        @RequestParam int pageSize,
-        @RequestParam int pageNumber,
-        @RequestParam(required = false) String postName ){
+            @RequestParam int pageSize,
+            @RequestParam int pageNumber,
+            @RequestParam(required = false) String postName ){
         List<Notices> notices;
         if(postName != null && !postName.isEmpty()){
-            notices = postsService.getSarchNotices(postName, pageSize, pageNumber);
+            notices = postsService.getSearchNotices(postName, pageSize, pageNumber);
         } else {
             notices = postsService.getAllNotices(pageSize, pageNumber);
         }
@@ -51,17 +50,11 @@ public class PostsController {
     public ResponseEntity<Integer> getNoticesCount( @RequestParam(required = false) String postName ){
         int count;
         if(postName != null && !postName.isEmpty()){
-            count = postsService.countSarchNotices(postName);
+            count = postsService.countSearchNotices(postName);
         } else {
             count = postsService.countAllNotices();
         }
         return ResponseEntity.ok(count);
-    }
-
-    @GetMapping("/manager/adminCode")
-    public ResponseEntity<Integer> getUserId(@RequestParam String token){
-        int adminCode = postsService.getAdminCode(token);
-         return ResponseEntity.ok(adminCode);
     }
 
     @PostMapping("/manager/post/notices")
@@ -91,10 +84,45 @@ public class PostsController {
     }
 
 
-    @GetMapping("/user/post/reviews")
-    public List<Reviews> getAllReviews(){ return postsService.getAllReviews(); }
+    @GetMapping("/manager/post/reviews")
+    public ResponseEntity<List<Reviews>> getAllReviews(
+            @RequestParam int pageSize,
+            @RequestParam int pageNumber,
+            @RequestParam(required = false) String postName) {
+        List<Reviews> reviews;
+        if(postName != null && !postName.isEmpty()) {
+            reviews = postsService.getSearchAllReviews(postName, pageSize, pageNumber);
+        } else {
+            reviews = postsService.getAllReviews(pageSize, pageNumber);
+        }
+        return ResponseEntity.ok(reviews);
+    }
+    @GetMapping("/manager/post/reviews/count")
+    public ResponseEntity<Integer> getReviewsCount( @RequestParam(required = false) String postName ){
+        int count;
+        if(postName != null && !postName.isEmpty()){
+            count = postsService.countSearchNotices(postName);
+        } else {
+            count = postsService.countAllNotices();
+        }
+        return ResponseEntity.ok(count);
+    }
+    @GetMapping("/manager/post/reviews/{postCode}")
+    public ResponseEntity<Reviews> getReview(@PathVariable Integer postCode) {
+        Reviews review = postsService.getReview(postCode);
 
-    @GetMapping("/user/post/inquirys")
-    public List<Inquirys> getallInquirys(){ return postsService.getallInquirys(); }
+        if (review != null) {
+            return ResponseEntity.ok(review);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
+
+
+    @GetMapping("/manager/post/inquirys")
+    public List<Inquirys> getAllInquirys(){ return postsService.getAllInquirys(); }
 
 }

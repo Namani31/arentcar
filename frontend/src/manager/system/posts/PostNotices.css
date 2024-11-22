@@ -86,7 +86,6 @@
 }
 .manager-post-notice-h6{
     font-weight: bold;
-
 }
 
 .manager-post-notice-popup-close{
@@ -121,6 +120,8 @@
 
 .manager-post-notice-popup-read {
     width: 750px;
+    min-height: 280px;
+    
 }
 
 .manager-post-notice-popup-author{

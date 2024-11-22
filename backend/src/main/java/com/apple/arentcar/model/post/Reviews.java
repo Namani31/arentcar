@@ -19,7 +19,7 @@ public class Reviews {
 
     private String postContent;
 
-    private String authorCode;
+    private Integer authorCode;
 
     private String authorType;
 

@@ -20,28 +20,38 @@ public class PostsService {
     JwtUtil jwtUtil;
 
     public List<Notices> getPostsAll() {return postsMapper.getPostsAll();}
-
     public List<Notices> getAllNotices(Integer pageSize, Integer pageNumber) {
         int offset = pageNumber * pageSize;
         return postsMapper.getAllNotices(pageSize, offset);
     }
     public int countAllNotices() { return postsMapper.countAllNotices(); }
     public Notices getNotice(Integer postCode) { return postsMapper.getNotice(postCode); }
-    public List<Notices> getSarchNotices(String keyword, Integer pageSize, Integer pageNumber) {
+    public List<Notices> getSearchNotices(String keyword, Integer pageSize, Integer pageNumber) {
         int offset = pageNumber * pageSize;
-        return postsMapper.getsSarchNotices(keyword, pageSize, offset);
+        return postsMapper.getsSearchNotices(keyword, pageSize, offset);
     }
-    public int countSarchNotices(String keyword) { return postsMapper.countSarchNotices(keyword); }
-    public int getAdminCode(String token) { //어드민 코드문
-        String adminid = jwtUtil.extractUsername(token);
-        int adminCode = postsMapper.adminCode(adminid);
-        return adminCode;
-    }
+    public int countSearchNotices(String keyword) { return postsMapper.countSearchNotices(keyword); }
+
     public void createNotices(Notices notices) { postsMapper.createNotice(notices); }
     public void updateNotice(Notices notices) { postsMapper.updateNotice(notices); }
     public void deleteNotice(Integer postCode) { postsMapper.deleteNotice(postCode); }
 
-    public List<Reviews> getAllReviews() { return postsMapper.getAllReviews(); }
 
-    public List<Inquirys> getallInquirys() { return postsMapper.getAllInquirys(); }
+    public int countAllReviews() { return postsMapper.countAllNotices(); }
+    public List<Reviews> getAllReviews(Integer pageSize, Integer pageNumber) {
+        int offset = pageNumber * pageSize;
+        return postsMapper.getAllReviews(pageSize, offset);
+    }
+    public List<Reviews> getSearchAllReviews(String keyword, Integer pageSize, Integer pageNumber) {
+        int offset = pageNumber * pageSize;
+        return postsMapper.getSearchAllReviews(keyword, pageSize, offset);
+    }
+    public Reviews getReview(Integer postCode) { return postsMapper.getReview(postCode); }
+
+
+
+
+
+
+    public List<Inquirys> getAllInquirys() { return postsMapper.getAllInquirys(); }
 }

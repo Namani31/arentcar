@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { refreshAccessToken, handleLogout } from 'common/Common';
 import 'manager/system/posts/PostNotices.css';
+import { store } from '../../../redux/store';
+
 
 const PostNotices = ({ onClick }) => {
   //공지사항
@@ -80,12 +82,12 @@ const PostNotices = ({ onClick }) => {
   const getByCodeNotices = async (code) => {
     try {
       const token = localStorage.getItem("accessToken");
-      getNotices(token, code);
+      await getNotices(token, code);
     } catch (error) {
       if (error.response && error.response.status === 403) {
         try {
           const newToken = await refreshAccessToken();
-          getNotices(newToken, code);
+          await getNotices(newToken, code);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
           handleLogout();
@@ -117,11 +119,11 @@ const PostNotices = ({ onClick }) => {
   const getTotalCount = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      getCount(token);
+      await getCount(token);
     } catch (error) {
       if (error.response && error.response.status === 403) {
         const newToken = await refreshAccessToken();
-        getCount(newToken);
+        await getCount(newToken);
       } else {
         console.error('There was an error fetching the movies!', error);
       }
@@ -148,32 +150,7 @@ const PostNotices = ({ onClick }) => {
   
   //어드민 code 가져오기
   const handleAdminCode = async () => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      getAdminCode(token);
-    } catch (error) {
-      if (error.response && error.response.status === 403) {
-        const newToken = await refreshAccessToken();
-        getAdminCode(newToken);
-      } else {
-        console.error('There was an error fetching the movies!', error);
-      }
-    }
-  }
-  const getAdminCode = async (token) => {
-    const params = { token: token }
-
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/adminCode`,
-    {
-      params,
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      withCredentials: true,
-    });
-    if(response.data) {
-      setAuthorCode(response.data)
-    }
+    setAuthorCode(store.getState().adminState.adminCode)
   }
 
   //공지사항 생성/수정 기능 제어
@@ -198,7 +175,7 @@ const PostNotices = ({ onClick }) => {
         setIsPopUp(false);
       } else if (e === "수정") {
         if(window.confirm('공지를 수정하시겠습니까?')) {
-          postUpdateNotices(newPost, postCode);
+          postUpdateNotices(newPost, newPost.post_code);
           setIsPopUp(false);
         }
       }
@@ -245,13 +222,13 @@ const PostNotices = ({ onClick }) => {
   const postUpdateNotices = async (newPost,code) => {
     try {
       const token = localStorage.getItem('accessToken');
-      updateNotices(token, newPost, code);
+      await updateNotices(token, newPost, code);
       
     } catch (error) {
       if (error.response && error.response.status === 403) {
         try {
           const newToken = await refreshAccessToken();
-          updateNotices(newToken, newPost, code);
+          await updateNotices(newToken, newPost, code);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
           handleLogout();
@@ -281,11 +258,11 @@ const PostNotices = ({ onClick }) => {
   const postDeleteNotices = async (code) => {
     try {
       const token = localStorage.getItem('accessToken');
-      deleteNotices(token, code)
+      await deleteNotices(token, code)
     } catch (error) {
       if (error.response && error.response.status === 403) {
         const newToken = await refreshAccessToken();
-        deleteNotices(newToken, code)
+        await deleteNotices(newToken, code)
       } else {
         console.error('There was an error fetching the movies!', error);
       }
@@ -335,6 +312,7 @@ const PostNotices = ({ onClick }) => {
     setPopupType(e);
     setPostType("NT");
     setAuthorType("AM");
+    setPostCode();
     setPostTitle("");
     setPostContent("");
     handleAdminCode(); //setAuthorCode()
@@ -424,14 +402,12 @@ const PostNotices = ({ onClick }) => {
                   <td key={index} className='manager-post-notice-table-row-colmn'
                     style={{width:`${column.width}`, textAlign:`${column.align}`}}
                   > 
-                    
                     {column.field === '' ? (<>
                       <button className='post-btn3' onClick={()=>handlePopupClick([ "보기", notice["post_code"] ])}> 보기 </button> 
                       <button className='post-btn2' onClick={()=>handlePopupClick([ "수정", notice["post_code"] ])}> 수정 </button> 
                       <button className='post-btn1' onClick={()=>handleDeleteClick(notice["post_code"])}> 삭제 </button> 
                     </>) : (
                       notice[column.field]
-                      
                     )}
                   </td>
                 )))}
@@ -470,7 +446,7 @@ const PostNotices = ({ onClick }) => {
                 </div>
                 <div className='manager-post-notice-popup-line'>
                   <label className='manager-post-notice-popup-line-label'>작성자</label>
-                  <input className='width50 word-center' type="text" value={authorCode} disabled/>
+                  <input className='width80 word-center' type="text" value={authorName +" "+ authorCode} disabled/>
                 </div>
                 <div className='manager-post-notice-popup-line'>
                   <label className='manager-post-notice-popup-line-label'>작성자 유형</label>
@@ -490,6 +466,7 @@ const PostNotices = ({ onClick }) => {
                     <button className='manager-button manager-post-notice-popup-close' onClick={()=>{setIsPopUp(!isPopUp)}}> 닫기 </button>
                   </div>
                 </div>
+                <hr/>
                 <div className='manager-post-notice-popup-line manager-post-notice-popup-content'>
                   {postContent}
                 </div>
@@ -509,10 +486,8 @@ const PostNotices = ({ onClick }) => {
             disabled={ (pageNumber + 1) >= totalPages }
           >다음 </button>
         </div>
-
-
+        
       </div>
-
 
     </div>
   );
