@@ -1,5 +1,5 @@
 // 전체 지점 예약 통계
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import DatePicker from 'react-datepicker'; // 달력 라이브러리
@@ -7,6 +7,7 @@ import { ko } from 'date-fns/locale'; // 달력을 한글로 바꾸기
 import 'react-datepicker/dist/react-datepicker.css';
 import './AllBranchesReservationChart.css';
 import 'index.css';
+import axios from 'axios';
 
 // 차트 라이브러리의 필요한 요소를 등록
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
@@ -15,8 +16,30 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 const AllBranchesReservationChart = () => {
 
     // 캘린더 시작 날짜와 종료 날짜
-    const [startDate, setStartDate] = useState(null); 
-    const [endDate, setEndDate] = useState(null); 
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [chartData, setChartData] = useState([]);
+    const [chartInstance, setChartInstance] = useState(null); // Chart.js 인스턴스 저장
+
+    useEffect(() => {
+        if (startDate && endDate) { // 날짜가 선택된 경우에만 호출
+            axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/reservation`, {
+                // 포맷팅 안 하면 2024-11-04T15:00:00.000Z 식으로 옴 (T는 날짜와 시간, Z는 UTC)
+                params: {
+                    // yyyy-MM-dd 형식으로 추출 후 /-/g 를 통해 전체 문자열에서 하이픈 제거
+                    startDate: startDate.toISOString().slice(0, 10).replace(/-/g, ''),
+                    endDate: endDate.toISOString().slice(0, 10).replace(/-/g, '')
+                }
+            }).then(response => {
+                console.log("API Response Data:", response.data);
+                setChartData(response.data);
+            }).catch(error => {
+                console.error("Error fetching chart data:", error);
+            });
+        }
+    }, [startDate, endDate]); // startDate, endDate가 변경될 때 호출
+    
+    
 
     // 선택된 필터 상태
     const [filter, setFilter] = useState('daily');
@@ -27,15 +50,17 @@ const AllBranchesReservationChart = () => {
     };
 
     const data = {
-        labels: ['서울', '부산', '대구', '광주', '대전'],
+        labels: chartData.map(branchsName => branchsName.branch_name),  // 지점 이름
         datasets: [
             {
                 label: '예약 건수',
-                data: [50, 30, 20, 40, 10],
+                // reservation_code 가 null, undefined,숫자가 아니면 0
+                data: chartData.map(reservations => Number(reservations.reservation_code) || 0),  // 예약 건수
                 backgroundColor: ['red', 'green', 'blue', 'yellow', 'purple'],
             },
         ],
     };
+    
 
     let filterText;
     if (filter === 'daily') {
@@ -94,7 +119,7 @@ const AllBranchesReservationChart = () => {
                     />
                 </div>
             </div>
-            
+
             <div className="chart-container">
                 <h3>{filterText}</h3>
                 <Bar data={data} />

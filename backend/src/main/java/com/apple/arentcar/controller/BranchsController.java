@@ -1,11 +1,12 @@
 package com.apple.arentcar.controller;
 
+import com.apple.arentcar.dto.ChartDataDTO;
 import com.apple.arentcar.model.Branchs;
+import com.apple.arentcar.model.Menus;
 import com.apple.arentcar.service.BranchsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,8 +16,16 @@ public class BranchsController {
 
     @Autowired
     private BranchsService branchsService;
-    @GetMapping("/manager/branchs")
-    public List<Branchs> getAllBranchs() {
-        return branchsService.getAllBranchs();
+
+    @GetMapping("/manager/branchs/name/{branchName}")
+    public List<Branchs> getBranchsByBranchName(
+            @PathVariable String branchName) {
+        return branchsService.getBranchsByBranchName(branchName);
+    }
+
+    @GetMapping("/manager/branchs/reservation")
+    public ResponseEntity<List<ChartDataDTO>> getBranchsChartData(@RequestParam String startDate, @RequestParam String endDate) {
+        List<ChartDataDTO> chartDataDto = branchsService.getBranchChartData(startDate, endDate);
+        return ResponseEntity.ok(chartDataDto);
     }
 }
