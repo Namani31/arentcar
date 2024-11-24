@@ -39,7 +39,7 @@ const CarInfo = ({ onClick }) => {
   const [carManufacturer, setCarManufacturer] = useState("");
   const [modelYear, setModelYear] = useState("");
   const [carImage, setCarImage] = useState("");
-  const [originalImageName, setOriginalImageName] = useState("");
+  const [carImageName, setCarImageName] = useState("");
 
   const optionsMenuCarTypeCategory = [
     { value: '01', label: '경형/소형' },
@@ -202,7 +202,7 @@ const CarInfo = ({ onClick }) => {
     setCarManufacturer(updateData.car_manufacturer)
     setModelYear(updateData.model_year)
     setCarImage("")
-    setOriginalImageName("")
+    setCarImageName("")
   };
 
   const viewDataInit = () => {
@@ -217,7 +217,7 @@ const CarInfo = ({ onClick }) => {
     setCarManufacturer("01");
     setModelYear("")
     setCarImage("");
-    setOriginalImageName("");
+    setCarImageName("");
   };
 
   const handleSearchClick = async () => {
@@ -288,7 +288,7 @@ const CarInfo = ({ onClick }) => {
 
     const newVehicleImage = {
       car_image: carImage,
-    }
+    };
 
     if (workMode === "수정") {
       try {
@@ -363,7 +363,6 @@ const CarInfo = ({ onClick }) => {
       return;
     }
 
-    const originalFileName = originalImageName;
     // Base64 문자열을 Blob으로 변환
     const byteString = atob(newVehicleImage.car_image.split(',')[1]);
     const mimeString = newVehicleImage.car_image.split(',')[0].split(':')[1].split(';')[0];
@@ -376,7 +375,7 @@ const CarInfo = ({ onClick }) => {
     
     // FormData 객체 생성
     const formData = new FormData();
-    formData.append('file', blob, originalFileName);
+    formData.append('file', blob, carImageName);
 
     await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars/image`,
       formData,
@@ -423,11 +422,11 @@ const CarInfo = ({ onClick }) => {
       };
 
        // 원본 파일 이름을 다른 곳에서 사용하고 싶다면 상태로 저장할 수도 있습니다.
-       setOriginalImageName(fileName);
+       setCarImageName(fileName);
     } else {
        // 파일 선택이 취소된 경우 상태 초기화
        setCarImage(null);
-       setOriginalImageName('');
+       setCarImageName('');
     }
   }
 
@@ -626,7 +625,7 @@ const CarInfo = ({ onClick }) => {
                 <input className='car-info-file-button' name="file" type="file" accept="image/*" onChange={onChangeImageUpload} />
                 {carImage && <img className="width350" src={carImage} alt="Selected Car" />}
                 {/* <img className="width350" src = {carImage} alt={carImage}  /> */}
-                {originalImageName && <p className='word-center'>파일 이름 : {originalImageName}</p>}
+                {carImageName && <p className='word-center'>파일 이름 : {carImageName}</p>}
               </div>
             </div>
           </div>
