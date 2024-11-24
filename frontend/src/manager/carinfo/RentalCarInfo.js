@@ -165,10 +165,10 @@ const RentalCarInfo = ({ onClick }) => {
 
   const viewDataInit = () => {
     setCarCode("");
-    setCarTypeCode("");
+    setCarTypeCode("01");
     setCarNumber("")
     setModelYear("");
-    setBranchCode("");
+    setBranchCode("01");
     setCarStatus("01");
   };
 

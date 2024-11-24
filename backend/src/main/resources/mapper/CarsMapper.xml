@@ -45,7 +45,7 @@
         VALUES
         (#{carTypeCode}, #{carTypeCategory}, #{originType}, #{carTypeName}, #{seatingCapacity},
         #{fuelType}, #{speedLimit}, #{licenseRestriction}, #{carManufacturer}, #{modelYear},
-        'sample_img', NOW(), NOW())
+        'sample-img', NOW(), NOW())
     </insert>
 
     <!-- 차종 삭제 -->
@@ -66,7 +66,7 @@
         license_restriction = #{licenseRestriction},
         car_manufacturer = #{carManufacturer},
         model_year = #{modelYear},
-        car_image_name = #{carImageName},
+        car_image_name = 'sample-update-img',
         updated_at = NOW()
         WHERE car_type_code = #{carTypeCode}
     </update>

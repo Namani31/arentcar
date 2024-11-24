@@ -39,6 +39,7 @@ const CarInfo = ({ onClick }) => {
   const [carManufacturer, setCarManufacturer] = useState("");
   const [modelYear, setModelYear] = useState("");
   const [carImage, setCarImage] = useState("");
+  const [originalImageName, setOriginalImageName] = useState("");
 
   const optionsMenuCarTypeCategory = [
     { value: '01', label: '경형/소형' },
@@ -200,7 +201,8 @@ const CarInfo = ({ onClick }) => {
     setLicenseRestriction(updateData.license_restriction);
     setCarManufacturer(updateData.car_manufacturer)
     setModelYear(updateData.model_year)
-    setCarImage(updateData.car_image)
+    setCarImage("")
+    setOriginalImageName("")
   };
 
   const viewDataInit = () => {
@@ -215,6 +217,7 @@ const CarInfo = ({ onClick }) => {
     setCarManufacturer("01");
     setModelYear("")
     setCarImage("");
+    setOriginalImageName("");
   };
 
   const handleSearchClick = async () => {
@@ -291,12 +294,12 @@ const CarInfo = ({ onClick }) => {
       try {
         setLoading(true);
         const token = localStorage.getItem('accessToken');
-        await updateVehicle(token, newVehicle);
+        await updateVehicle(token, newVehicle, newVehicleImage);
       } catch (error) {
         if (error.response && error.response.status === 403) {
           try {
             const newToken = await refreshAccessToken();
-            await updateVehicle(newToken, newVehicle);
+            await updateVehicle(newToken, newVehicle, newVehicleImage);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
             handleLogout();
@@ -332,27 +335,48 @@ const CarInfo = ({ onClick }) => {
     setIsPopUp(false);
   };
 
-  const updateVehicle = async (token, newVehicle) => {
-    await axios.put(
-      `${process.env.REACT_APP_API_URL}/arentcar/manager/cars/${carTypeCode}`,
-      newVehicle,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
-      }
-    );
-    setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.car_type_code === carTypeCode ? newVehicle : vehicle));
-    alert("자료가 수정되었습니다.");
+  const updateVehicle = async (token, newVehicle, newVehicleImage) => {
+    try {
+      await uploadImage(token, newVehicleImage);
+      await axios.put(
+        `${process.env.REACT_APP_API_URL}/arentcar/manager/cars/${carTypeCode}`,
+        newVehicle,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.car_type_code === carTypeCode ? newVehicle : vehicle));
+      alert("자료가 수정되었습니다.");
+    } catch(error) {
+      console.error("Error updating vehicle:", error);
+      alert("차량 수정 중 오류가 발생했습니다.");
+    }
+
   };
   
   const uploadImage = async (token, newVehicleImage) => {
-    console.log(newVehicleImage);
+    if (!newVehicleImage || !newVehicleImage.car_image) {
+      console.error("No image data available");
+      return;
+    }
+
+    const originalFileName = originalImageName;
+    // Base64 문자열을 Blob으로 변환
+    const byteString = atob(newVehicleImage.car_image.split(',')[1]);
+    const mimeString = newVehicleImage.car_image.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([ab], { type: mimeString });
+    
     // FormData 객체 생성
     const formData = new FormData();
-    // 이미지 파일을 FormData에 추가
-    formData.append('file', newVehicleImage);
+    formData.append('file', blob, originalFileName);
 
     await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars/image`,
       formData,
@@ -366,28 +390,44 @@ const CarInfo = ({ onClick }) => {
   };
 
   const createVehicle = async (token, newVehicle, newVehicleImage) => {
-    uploadImage(token, newVehicleImage);
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars`, 
-      newVehicle,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        withCredentials: true,
-      });
-    newVehicle.car_type_code = response.data.car_type_code;
-    newVehicle.car_type_password = response.data.car_type_password;
-    setVehicles((prevVehicle) => [...prevVehicle, newVehicle]);
-    alert("자료가 등록되었습니다.");
+    try {
+      await uploadImage(token, newVehicleImage);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars`, 
+        newVehicle,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          withCredentials: true,
+        });
+        newVehicle.car_type_code = response.data.car_type_code;
+        newVehicle.car_type_password = response.data.car_type_password;
+        setVehicles((prevVehicle) => [...prevVehicle, newVehicle]);
+        alert("자료가 등록되었습니다.");
+    } catch (error) {
+      console.error("Error creating vehicle:", error);
+      alert("차량 등록 중 오류가 발생했습니다.");
+    }
   };
 
   const onChangeImageUpload = (e) => {
     const {files} = e.target;
-    const uploadFile = files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(uploadFile);
-    reader.onloadend = () => {
-      setCarImage(reader.result);
+    if (files && files.length > 0) { // 파일이 선택되었는지 확인
+      const uploadFile = files[0];
+      const fileName = uploadFile.name; // 원본 파일 이름 가져오기
+
+      const reader = new FileReader();
+      reader.readAsDataURL(uploadFile);
+      reader.onloadend = () => {
+        setCarImage(reader.result);
+      };
+
+       // 원본 파일 이름을 다른 곳에서 사용하고 싶다면 상태로 저장할 수도 있습니다.
+       setOriginalImageName(fileName);
+    } else {
+       // 파일 선택이 취소된 경우 상태 초기화
+       setCarImage(null);
+       setOriginalImageName('');
     }
   }
 
@@ -478,7 +518,7 @@ const CarInfo = ({ onClick }) => {
                   {title.field === '' ? (
                     <>
                       <button className='manager-button manager-button-update' onClick={() => handleUpdateClick(row, "수정")}>수정</button>
-                      <button className='manager-button manager-button-delete' onClick={() => handleDeleteClick(row.vehicle_code)}>삭제</button>
+                      <button className='manager-button manager-button-delete' onClick={() => handleDeleteClick(row.car_type_code)}>삭제</button>
                     </>
                   ) : (
                       row[title.field]
@@ -584,7 +624,9 @@ const CarInfo = ({ onClick }) => {
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">차량이미지</label>
                 <input className='car-info-file-button' name="file" type="file" accept="image/*" onChange={onChangeImageUpload} />
-                <img className="width350" src = {carImage} alt={carImage}  />
+                {carImage && <img className="width350" src={carImage} alt="Selected Car" />}
+                {/* <img className="width350" src = {carImage} alt={carImage}  /> */}
+                {originalImageName && <p className='word-center'>파일 이름 : {originalImageName}</p>}
               </div>
             </div>
           </div>

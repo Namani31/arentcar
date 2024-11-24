@@ -92,12 +92,18 @@ public class CarsController {
 
     // 차종 이미지 업로드
     @PostMapping("/manager/cars/image")
-    public ResponseEntity<String> uploadCarImage(@RequestParam("file") MultipartFile file) throws IOException {
-        String originalFilename = file.getOriginalFilename();
-        String uniqueFilename = UUID.randomUUID().toString() + "-" + originalFilename;
+    public ResponseEntity<String> uploadCarImage(@RequestParam("file") MultipartFile file) {
+        try {
+            String originalFilename = file.getOriginalFilename();
+            String uniqueFilename = UUID.randomUUID().toString() + "-" + originalFilename;
 
-        Path filePath = Paths.get(uploadDirectory, uniqueFilename);
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        return ResponseEntity.ok("success");
+            Path filePath = Paths.get(uploadDirectory, uniqueFilename);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            return ResponseEntity.ok("success");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed!");
+        }
+
     }
 }
