@@ -9,11 +9,13 @@ import './AllBranchesReservationChart.css';
 import 'index.css';
 import axios from 'axios';
 import { endOfMonth, startOfMonth } from 'date-fns';
+import { format } from 'date-fns'; // date-fns 라이브러리에서 format 함수 사용
+
+
 
 // 차트 라이브러리의 필요한 요소를 등록
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-// 일별, 월별의 filter 값을 props로 받음 (daily, monthly)
 const AllBranchesReservationChart = () => {
 
     // 캘린더 시작 날짜와 종료 날짜
@@ -29,6 +31,8 @@ const AllBranchesReservationChart = () => {
     // 일별, 월별 선택용 핸들러
     const handleFilterChange = (event) => {
         setFilter(event.target.value); // 선택된 값을 차트 이름에 반영
+        setStartDate(null); //필터 변경 시 기존 날짜 초기화
+        setEndDate(null);
     };
 
     // 일별 & 월별 클릭 시
@@ -46,11 +50,12 @@ const AllBranchesReservationChart = () => {
                 formattedEndDate = endDate.toISOString().slice(0, 10).replace(/-/g, '');
 
                 // 사용자가 '월별'을 클릭했다면
-            } else if (filter === 'montly') {
+            } else if (filter === 'monthly') {
                 const montlyStart = startOfMonth(startDate); // 시작된 선택일의 해당 월 첫날
-                const monltyEnd = endOfMonth(endOfMonth); // 시작된 종료일의 해당 월 마지막 날
-                formattedStartDate = montlyStart.toISOString().slice(0, 10).replace(/-/g, '');
-                formattedEndDate = monltyEnd.toISOString().slice(0, 10).replace(/-/g, '');
+                const montlyEnd = endOfMonth(endDate); // 시작된 선택일의 해당 월 마지막날
+                formattedStartDate = format(montlyStart, 'yyyyMMdd');
+                formattedEndDate = format(montlyEnd, 'yyyyMMdd');
+                console.log(formattedStartDate, formattedEndDate);
             }
 
             // axios를 통해 json 형식으로 데이터를 가져옴
@@ -68,6 +73,7 @@ const AllBranchesReservationChart = () => {
         }
     }, [startDate, endDate, filter]); // startDate, endDate가 변경될 때 호출
 
+    // 데이터를 차트에 넘기기
     const data = {
         labels: chartData.map(branchsName => branchsName.branch_name),  // 지점 이름
         datasets: [
@@ -112,12 +118,13 @@ const AllBranchesReservationChart = () => {
                     <label className="manager-label">시작일: </label>
                     <DatePicker
                         locale={ko}
-                        dateFormat="yyyy년 MM월 dd일"
-                        dateFormatCalendar="yyyy년 MM월"
+                        dateFormat={filter === 'daily' ? "yyyy년 MM월 dd일" : "yyyy년 MM월"}
+                        dateFormatCalendar={filter === 'daily' ? "yyyy년 MM월" : "yyyy년"}
+                        showMonthYearPicker={filter === 'monthly'}
                         selected={startDate}
                         onChange={(date) => setStartDate(date)}
                         selectsStart
-                        placeholderText="시작 날짜 선택"
+                        placeholderText={filter === 'daily' ? "시작 날짜 선택" : "시작 월 선택"}
                         startDate={startDate}
                         endDate={endDate}
                         maxDate={new Date()} // 시작일, 종료일이 오늘 날짜 이상으로 넘어가지 않음
@@ -130,11 +137,12 @@ const AllBranchesReservationChart = () => {
                     <label className="manager-label">종료일: </label>
                     <DatePicker
                         locale={ko}
-                        dateFormat="yyyy년 MM월 dd일"
-                        dateFormatCalendar="yyyy년 MM월"
+                        dateFormat={filter === 'daily' ? "yyyy년 MM월 dd일" : "yyyy년 MM월"}
+                        dateFormatCalendar={filter === 'daily' ? "yyyy년 MM월" : "yyyy년"}
+                        showMonthYearPicker={filter === 'monthly'}
                         selected={endDate}
                         onChange={(date) => setEndDate(date)}
-                        placeholderText="종료 날짜 선택"
+                        placeholderText={filter === 'daily' ? "종료 날짜 선택" : "종료 월 선택"}
                         selectsEnd
                         startDate={startDate}
                         endDate={endDate}
