@@ -112,6 +112,19 @@
         where p.post_code = #{postCode};
     </select>
 
+    <insert id="createReviewPosts" parameterType="com.apple.arentcar.model.post.Reviews">
+        <selectKey resultType="int" keyProperty="postCode" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO posts (post_type, post_title, post_content, author_code, author_type)
+        values('RV', #{postTitle}, #{postContent}, #{authorCode},'US');
+    </insert>
+    <insert id="createReview" parameterType="com.apple.arentcar.model.post.Reviews">
+        INSERT INTO posts (post_code, review_rating)
+        values(#{postCode}, #{reviewRating});
+    </insert>
+
+
     <select id="getAllInquirys" resultType="com.apple.arentcar.model.post.Inquirys">
         SELECT p.*, iq.inquiry_status from posts p
         join inquirys iq on iq.post_code = p.post_code;

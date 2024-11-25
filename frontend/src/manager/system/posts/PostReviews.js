@@ -146,9 +146,7 @@ const PostReviews = ({ onClick }) => {
     <div className='manager-post-reviews-wrap'>
       <div className='manager-post-reviews-header-wrap'>
         <div className='manager-post-reviews-header-title'>
-          <hr/>
-            <h5 className='manager-post-reviews-header-h5'> 고객후기 게시판 </h5>
-          <hr/>
+          <h5 className='manager-post-reviews-header-h5'> 고객후기 게시판 </h5>
         </div>
       </div>
       <div className='manager-post-reviews-table-wrap'>

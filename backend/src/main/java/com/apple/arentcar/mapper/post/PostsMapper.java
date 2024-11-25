@@ -23,8 +23,8 @@ public interface PostsMapper {
     List<Reviews> getAllReviews(Integer pageSize, Integer pageNumber);
     List<Reviews> getSearchAllReviews(String keyword, Integer pageSize, Integer pageNumber);
     Reviews getReview(Integer postCode);
-
-
+    void createReviewPosts(Reviews reviews);
+    void createReview(Reviews reviews);
 
     List<Inquirys> getAllInquirys();
 }

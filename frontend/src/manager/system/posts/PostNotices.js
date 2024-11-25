@@ -309,14 +309,14 @@ const PostNotices = ({ onClick }) => {
   }
   //생성 팝업창
   const handleCreateClick = (e) => {
-    setIsPopUp(true);
+    handleAdminCode(); //setAuthorCode() / +getName
     setPopupType(e);
     setPostType("NT");
     setAuthorType("AM");
     setPostCode();
     setPostTitle("");
     setPostContent("");
-    handleAdminCode(); //setAuthorCode()
+    setIsPopUp(true);
   }
   //수정 팝업창
   const handleUpdateClick = (e,i) => {
@@ -360,9 +360,7 @@ const PostNotices = ({ onClick }) => {
     <div className='manager-post-notice-wrap'>
       <div className='manager-post-notice-header-wrap'>
         <div className='manager-post-notice-header-title'>
-          <hr/>
-            <h5 className='manager-post-notice-header-h5'> 공지사항 게시판 </h5>
-          <hr/>
+          <h5 className='manager-post-notice-header-h5'> 공지사항 게시판 </h5>
         </div>
       </div>
 

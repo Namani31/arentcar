@@ -6,6 +6,8 @@ const ReviewPopup = ( { colse } ) => {
   const [user, setUser] = useState("123");
   const [score, setScore] = useState(1);
 
+  
+
   useEffect(()=>{
     setUser(store.userState);
   },[])
