@@ -95,9 +95,18 @@ public class CarsController {
     public ResponseEntity<String> uploadCarImage(@RequestParam("file") MultipartFile file) {
         try {
             String originalFilename = file.getOriginalFilename();
-            String uniqueFilename = UUID.randomUUID().toString() + "-" + originalFilename;
+            // 파일에 고유한 이름 부여하기
+//            String uniqueFilename = UUID.randomUUID().toString() + "-" + originalFilename;
 
-            Path filePath = Paths.get(uploadDirectory, uniqueFilename);
+//            Path filePath = Paths.get(uploadDirectory, uniqueFilename);
+            Path filePath = Paths.get(uploadDirectory, originalFilename);
+
+            // 파일 이름 중복 확인
+//            if (Files.exists(filePath)) {
+//                return ResponseEntity.status(HttpStatus.CONFLICT).body("File with the same name already exists!");
+//            }
+            
+            // 덮어쓰기를 허용하므로 중복 확인은 필요하지 않음
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             return ResponseEntity.ok("success");
         } catch (IOException e) {
