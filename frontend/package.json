@@ -8,10 +8,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.7",
-<<<<<<< HEAD
-=======
     "core-js": "^3.39.0",
->>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",

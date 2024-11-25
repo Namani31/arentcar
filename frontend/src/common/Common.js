@@ -52,8 +52,6 @@ export const formatTimestamp = (timestamp) => {
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 };
 
-<<<<<<< HEAD
-=======
 // 휴대폰번호 형식 변환 함수
 export const formatPhone = (date) => {
   if (!date) {
@@ -73,7 +71,6 @@ export const formatPhone = (date) => {
   return "";  
 };
 
->>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
 export const errorChk = (error) => {
   if (!error) {
     return ""; 

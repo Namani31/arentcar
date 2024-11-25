@@ -34,12 +34,7 @@ function App() {
         />
 
         {/* 관리자 페이지 */}
-<<<<<<< HEAD
-        <Route
-          path="/admin/*"
-=======
         <Route path="/admin/*" 
->>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
           element={
             <RequireAuth>
               <ManagerMenu />
@@ -48,23 +43,9 @@ function App() {
         />
 
         {/* 사용자 페이지 */}
-<<<<<<< HEAD
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? (
-              <Navigate to="/" />
-            ) : (
-              <UserMenu />
-            )
-          }
-        />
-
-=======
         <Route path="/*" element={<UserMenu />} />
 
         {/* 오류발생시   */}
->>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>

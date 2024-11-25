@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-import React from 'react';
-import MainSlider from 'user/content/MainSlider';
-import 'user/content/ContentHome.css';
-
-const ContentHome = () => {
-=======
 import React, { useEffect, useState } from 'react';
 import MainSlider from 'user/content/MainSlider';
 import 'user/content/ContentHome.css';
@@ -44,18 +37,11 @@ const ContentHome = () => {
     };
   }, []);
 
->>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
   return (
     <div className='content-home-wrap'>
       <MainSlider />
     </div>
   );
-<<<<<<< HEAD
-}
-
-export default ContentHome;
-=======
 };
 
 export default ContentHome;
->>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
