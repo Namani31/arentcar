@@ -11,7 +11,7 @@ const RentalCarInfo = ({ onClick }) => {
   const [workMode, setWorkMode] = useState("");
   const [searchName, setSearchName] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
-  const pageSize = 10;
+  const pageSize = 15;
   const [totalCount, setTotalCount] = useState(0);
 
   const [columnDefs] = useState([
@@ -483,6 +483,13 @@ const RentalCarInfo = ({ onClick }) => {
           onClick={() => handlePageChange(pageNumber + 1)} 
           disabled={pageNumber === totalPages}
         >다음</button>
+      </div>
+
+      <div className="flex-align-center">
+        <div>A</div>
+        <div>B</div>
+        <div>C</div>
+        <div>D</div>
       </div>
 
       {loading && (<Loading />)}
