@@ -339,7 +339,6 @@ const PostNotices = ({ onClick }) => {
       postDeleteNotices(e)
     }
   }
-  //텍스트박스 크기조절
   let totalPages = Math.ceil(totalNotices / pageSize);
   if (totalPages < 1) { totalPages = 1; }
   if (totalNotices === 0) { totalPages = 0; }
@@ -349,7 +348,7 @@ const PostNotices = ({ onClick }) => {
       onClick();
     }
   };
-
+  //텍스트박스 크기조절
   const textarea = useRef();
   const handleResizeHeight = (e) => {
     setPostContent(e.target.value);
