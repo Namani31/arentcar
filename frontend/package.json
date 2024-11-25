@@ -8,6 +8,10 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.7",
+<<<<<<< HEAD
+=======
+    "core-js": "^3.39.0",
+>>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
@@ -16,6 +20,7 @@
     "react-router-dom": "^6.28.0",
     "react-scripts": "5.0.1",
     "redux": "^5.0.1",
+    "regenerator-runtime": "^0.14.1",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },
@@ -42,5 +47,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:8080"
 }

@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAdminState } from '../../redux/AdminState';
 import { refreshAccessToken, handleLogout } from 'common/Common';
 import 'manager/system/ManagerMenu.css';
 import RegisterMenu from 'manager/system/RegisterMenu';
+<<<<<<< HEAD
 import RentalCarInfo from 'manager/carinfo/RentalCarInfo';
 import CarInfo from 'manager/carinfo/CarInfo';
+=======
+import RegisterAdmin from 'manager/system/RegisterAdmin';
+import ManagerUser from 'manager/system/ManagerUser';
+import ConnectionStatus from 'manager/system/ConnectionStatus';
+>>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -18,6 +25,10 @@ const ManagerMenu = () => {
   const isAdminRole = useSelector((state) => state.adminState.adminRole);
   const isAdminName = useSelector((state) => state.adminState.adminName);
   const dispatch = useDispatch();
+<<<<<<< HEAD
+=======
+  const navigate = useNavigate();
+>>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
 
   const handleCloseClick = () => {
     setSelectedComponent("");
@@ -25,8 +36,14 @@ const ManagerMenu = () => {
 
   const componentMap = {
     RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
+<<<<<<< HEAD
     managerRentalCar: <RentalCarInfo onClick={handleCloseClick} />,
     managerCar: <CarInfo onClick={handleCloseClick} />,
+=======
+    RegisterAdmin: <RegisterAdmin onClick={handleCloseClick} />,
+    ManagerUser: <ManagerUser onClick={handleCloseClick} />,
+    ConnectionStatus: <ConnectionStatus onClick={handleCloseClick} />,
+>>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
   };
 
   useEffect(() => {
@@ -105,6 +122,13 @@ const ManagerMenu = () => {
     handleLogout()
   }
 
+<<<<<<< HEAD
+=======
+  const handleHomePageClick = () => {
+    navigate('/');
+  }
+
+>>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
   return (
     <div className='manager-menu-wrap'>
       <div className='manager-menu-header-wrap'>
@@ -153,9 +177,18 @@ const ManagerMenu = () => {
       </div>
       <div className='manager-menu-content-wrap'>
         <div className='manager-menu-content-left'>
+<<<<<<< HEAD
           <div>
             홈페이지
           </div>
+=======
+          <div className='manager-menu-content-homepage' onClick={handleHomePageClick}>
+            홈페이지
+          </div>
+          <div>
+            <ConnectionStatus />
+          </div>
+>>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
         </div>
         <div className='manager-menu-content-right'>
           <div className='manager-menu-content-right-top'>

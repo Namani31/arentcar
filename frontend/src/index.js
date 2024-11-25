@@ -11,13 +11,21 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
+<<<<<<< HEAD
   <React.StrictMode>
+=======
+  // <React.StrictMode>
+>>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
     <Provider store={store}> 
       <BrowserRouter>
         <App />
       </BrowserRouter>
     </Provider>
+<<<<<<< HEAD
   </React.StrictMode>
+=======
+  // </React.StrictMode>
+>>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
 );
 
 // 성능 측정을 위한 함수 (옵션)

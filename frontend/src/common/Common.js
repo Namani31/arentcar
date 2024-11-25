@@ -52,6 +52,28 @@ export const formatTimestamp = (timestamp) => {
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 };
 
+<<<<<<< HEAD
+=======
+// 휴대폰번호 형식 변환 함수
+export const formatPhone = (date) => {
+  if (!date) {
+    return ""; 
+  }
+
+  // date가 숫자 형식일 때 (예: 01011112222)
+  const dateStr = date.toString(); 
+
+  if (dateStr.length === 11) {
+    const phoneNumber1 = dateStr.slice(0, 3);    
+    const phoneNumber2 = dateStr.slice(3, 7);  
+    const phoneNumber3 = dateStr.slice(7, 11);    
+
+    return `${phoneNumber1}-${phoneNumber2}-${phoneNumber3}`;  
+  }
+  return "";  
+};
+
+>>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
 export const errorChk = (error) => {
   if (!error) {
     return ""; 

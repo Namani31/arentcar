@@ -105,9 +105,15 @@ public class AdminsController {
 
     @PostMapping("/manager/admins/login")
     public ResponseEntity<?> getAdminLogin(@RequestBody AdminsLoginDTO requestDTO) {
+<<<<<<< HEAD
         Admins admins = adminsService.getAdminLogin(requestDTO);
 
 //        System.out.println("login admins: " + admins.getAdminId());
+=======
+//        System.out.println("login admins: " + requestDTO.getAdminId());
+        Admins admins = adminsService.getAdminLogin(requestDTO);
+
+>>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
         if (admins == null) {
             return ResponseEntity.notFound().build();
         }

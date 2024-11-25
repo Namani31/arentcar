@@ -42,4 +42,28 @@
 .manager-menu-login-img {
   width: 26px;
   height: 28px;
+<<<<<<< HEAD
 }
+=======
+  cursor: pointer;
+}
+
+.header-menu-top-login> span{
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.manager-menu-login-btn::after { 
+  display: inline-block;
+  position: absolute;
+  content: '';
+  width: 3px;
+  height: 3px;
+  bottom: 38px;
+  background: black;
+  border-radius: 50%;
+  margin-left: 4px;
+} 
+>>>>>>> 951208bf89423d692882ff5d76df2ef9039ac76e
