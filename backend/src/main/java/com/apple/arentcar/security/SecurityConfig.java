@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/arentcar/user/**").permitAll()
 //                        .requestMatchers("/arentcar/manager/**").permitAll()
                         .requestMatchers("/arentcar/manager/admins/login", "/arentcar/manager/admins/refresh", "/arentcar/manager/menus").permitAll()
+                        .requestMatchers("/ws/visitor/**").permitAll()
                         .requestMatchers("/arentcar/manager/**").authenticated()
                         .anyRequest().authenticated()  // 나머지 요청은 인증 필요
                 )
