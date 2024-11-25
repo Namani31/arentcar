@@ -7,17 +7,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RentalCarsDTO {
+public class CarTypesDTO {
 
-    private Integer carCode;
-    private String carTypeName;
-    private String carNumber;
-    private String carStatus;
-    private String branchName;
+    private Integer carTypeCode;
     private String carTypeCategory;
     private String originType;
+    private String carTypeName;
     private String seatingCapacity;
     private String fuelType;
+    private String speedLimit;
+    private String licenseRestriction;
     private String carManufacturer;
     private String modelYear;
 

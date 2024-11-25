@@ -1,5 +1,6 @@
 package com.apple.arentcar.mapper;
 
+import com.apple.arentcar.dto.CarTypesDTO;
 import com.apple.arentcar.model.CarTypes;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,9 +15,9 @@ public interface CarsMapper {
     CarTypes getCarsById(Integer carTypeCode);
 
     // 차량 조회 및 페이지네이션
-    List<CarTypes> getCarsWithPaging(@Param("pageSize") int pageSize, @Param("offset") int offset);
+    List<CarTypesDTO> getCarsWithPaging(@Param("pageSize") int pageSize, @Param("offset") int offset);
     // 차량 조회 및 페이지네이션(검색 기능 포함)
-    List<CarTypes> getCarsByNameWithPaging(@Param("carTypeName") String carTypeName,
+    List<CarTypesDTO> getCarsByNameWithPaging(@Param("carTypeName") String carTypeName,
                                            @Param("pageSize") int pageSize,
                                            @Param("offset") int offset);
     // 전체 차종 수 조회

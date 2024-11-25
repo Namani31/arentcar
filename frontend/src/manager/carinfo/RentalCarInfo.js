@@ -15,17 +15,17 @@ const RentalCarInfo = ({ onClick }) => {
   const [totalCount, setTotalCount] = useState(0);
 
   const [columnDefs] = useState([
-    { headerName: '코드', field: 'car_code', width: 70, align: 'center' },
-    { headerName: '차종코드', field: 'car_type_code', width: 145, align: 'center' },
-    { headerName: '차량번호', field: 'car_number', width: 145, align: 'center' },
-    { headerName: '차량상태', field: 'car_status', width: 70, align: 'center' },
-    { headerName: '지점코드', field: 'branch_code', width: 70, align: 'center' },
-    { headerName: '차종구분', field: 'car_type_category', width: 70, align: 'center' },
-    { headerName: '국산/수입', field: 'origin_type', width: 70, align: 'center' },
-    { headerName: '인승', field: 'seating_capacity', width: 70, align: 'center' },
-    { headerName: '연료', field: 'fuel_type', width: 70, align: 'center' },
-    { headerName: '제조사', field: 'car_manufacturer', width: 70, align: 'center' },
-    { headerName: '년식', field: 'model_year', width: 70, align: 'center' },
+    { headerName: '코드', field: 'car_code', width: 75, align: 'center' },
+    { headerName: '차종명', field: 'car_type_name', width: 150, align: 'center' },
+    { headerName: '차량번호', field: 'car_number', width: 150, align: 'center' },
+    { headerName: '차량상태', field: 'car_status', width: 75, align: 'center' },
+    { headerName: '지점명', field: 'branch_name', width: 75, align: 'center' },
+    { headerName: '차종구분', field: 'car_type_category', width: 75, align: 'center' },
+    { headerName: '국산/수입', field: 'origin_type', width: 75, align: 'center' },
+    { headerName: '인승', field: 'seating_capacity', width: 75, align: 'center' },
+    { headerName: '연료', field: 'fuel_type', width: 75, align: 'center' },
+    { headerName: '제조사', field: 'car_manufacturer', width: 75, align: 'center' },
+    { headerName: '년식', field: 'model_year', width: 75, align: 'center' },
     { headerName: '작업', field: '', width: 200, align: 'center' },
   ]);
 
@@ -105,6 +105,7 @@ const RentalCarInfo = ({ onClick }) => {
       });
 
     if (response.data) {
+      // console.log(response.data);
       setVehicles(response.data);
     }
   };
