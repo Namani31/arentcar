@@ -9,7 +9,8 @@ import './AllBranchesReservationChart.css';
 import 'index.css';
 import axios from 'axios';
 import { endOfMonth, startOfMonth } from 'date-fns';
-import { format } from 'date-fns'; // date-fns 라이브러리에서 format 함수 사용
+import { subDays } from 'date-fns';
+import { format } from 'date-fns';
 
 
 
@@ -19,8 +20,8 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 const AllBranchesReservationChart = () => {
 
     // 캘린더 시작 날짜와 종료 날짜
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
+    const [startDate, setStartDate] = useState(subDays(new Date(), 7)); // 오늘 기준 일주일 전
+    const [endDate, setEndDate] = useState(new Date()); // 오늘 날짜
     const [chartData, setChartData] = useState([]);
     // 선택된 일별 & 월별 필터 상태
     const [filter, setFilter] = useState('daily');
@@ -109,8 +110,8 @@ const AllBranchesReservationChart = () => {
             {/* 일별, 월별 필터 */}
             <div className="daily-and-monthly-filter-row">
                 <select className="manager-row-column h6" value={filter} onChange={handleFilterChange}>
-                    <option value="daily">일별</option>
-                    <option value="monthly">월별</option>
+                    <option className="option-dropdown" value="daily">일별</option>
+                    <option className="option-dropdown" value="monthly">월별</option>
                 </select>
 
                 {/* 시작 날짜 */}
