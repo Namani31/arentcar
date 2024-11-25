@@ -337,12 +337,32 @@ const CarInfo = ({ onClick }) => {
 
   const updateVehicle = async (token, newVehicle, newVehicleImage) => {
     try {
-      await uploadImage(token, newVehicleImage);
+      if (!newVehicleImage || !newVehicleImage.car_image) {
+        console.error("No image data available");
+        return;
+      }
+  
+      // Base64 문자열을 Blob으로 변환
+      const byteString = atob(newVehicleImage.car_image.split(',')[1]);
+      const mimeString = newVehicleImage.car_image.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([ab], { type: mimeString });
+      
+      // FormData 객체 생성
+      const formData = new FormData();
+      formData.append('file', blob, carImageName);
+      formData.append('carData', JSON.stringify(newVehicle));
+
       await axios.put(
         `${process.env.REACT_APP_API_URL}/arentcar/manager/cars/${carTypeCode}`,
-        newVehicle,
+        formData,
         {
           headers: {
+            'Content-type': 'multipart/form-data', // 명시적으로 설정하지 않아도 axios가 객체를 전송할 때 자동으로 적절한 타입을 설정해줌
             Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
@@ -356,52 +376,43 @@ const CarInfo = ({ onClick }) => {
     }
 
   };
-  
-  const uploadImage = async (token, newVehicleImage) => {
-    if (!newVehicleImage || !newVehicleImage.car_image) {
-      console.error("No image data available");
-      return;
-    }
-
-    // Base64 문자열을 Blob으로 변환
-    const byteString = atob(newVehicleImage.car_image.split(',')[1]);
-    const mimeString = newVehicleImage.car_image.split(',')[0].split(':')[1].split(';')[0];
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    const blob = new Blob([ab], { type: mimeString });
-    
-    // FormData 객체 생성
-    const formData = new FormData();
-    formData.append('file', blob, carImageName);
-
-    await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars/image`,
-      formData,
-      {
-        headers: {
-          'Content-type': 'multipart/form-data', // 명시적으로 설정하지 않아도 axios가 객체를 전송할 때 자동으로 적절한 타입을 설정해줌
-          Authorization: `Bearer ${token}`
-        },
-        withCredentials: true,
-      });
-  };
 
   const createVehicle = async (token, newVehicle, newVehicleImage) => {
     try {
-      await uploadImage(token, newVehicleImage);
+      if (!newVehicleImage || !newVehicleImage.car_image) {
+        console.error("No image data available");
+        return;
+      }
+  
+      // Base64 문자열을 Blob으로 변환
+      const byteString = atob(newVehicleImage.car_image.split(',')[1]);
+      const mimeString = newVehicleImage.car_image.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([ab], { type: mimeString });
+      
+      // FormData 객체 생성
+      const formData = new FormData();
+      formData.append('file', blob, carImageName);
+      formData.append('carData', JSON.stringify(newVehicle));
+
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars`, 
-        newVehicle,
+        formData,
         {
           headers: {
+            'Content-type': 'multipart/form-data', // 명시적으로 설정하지 않아도 axios가 객체를 전송할 때 자동으로 적절한 타입을 설정해줌
             Authorization: `Bearer ${token}`
           },
           withCredentials: true,
         });
-        newVehicle.car_type_code = response.data.car_type_code;
-        newVehicle.car_type_password = response.data.car_type_password;
-        setVehicles((prevVehicle) => [...prevVehicle, newVehicle]);
+
+        const savedVehicle = response.data;
+        // newVehicle.car_type_code = response.data.car_type_code;
+        // newVehicle.car_type_password = response.data.car_type_password;
+        setVehicles((prevVehicle) => [...prevVehicle, savedVehicle]);
         alert("자료가 등록되었습니다.");
     } catch (error) {
       console.error("Error creating vehicle:", error);
