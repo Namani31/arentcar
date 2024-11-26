@@ -87,7 +87,19 @@ const PostReviews = ({ onClick }) => {
 
   }
 
+  const postDeleteReviews = async (code) => {
+    try {
+      await deleteReviews(code);
+    } catch (error) {
+      console.error('There was an error fetching the movies!', error);
+    }
+  }
+  const deleteReviews = async (code) => {
+    const response = await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/reviews/${code}`,
 
+    )
+    pageReviews();
+  }
 
   useEffect(()=>{
     pageReviews();
@@ -101,6 +113,11 @@ const PostReviews = ({ onClick }) => {
   }
 
 
+  const handleDeleteClick = (e) => {
+    if (window.confirm('후기를 정말로 삭제하시겠습니까?')) {
+      postDeleteReviews(e)
+    }
+  }
 
 
   //팝업창
@@ -188,7 +205,7 @@ const PostReviews = ({ onClick }) => {
                         <>
                           <button className='manager-button post-btn3' onClick={()=> handlePopupClick([ "보기", review["post_code"] ])}> 보기 </button>
                           <button className='manager-button post-btn2' > 수정 </button> 
-                          <button className='manager-button post-btn1' > 삭제 </button> 
+                          <button className='manager-button post-btn1' onClick={()=> handleDeleteClick(review["post_code"]) }> 삭제 </button> 
                         </>
                       ) : (
                         review[column.field]

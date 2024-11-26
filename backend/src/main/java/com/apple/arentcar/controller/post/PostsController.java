@@ -117,8 +117,17 @@ public class PostsController {
             return ResponseEntity.notFound().build();
         }
     }
+    @PostMapping("/manager/post/reviews")
+    public ResponseEntity<Reviews> createReview(@RequestBody Reviews reviews) {
+        postsService.createReview(reviews);
 
-
+        return ResponseEntity.ok(reviews);
+    }
+    @DeleteMapping("/manager/post/reviews/{postCode}")
+    public ResponseEntity<Reviews> deleteReview(@PathVariable Integer postCode) {
+        postsService.deleteReview(postCode);
+        return ResponseEntity.noContent().build();
+    }
 
 
 

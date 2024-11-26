@@ -1,16 +1,45 @@
 import { useEffect, useRef, useState } from "react";
 import "manager/system/posts/ReviewPopup.css";
 import { store } from '../../../redux/store';
+import axios from "axios";
 
 const ReviewPopup = ( { colse } ) => {
   const [user, setUser] = useState("123");
-  const [score, setScore] = useState(1);
+  const [score, setScore] = useState(0);
 
-  
+  // 상세내용
+  const [postCode,setPostCode] = useState();
+  const [postType,setPostType] = useState();
+  const [postTitle,setPostTitle] = useState("");
+  const [postContent,setPostContent] = useState("");
+  const [authorCode,setAuthorCode] = useState();
+  const [authorType,setAuthorType] = useState();
+  const [authorName,setAuthorName] = useState();
 
+  const postCreateReview = async (newPost) => {
+    try {
+      await createReview(newPost);
+    } catch (error) {
+      console.error('There was an error fetching the menus pageing!', error);
+    }
+  } 
+  const createReview = async (newPost) => {
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/reviews`,
+      newPost,
+    );
+  }
+
+ 
   useEffect(()=>{
-    setUser(store.userState);
+    pageSeting();
   },[])
+
+  const pageSeting = () => {
+    setUser(store.getState().userState);
+    setAuthorCode(store.getState().userState.userCode);
+    setAuthorName(store.getState().userState.userName);
+    setPostTitle(store.getState().userState.userName? store.getState().userState.userName:""+"님 후기");
+  }
 
   const StarSeting = () => {
     const star = [];
@@ -30,15 +59,38 @@ const ReviewPopup = ( { colse } ) => {
     </>)
   }
 
+  const handleCreate = () => {
+
+    if(postContent==="") {
+      alert("후기를 적성해주세요.")
+      return ;
+    }
+
+    const newPost = {
+      post_code: postCode,
+      post_type: postType,
+      post_title: postTitle,
+      post_content: postContent,
+      author_code: authorCode ? authorCode : 55,
+      author_type: authorType,
+      author: null,
+      created_at: null,
+      updated_at: null,
+      review_rating: score,
+    }
+
+    postCreateReview(newPost);
+    alert("후기가 적성되었습니다.")
+  }
 
   //텍스트박스 크기조절
   const textarea = useRef();
   const handleResizeHeight = (e) => {
+    setPostContent(e.target.value);
     textarea.current.style.height = "auto";
     textarea.current.style.height = textarea.current.scrollHeight + "px";
   }
   const handleColse = () => {
-    console.log(colse);
     if(colse){
       colse();
     }
@@ -47,7 +99,7 @@ const ReviewPopup = ( { colse } ) => {
     <div className="user-review-popup">
       <div className="user-review-popup-wrap">
         <div className="user-review-popup-line">
-          <div className="user-review-popup-title"> <h6> {user}님 후기</h6> </div>
+          <div className="user-review-popup-title"> <h6> {authorName}님 후기</h6> </div>
         </div>
         <div className="user-review-popup-line">
           <div className="user-review-popup-score">
@@ -60,11 +112,11 @@ const ReviewPopup = ( { colse } ) => {
           rows={5} ref={textarea} onChange={(e)=>{handleResizeHeight(e)}}/>
         </div>
         <div className="user-review-popup-line">
-          <button className="manager-button">작성</button> 
+          <button className="manager-button" onClick={()=>handleCreate()}>작성</button> 
+          <button className="manager-button" onClick={()=>handleColse()}>닫기</button>
         </div>
-        
+
       </div>
-      <button onClick={()=>handleColse()}>닫기</button>
     </div>
   )
 }

@@ -120,9 +120,16 @@
         values('RV', #{postTitle}, #{postContent}, #{authorCode},'US');
     </insert>
     <insert id="createReview" parameterType="com.apple.arentcar.model.post.Reviews">
-        INSERT INTO posts (post_code, review_rating)
+        INSERT INTO reviews (post_code, review_rating)
         values(#{postCode}, #{reviewRating});
     </insert>
+
+    <delete id="deleteReview">
+        DELETE FROM reviews where post_code = #{postCode};
+    </delete>
+    <delete id="deletePostsRV">
+        DELETE FROM posts where post_code = #{postCode};
+    </delete>
 
 
     <select id="getAllInquirys" resultType="com.apple.arentcar.model.post.Inquirys">

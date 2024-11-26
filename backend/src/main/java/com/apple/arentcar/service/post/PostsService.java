@@ -47,8 +47,16 @@ public class PostsService {
         return postsMapper.getSearchAllReviews(keyword, pageSize, offset);
     }
     public Reviews getReview(Integer postCode) { return postsMapper.getReview(postCode); }
-
-
+    public void createReview(Reviews reviews) {
+        postsMapper.createReviewPosts(reviews);
+        System.out.println(reviews.getPostCode());
+        postsMapper.createReview(reviews);
+    }
+    public void deleteReview(Integer postCode) {
+        System.out.println(postCode);
+        postsMapper.deleteReview(postCode);
+        postsMapper.deletePostsRV(postCode);
+    }
 
 
 
