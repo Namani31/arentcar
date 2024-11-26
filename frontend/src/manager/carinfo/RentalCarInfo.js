@@ -13,6 +13,7 @@ const RentalCarInfo = ({ onClick }) => {
   const [pageNumber, setPageNumber] = useState(1);
   const pageSize = 15;
   const [totalCount, setTotalCount] = useState(0);
+  // const [availableRentalCarsCount, setAvailableRentalCarsCount] = useState(0);
 
   const [columnDefs] = useState([
     { headerName: '코드', field: 'car_code', width: 75, align: 'center' },
@@ -148,9 +149,44 @@ const RentalCarInfo = ({ onClick }) => {
     }
   };
 
+  // const getRentalCarsCount = async (carStatus) => {
+  //   try {
+  //     const token = localStorage.getItem('accessToken');
+  //     await getAvailabelRentalCarsCount(token, carStatus);
+  //   } catch (error) {
+  //     if (error.response && error.response.status === 403) {
+  //       try {
+  //         const newToken = await refreshAccessToken();
+  //         await getAvailabelRentalCarsCount(newToken, carStatus);
+  //       } catch (error) {
+  //         alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+  //         handleLogout();
+  //       }
+  //     } else {
+  //       console.error('There was an error fetching the vehicles pageing!', error);
+  //     }
+  //   }
+  // };
+
+  // const getAvailabelRentalCarsCount = async (token, carStatus) => {
+  //   const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/count/${carStatus}`, 
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`
+  //       },
+  //       withCredentials: true,
+  //     });
+
+  //   if (response.data) {
+  //     // console.log(response.data);
+  //     setAvailableRentalCarsCount(response.data);
+  //   }
+  // };
+
   useEffect(() => {
     pageingVehicles();
     getTotalCount();
+    // getRentalCarsCount();
   }, [pageNumber]);
 
   const handleUpdateClick = (updateData, workMode) => {
@@ -174,8 +210,9 @@ const RentalCarInfo = ({ onClick }) => {
   };
 
   const handleSearchClick = async () => {
-   pageingVehicles();
-   getTotalCount();
+    pageingVehicles();
+    getTotalCount();
+    setPageNumber(1);
   };
 
   const handleDetailSearchClick = async () => {
@@ -485,12 +522,12 @@ const RentalCarInfo = ({ onClick }) => {
         >다음</button>
       </div>
 
-      <div className="flex-align-center">
-        <div>A</div>
-        <div>B</div>
-        <div>C</div>
-        <div>D</div>
-      </div>
+      {/* <div className="flex-align-center">
+        <div>{availableRentalCarsCount}</div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div> */}
 
       {loading && (<Loading />)}
       </div>
