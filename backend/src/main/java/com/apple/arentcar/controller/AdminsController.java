@@ -46,7 +46,7 @@ public class AdminsController {
     public ResponseEntity<Admins> createAdmins(@RequestBody Admins admins) {
         Admins savedAdmins = adminsService.createAdmins(admins);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmins);
-    }
+    }       
 
     @PutMapping("/manager/admins/{adminCode}")
     public ResponseEntity<Void> updateAdminsById(

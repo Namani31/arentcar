@@ -50,7 +50,7 @@ public class MenusController {
     public ResponseEntity<Void> updateMenusById(
             @PathVariable Integer menuCode,
             @RequestBody Menus menus) {
-             menus.setMenuCode(menuCode);
+        menus.setMenuCode(menuCode);
 
         menusService.updateMenusById(menus);
         return ResponseEntity.noContent().build();

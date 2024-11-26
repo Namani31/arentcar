@@ -42,7 +42,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // 회원가입 및 토큰 발행 요청인지 확인
         String requestURI = httpRequest.getRequestURI();
         boolean isPublicRequest;
+<<<<<<< HEAD
         if (authorizationHeader == null || "Bearer null".equals(authorizationHeader) || "Bearer undefined".equals(authorizationHeader)) {
+=======
+        if ("Bearer null".equals(authorizationHeader) || "Bearer undefined".equals(authorizationHeader)) {
+>>>>>>> 2ddba226ccbb1490d9005b1aee90f9b61647d630
             isPublicRequest = requestURI.equals("/arentcar/manager/admins") && httpRequest.getMethod().equalsIgnoreCase("POST")
                     || requestURI.equals("/arentcar/manager/admins/login") && httpRequest.getMethod().equalsIgnoreCase("POST")
                     || requestURI.equals("/arentcar/manager/admins/refresh") && httpRequest.getMethod().equalsIgnoreCase("POST")

@@ -13,7 +13,6 @@ const RegisterMenu = ({ onClick }) => {
   const [pageNumber, setPageNumber] = useState(1);
   const pageSize = 10;
   const [totalCount, setTotalCount] = useState(0);
-
   const [columnDefs] = useState([
     { headerName: '코드', field: 'menu_code', width: 80, align: 'center' },
     { headerName: '메뉴구분', field: 'menu_kind', width: 80, align: 'center' },

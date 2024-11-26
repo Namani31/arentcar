@@ -35,10 +35,17 @@ public class SecurityConfig {
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/arentcar/user/**").permitAll()
+<<<<<<< HEAD
                         .requestMatchers("/arentcar/manager/**").permitAll()
                         .requestMatchers("/arentcar/manager/admins/login", "/arentcar/manager/admins/refresh", "/arentcar/manager/menus").permitAll()
                         .requestMatchers("/ws/visitor/**").permitAll()
 //                        .requestMatchers("/arentcar/manager/**").authenticated()
+=======
+                        .requestMatchers("/arentcar/manager/post/**").permitAll() // 임시접근 권한해제
+                        .requestMatchers("/arentcar/manager/admins/login", "/arentcar/manager/admins/refresh", "/arentcar/manager/menus").permitAll()
+                        .requestMatchers("/arentcar/manager/**").authenticated()
+
+>>>>>>> 2ddba226ccbb1490d9005b1aee90f9b61647d630
                         .anyRequest().authenticated()  // 나머지 요청은 인증 필요
                 )
                 .sessionManagement(session -> session

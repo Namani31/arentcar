@@ -6,11 +6,17 @@ import { setAdminState } from '../../redux/AdminState';
 import { refreshAccessToken, handleLogout } from 'common/Common';
 import 'manager/system/ManagerMenu.css';
 import RegisterMenu from 'manager/system/RegisterMenu';
+<<<<<<< HEAD
 import RentalCarInfo from 'manager/carinfo/RentalCarInfo';
 import CarInfo from 'manager/carinfo/CarInfo';
 import RegisterAdmin from 'manager/system/RegisterAdmin';
 import ManagerUser from 'manager/system/ManagerUser';
 import ConnectionStatus from 'manager/system/ConnectionStatus';
+=======
+import RegisterUser from 'manager/system/RegisterUser';
+import PostNotices from './posts/PostNotices';
+import PostReviews from './posts/PostReviews';
+>>>>>>> 2ddba226ccbb1490d9005b1aee90f9b61647d630
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -30,11 +36,17 @@ const ManagerMenu = () => {
 
   const componentMap = {
     RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
+<<<<<<< HEAD
     managerRentalCar: <RentalCarInfo onClick={handleCloseClick} />,
     managerCar: <CarInfo onClick={handleCloseClick} />,
     RegisterAdmin: <RegisterAdmin onClick={handleCloseClick} />,
     ManagerUser: <ManagerUser onClick={handleCloseClick} />,
     ConnectionStatus: <ConnectionStatus onClick={handleCloseClick} />,
+=======
+    RegisterUser: <RegisterUser onClick={handleCloseClick} />,
+    manageNotices: <PostNotices onClick={handleCloseClick} />,
+    managementCustomer: <PostReviews onClick={handleCloseClick}/>,//임시링크
+>>>>>>> 2ddba226ccbb1490d9005b1aee90f9b61647d630
   };
 
   useEffect(() => {
