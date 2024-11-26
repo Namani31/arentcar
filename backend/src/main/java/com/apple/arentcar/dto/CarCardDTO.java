@@ -1,4 +1,4 @@
-package com.apple.arentcar.model;
+package com.apple.arentcar.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RentalCars {
+public class CarCardDTO {
 
     private String carTypeName;
 

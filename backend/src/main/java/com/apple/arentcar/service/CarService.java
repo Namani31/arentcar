@@ -1,7 +1,7 @@
 package com.apple.arentcar.service;
 
+import com.apple.arentcar.dto.*;
 import com.apple.arentcar.mapper.CarMapper;
-import com.apple.arentcar.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ public class CarService {
     @Autowired
     private CarMapper CarMapper;
 
-    public List<RentalCars> getAllCars(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity) {
+    public List<CarCardDTO> getAllCars(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity) {
         return CarMapper.getAllCars(branchName,fuelType,carTypeCategory,carManufacturer,seatingCapacity);
     }
 
@@ -21,29 +21,29 @@ public class CarService {
         return CarMapper.getFilterCarsCount(branchName,fuelType,carTypeCategory,carManufacturer,seatingCapacity);
     }
 
-    public List<CarType> getCarType() {return CarMapper.getCarType();}
+    public List<CarTypeDTO> getCarType() {return CarMapper.getCarType();}
 
-    public List<CarManufacturer> getCarManufacturer() {
+    public List<CarManufacturerDTO> getCarManufacturer() {
         return CarMapper.getCarManufacturer();
     }
 
-    public List<FuelType> getFuelType() {
+    public List<FuelTypeDTO> getFuelType() {
         return CarMapper.getFuelType();
     }
 
-    public List<SeatingCapacity> getSeatingCapacity() {
+    public List<SeatingCapacityDTO> getSeatingCapacity() {
         return CarMapper.getSeatingCapacity();
     }
 
-    public List<ModelYear> getModelYear() {
+    public List<ModelYearDTO> getModelYear() {
         return CarMapper.getModelYear();
     }
 
-    public List<Branchs> getAllBranchs() {
+    public List<BranchsDTO> getAllBranchs() {
         return CarMapper.getAllBranchs();
     }
 
-    public List<CarTypeCategory> getCarTypeCategory() {
+    public List<CarTypeCategoryDTO> getCarTypeCategory() {
         return CarMapper.getCarTypeCategory();
     }
 }

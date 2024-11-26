@@ -6,7 +6,7 @@
 <mapper namespace="com.apple.arentcar.mapper.CarMapper">
 
     <!-- 모든 조회 -->
-    <select id="getAllCars" resultType="com.apple.arentcar.model.RentalCars">
+    <select id="getAllCars" resultType="com.apple.arentcar.dto.CarCardDTO">
         SELECT
         ct.car_type_name,
         cc1.common_name AS fuel_type,
@@ -86,25 +86,25 @@
             </if>
         </where>
     </select>
-    <select id="getCarType" resultType="com.apple.arentcar.model.CarType">
+    <select id="getCarType" resultType="com.apple.arentcar.dto.CarTypeDTO">
         SELECT common_name as car_type_name from common_codes cc WHERE common_kind_code = 'car_type_category';
     </select>
-    <select id="getCarManufacturer" resultType="com.apple.arentcar.model.CarManufacturer">
+    <select id="getCarManufacturer" resultType="com.apple.arentcar.dto.CarManufacturerDTO">
         SELECT common_name as car_manufacturer from common_codes cc WHERE common_kind_code = 'car_manufacturer';
     </select>
-    <select id="getFuelType" resultType="com.apple.arentcar.model.FuelType">
+    <select id="getFuelType" resultType="com.apple.arentcar.dto.FuelTypeDTO">
         SELECT common_name as fuel_type from common_codes cc WHERE common_kind_code = 'fuel_type';
     </select>
-    <select id="getSeatingCapacity" resultType="com.apple.arentcar.model.SeatingCapacity">
+    <select id="getSeatingCapacity" resultType="com.apple.arentcar.dto.SeatingCapacityDTO">
         SELECT common_name as seating_capacity from common_codes cc WHERE common_kind_code = 'seating_Capacity';
     </select>
-    <select id="getCarTypeCategory" resultType="com.apple.arentcar.model.CarTypeCategory">
+    <select id="getCarTypeCategory" resultType="com.apple.arentcar.dto.CarTypeCategoryDTO">
         SELECT common_name as car_type_category from common_codes cc WHERE common_kind_code = 'car_type_category';
     </select>
-    <select id="getModelYear" resultType="com.apple.arentcar.model.ModelYear">
+    <select id="getModelYear" resultType="com.apple.arentcar.dto.ModelYearDTO">
         SELECT DISTINCT model_year  from rental_cars order by model_year;
     </select>
-    <select id="getAllBranchs" resultType="com.apple.arentcar.model.Branchs">
+    <select id="getAllBranchs" resultType="com.apple.arentcar.dto.BranchsDTO">
         SELECT branch_name from branchs ORDER BY branch_name;
     </select>
 

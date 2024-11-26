@@ -1,28 +1,28 @@
 package com.apple.arentcar.mapper;
 
-import com.apple.arentcar.model.*;
+import com.apple.arentcar.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
 public interface CarMapper {
-    List<RentalCars> getAllCars(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity);
+    List<CarCardDTO> getAllCars(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity);
 
     Integer getFilterCarsCount(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity);
 
 
-    List<CarType> getCarType();
+    List<CarTypeDTO> getCarType();
 
-    List<CarManufacturer> getCarManufacturer();
+    List<CarManufacturerDTO> getCarManufacturer();
 
-    List<FuelType> getFuelType();
+    List<FuelTypeDTO> getFuelType();
 
-    List<SeatingCapacity> getSeatingCapacity();
+    List<SeatingCapacityDTO> getSeatingCapacity();
 
-    List<ModelYear> getModelYear();
+    List<ModelYearDTO> getModelYear();
 
-    List<Branchs> getAllBranchs();
+    List<BranchsDTO> getAllBranchs();
 
-    List<CarTypeCategory> getCarTypeCategory();
+    List<CarTypeCategoryDTO> getCarTypeCategory();
 }
