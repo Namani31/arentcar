@@ -6,6 +6,7 @@ import { refreshAccessToken, handleLogout } from 'common/Common';
 import 'manager/system/ManagerMenu.css';
 import RegisterMenu from 'manager/system/RegisterMenu';
 import RegisterUser from 'manager/system/RegisterUser';
+import ManagerReservation from 'manager/reservation/ManagerReservation';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -25,6 +26,7 @@ const ManagerMenu = () => {
   const componentMap = {
     RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
     RegisterUser: <RegisterUser onClick={handleCloseClick} />,
+    ManagerReservation: <ManagerReservation onClick={handleCloseClick} />,
   };
 
   useEffect(() => {
@@ -53,7 +55,7 @@ const ManagerMenu = () => {
   const getMenus = async (token) => {
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/menus`, {
       headers: { Authorization: `Bearer ${token}` },
-      withCredentials: true, 
+      withCredentials: true,
     });
     setMenus(response.data);
   };
