@@ -29,26 +29,43 @@ const ManagerReservation = () => {
     handleFetchAllReservations();
   }, [selectedBranch, reservationDate, reserverName]);
 
-  // 예약 데이터 가져오기
-  const handleFetchAllReservations = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      console.log("필터 예약 데이터 API 호출: ", selectedBranch, reservationDate, reserverName); // 디버깅용
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/reservations`, {
-        params: {
-          rentalLocationName: selectedBranch,
-          rentalDate: reservationDate,
-          userName: reserverName,
-        },
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-      });
-      console.log("필터 예약 응답 데이터: ", response.data); // 디버깅용
-      setReservations(response.data); // 상태 업데이트
-    } catch (error) {
-      console.error("필터 예약 데이터를 가져오는 중 오류가 발생했습니다.", error);
-    }
-  };
+    // 전체 예약 데이터 가져오기
+    const handleFetchAllReservations = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/reservations`, {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        });
+        setReservations(response.data); // 전체 데이터 설정
+      } catch (error) {
+        console.error("전체 예약 데이터를 가져오는 중 오류 발생", error);
+      }
+    };
+  
+    // 필터링된 예약 데이터 가져오기 (검색 버튼 클릭 시 호출)
+    const handleFetchFilteredReservations = async () => {
+      const params = {
+        rentalLocationName: selectedBranch,
+        rentalDate: reservationDate,
+        userName: reserverName,
+      };
+
+      try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/reservations`, {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        });
+        console.log("필터링된 예약 데이터: ", response.data); // 디버깅용
+        setReservations(response.data); // 필터링된 데이터 설정
+        
+        
+      } catch (error) {
+        console.error("전체 예약 데이터를 가져오는 중 오류 발생", error);
+      }
+    };
 
   // 지점명 데이터 가져오기
   const handleFetchBranchNames = async () => {
@@ -120,7 +137,7 @@ const ManagerReservation = () => {
             className="manager-reservation-date-input"
           />
           <button
-            onClick={handleFetchAllReservations}
+            onClick={handleFetchFilteredReservations}
             className="manager-reservation-button-search manager-button manager-button-search"
           >
             검색

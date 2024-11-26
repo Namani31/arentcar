@@ -37,7 +37,7 @@
             AND rl.branch_name = #{rentalLocationName}
         </if>
         <if test="rentalDate != null and rentalDate != ''">
-            AND r.rental_date = #{rentalDate}
+            AND r.rental_date = DATE_FORMAT(#{rentalDate}, '%Y%m%d')
         </if>
     </select>
 

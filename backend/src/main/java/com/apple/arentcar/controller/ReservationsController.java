@@ -5,10 +5,13 @@ import com.apple.arentcar.dto.ReservationsResponseDTO;
 import com.apple.arentcar.model.Reservations;
 import com.apple.arentcar.service.ReservationsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -27,16 +30,19 @@ public class ReservationsController {
     public ResponseEntity<List<ReservationsResponseDTO>> getAllReservations(
             @RequestParam(required = false) String userName,
             @RequestParam(required = false) String rentalLocationName,
-            @RequestParam(required = false) String rentalDate) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate rentalDate) {
 
         // RequestDTO 생성 및 값 설정
         ReservationRequestDTO requestDTO = new ReservationRequestDTO();
 
         requestDTO.setUserName(userName);
         requestDTO.setRentalLocationName(rentalLocationName);
-        requestDTO.setRentalDate(rentalDate);
 
-        System.out.println("userName: " + requestDTO.getUserName());
+        // rentalDate 변환
+        if (rentalDate != null) {
+            String formattedDate = rentalDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            requestDTO.setRentalDate(formattedDate);
+        }
 
         // Service 호출
         List<ReservationsResponseDTO> reservations = reservationsService.getAllReservations(requestDTO);
