@@ -192,14 +192,14 @@ const CarInfo = ({ onClick }) => {
     setIsPopUp(true);
     setWorkMode(workMode);
     setCarTypeCode(updateData.car_type_code);
-    setCarTypeCategory(updateData.car_type_category);
-    setOriginType(updateData.origin_type);
+    setCarTypeCategory(updateData.car_type_category_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
+    setOriginType(updateData.origin_type_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
     setCarTypeName(updateData.car_type_name);
-    setSeatingCapacity(updateData.seating_capacity);
-    setFuelType(updateData.fuel_type);
-    setSpeedLimit(updateData.speed_limit);
-    setLicenseRestriction(updateData.license_restriction);
-    setCarManufacturer(updateData.car_manufacturer)
+    setSeatingCapacity(updateData.seating_capacity_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
+    setFuelType(updateData.fuel_type_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
+    setSpeedLimit(updateData.speed_limit_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
+    setLicenseRestriction(updateData.license_restriction_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
+    setCarManufacturer(updateData.car_manufacturer_code) // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
     setModelYear(updateData.model_year)
     setCarImage("")
     setCarImageName("")
@@ -238,7 +238,7 @@ const CarInfo = ({ onClick }) => {
   };
 
   const handleDeleteClick = async (carTypeCode) => {
-    if (window.confirm('자료를 정말로 삭제하시겠습니까?')) {
+    if (window.confirm('차종을 정말로 삭제하시겠습니까?')) {
       try {
         const token = localStorage.getItem('accessToken');
         await deleteVehicle(token, carTypeCode);
@@ -252,7 +252,7 @@ const CarInfo = ({ onClick }) => {
             handleLogout();
           }
         } else {
-          alert("삭제 중 오류가 발생했습니다." + error);
+          alert("차종 삭제 중 오류가 발생했습니다." + error);
         }
       }
     }
@@ -266,7 +266,7 @@ const CarInfo = ({ onClick }) => {
       withCredentials: true,
     });
     setVehicles((prevVehicle) => prevVehicle.filter(vehicle => vehicle.car_type_code !== carTypeCode));
-    alert("자료가 삭제되었습니다.");
+    alert("차종이 삭제되었습니다.");
   };
 
   const handleDataSaveClick = async () => {
@@ -306,7 +306,7 @@ const CarInfo = ({ onClick }) => {
             handleLogout();
           }
         } else {
-          alert("수정 중 오류가 발생했습니다." + error);
+          alert("차종 수정 중 오류가 발생했습니다." + error);
         }
       } finally {
         setLoading(false);
@@ -326,7 +326,7 @@ const CarInfo = ({ onClick }) => {
             handleLogout();
           }
         } else {
-          alert("등록 중 오류가 발생했습니다." + error);
+          alert("차종 등록 중 오류가 발생했습니다." + error);
         }
       } finally {
         setLoading(false);
@@ -370,10 +370,10 @@ const CarInfo = ({ onClick }) => {
         }
       );
       setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.car_type_code === carTypeCode ? newVehicle : vehicle));
-      alert("자료가 수정되었습니다.");
+      alert("차종이 수정되었습니다.");
     } catch(error) {
       console.error("Error updating vehicle:", error);
-      alert("차량 수정 중 오류가 발생했습니다.");
+      alert("차종 수정 중 오류가 발생했습니다.");
     }
 
   };
@@ -386,17 +386,17 @@ const CarInfo = ({ onClick }) => {
       }
   
       // Base64 문자열을 Blob으로 변환
-      const byteString = atob(newVehicleImage.car_image.split(',')[1]);
-      const mimeString = newVehicleImage.car_image.split(',')[0].split(':')[1].split(';')[0];
+      const byteString = atob(newVehicleImage.car_image.split(',')[1]); // atob 함수를 이용해 Base64 문자열을 바이너리 데이터로 디코딩함
+      const mimeString = newVehicleImage.car_image.split(',')[0].split(':')[1].split(';')[0]; // URL(newVehicleImage.car_image)에서 MIME 타입을 추출함
       const ab = new ArrayBuffer(byteString.length);
       const ia = new Uint8Array(ab);
       for (let i = 0; i < byteString.length; i++) {
         ia[i] = byteString.charCodeAt(i);
       }
-      const blob = new Blob([ab], { type: mimeString });
+      const blob = new Blob([ab], { type: mimeString }); // Blob 객체를 생성하여 바이너리 데이터를 파일 형식으로 변환함. Blob은 파일과 유사한 객체, 서버에 전송 가능함
       
       // FormData 객체 생성
-      const formData = new FormData();
+      const formData = new FormData(); // 파일과 데이터를 함께 전송할 수 있도록 준비
       formData.append('file', blob, carImageName);
       formData.append('carData', JSON.stringify(newVehicle));
 
@@ -414,31 +414,31 @@ const CarInfo = ({ onClick }) => {
         // newVehicle.car_type_code = response.data.car_type_code;
         // newVehicle.car_type_password = response.data.car_type_password;
         setVehicles((prevVehicle) => [...prevVehicle, savedVehicle]);
-        alert("자료가 등록되었습니다.");
+        alert("차종이 등록되었습니다.");
     } catch (error) {
       console.error("Error creating vehicle:", error);
-      alert("차량 등록 중 오류가 발생했습니다.");
+      alert("차종 등록 중 오류가 발생했습니다.");
     }
   };
 
-  const onChangeImageUpload = (e) => {
+  const handleImageUpload = (e) => {
     const {files} = e.target;
-    if (files && files.length > 0) { // 파일이 선택되었는지 확인
-      const uploadFile = files[0];
+    if (files && files.length > 0) { // 하나 이상의 파일이 선택되었는지 확인
+      const uploadFile = files[0]; // 선택한 첫 번째 파일을 변수에 저장
       const fileName = uploadFile.name; // 원본 파일 이름 가져오기
 
-      const reader = new FileReader();
-      reader.readAsDataURL(uploadFile);
-      reader.onloadend = () => {
-        setCarImage(reader.result);
+      const reader = new FileReader(); // 파일을 읽고 그 내용을 다양한 형식으로 변활할 수 있는 API를 제공
+      reader.readAsDataURL(uploadFile); // 데이터를 URL로변환. 데이터 URL은 파일의 내용을  Base64로 인코딩한 문자열임임
+      reader.onloadend = () => { // 파일 읽기가 완료되면 호출되는 콜백 함수.
+        setCarImage(reader.result); // 파일의 결과(URL 포함)를 carImage에 저장, 이미지 미리보기에 이용 가능
       };
 
        // 원본 파일 이름을 다른 곳에서 사용하고 싶다면 상태로 저장할 수도 있습니다.
        setCarImageName(fileName);
     } else {
        // 파일 선택이 취소된 경우 상태 초기화
-       setCarImage(null);
-       setCarImageName('');
+       setCarImage(null); // 이미지 데이터 초기화
+       setCarImageName(''); 
     }
   }
 
@@ -462,7 +462,7 @@ const CarInfo = ({ onClick }) => {
       return false;
     };
     if (!carImage || carImage.trim() === '') {
-      alert("차량이미지를 등록해주세요.");
+      alert("차종이미지를 등록해주세요.");
       return false;
     };
   
@@ -634,7 +634,7 @@ const CarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="">차량이미지</label>
-                <input className='car-info-file-button' name="file" type="file" accept="image/*" onChange={onChangeImageUpload} />
+                <input className='car-info-file-button' name="file" type="file" accept="image/*" onChange={handleImageUpload} />
                 {carImage && <img className="width350" src={carImage} alt="Selected Car" />}
                 {/* <img className="width350" src = {carImage} alt={carImage}  /> */}
                 {carImageName && <p className='word-center'>파일 이름 : {carImageName}</p>}

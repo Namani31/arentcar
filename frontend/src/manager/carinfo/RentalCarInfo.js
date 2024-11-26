@@ -265,11 +265,11 @@ const RentalCarInfo = ({ onClick }) => {
     setIsPopUp(true);
     setWorkMode(workMode);
     setCarCode(updateData.car_code);
-    setCarTypeCode(updateData.car_type_code);
+    setCarTypeCode(updateData.car_type_code); // carTypeName으로 가져온(GET) 데이터를 다시 carTypeCode로 서버에 보내기위해 DB에서 전달(GET) 받은 데이터 이용
     setCarNumber(updateData.car_number);
     setModelYear(updateData.model_year)
-    setBranchCode(updateData.branch_code);
-    setCarStatus(updateData.car_status);
+    setBranchCode(updateData.branch_code); // branchName으로 가져온(GET) 데이터를 다시 branchCode로 서버에 보내기위해 DB에서 전달(GET) 받은 데이터 이용
+    setCarStatus(updateData.car_status_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
   };
 
   const viewDataInit = () => {
@@ -299,7 +299,7 @@ const RentalCarInfo = ({ onClick }) => {
   };
 
   const handleDeleteClick = async (carCode) => {
-    if (window.confirm('자료를 정말로 삭제하시겠습니까?')) {
+    if (window.confirm('차량을 정말로 삭제하시겠습니까?')) {
       try {
         const token = localStorage.getItem('accessToken');
         await deleteVehicle(token, carCode);
@@ -327,7 +327,7 @@ const RentalCarInfo = ({ onClick }) => {
       withCredentials: true,
     });
     setVehicles((prevVehicle) => prevVehicle.filter(vehicle => vehicle.car_code !== carCode));
-    alert("자료가 삭제되었습니다.");
+    alert("차량이 삭제되었습니다.");
   };
 
   const handleDataSaveClick = async () => {
@@ -359,7 +359,7 @@ const RentalCarInfo = ({ onClick }) => {
             handleLogout();
           }
         } else {
-          alert("수정 중 오류가 발생했습니다." + error);
+          alert("차량 수정 중 오류가 발생했습니다." + error);
         }
       } finally {
         setLoading(false);
@@ -379,7 +379,7 @@ const RentalCarInfo = ({ onClick }) => {
             handleLogout();
           }
         } else {
-          alert("등록 중 오류가 발생했습니다." + error);
+          alert("차량 등록 중 오류가 발생했습니다." + error);
         }
       } finally {
         setLoading(false);
@@ -401,7 +401,7 @@ const RentalCarInfo = ({ onClick }) => {
       }
     );
     setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.car_code === carCode ? newVehicle : vehicle));
-    alert("자료가 수정되었습니다.");
+    alert("차량이 수정되었습니다.");
   };
   
   const createVehicle = async (token, newVehicle) => {
@@ -416,7 +416,7 @@ const RentalCarInfo = ({ onClick }) => {
     newVehicle.car_code = response.data.car_code;
     newVehicle.car_password = response.data.car_password;
     setVehicles((prevVehicle) => [...prevVehicle, newVehicle]);
-    alert("자료가 등록되었습니다.");
+    alert("차량이 등록되었습니다.");
   };
 
   const handlePopupCloseClick = () => {
@@ -440,10 +440,6 @@ const RentalCarInfo = ({ onClick }) => {
     };
     if (!modelYear || modelYear.trim() === '') {
       alert("년식을 입력해주세요.");
-      return false;
-    };
-    if (!branchCode || branchCode.trim() === '') {
-      alert("지점명을 선택해주세요.");
       return false;
     };
 

@@ -17,13 +17,20 @@
         SELECT
         ct.car_type_code,
         cc0.common_name AS car_type_category,
+        cc0.common_code AS car_type_category_code, <!-- 수정 기능을 위해 CarTypesDTO에 같이 전달 -->
         cc1.common_name AS origin_type,
+        cc1.common_code AS origin_type_code, <!-- 수정 기능을 위해 CarTypesDTO에 같이 전달 -->
         ct.car_type_name,
         cc2.common_name AS seating_capacity,
+        cc2.common_code AS seating_capacity_code, <!-- 수정 기능을 위해 CarTypesDTO에 같이 전달 -->
         cc3.common_name AS fuel_type,
+        cc3.common_code AS fuel_type_code, <!-- 수정 기능을 위해 CarTypesDTO에 같이 전달 -->
         cc4.common_name AS speed_limit,
+        cc4.common_code AS speed_limit_code, <!-- 수정 기능을 위해 CarTypesDTO에 같이 전달 -->
         cc5.common_name AS license_restriction,
+        cc5.common_code AS license_restriction_code, <!-- 수정 기능을 위해 CarTypesDTO에 같이 전달 -->
         cc6.common_name AS car_manufacturer,
+        cc6.common_code AS car_manufacturer_code, <!-- 수정 기능을 위해 CarTypesDTO에 같이 전달 -->
         ct.model_year
         FROM car_types ct
         JOIN common_codes cc0 ON cc0.common_code = ct.car_type_category AND cc0.common_kind_code = 'car_type_category'
@@ -41,13 +48,20 @@
         SELECT
         ct.car_type_code,
         cc0.common_name AS car_type_category,
+        cc0.common_code AS car_type_category_code,
         cc1.common_name AS origin_type,
+        cc1.common_code AS origin_type_code,
         ct.car_type_name,
         cc2.common_name AS seating_capacity,
+        cc2.common_code AS seating_capacity_code,
         cc3.common_name AS fuel_type,
+        cc3.common_code AS fuel_type_code,
         cc4.common_name AS speed_limit,
+        cc4.common_code AS speed_limit_code,
         cc5.common_name AS license_restriction,
+        cc5.common_code AS license_restriction_code,
         cc6.common_name AS car_manufacturer,
+        cc6.common_code AS car_manufacturer_code,
         ct.model_year
         FROM car_types ct
         JOIN common_codes cc0 ON cc0.common_code = ct.car_type_category AND cc0.common_kind_code = 'car_type_category'

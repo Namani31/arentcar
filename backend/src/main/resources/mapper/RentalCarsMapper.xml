@@ -44,9 +44,12 @@
         SELECT
         rc.car_code,
         ct.car_type_name,
+        ct.car_type_code, <!-- 수정 기능을 위해 RentalCarsDTO에 같이 전달 -->
         rc.car_number,
         cc1.common_name AS car_status,
+        rc.car_status AS car_status_code, <!-- 수정 기능을 위해 RentalCarsDTO에 같이 전달 -->
         b.branch_name,
+        b.branch_code, <!-- 수정 기능을 위해 RentalCarsDTO에 같이 전달 -->
         cc2.common_name AS car_type_category,
         cc3.common_name AS origin_type,
         cc4.common_name AS seating_capacity,
@@ -71,9 +74,12 @@
         SELECT
         rc.car_code,
         ct.car_type_name,
+        ct.car_type_code, <!-- 수정 기능을 위해 RentalCarsDTO에 같이 전달 -->
         rc.car_number,
         cc1.common_name AS car_status,
+        rc.car_status AS car_status_code, <!-- 수정 기능을 위해 RentalCarsDTO에 같이 전달 -->
         b.branch_name,
+        b.branch_code, <!-- 수정 기능을 위해 RentalCarsDTO에 같이 전달 -->
         cc2.common_name AS car_type_category,
         cc3.common_name AS origin_type,
         cc4.common_name AS seating_capacity,
