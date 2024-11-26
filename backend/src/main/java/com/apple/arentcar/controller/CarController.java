@@ -1,6 +1,6 @@
 package com.apple.arentcar.controller;
 
-import com.apple.arentcar.model.*;
+import com.apple.arentcar.dto.*;
 import com.apple.arentcar.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ public class CarController {
     private CarService carService;
 
     @GetMapping("/user/cars")
-    public List<RentalCars> getAllCars(
+    public List<CarCardDTO> getAllCars(
             @RequestParam(name = "branchName",required = false, defaultValue = "수원 본점") String branchName,
             @RequestParam(name = "fuelType",required = false) String fuelType,
             @RequestParam(name = "carTypeCategory",required = false) String carTypeCategory,
@@ -40,37 +40,37 @@ public class CarController {
     }
 
     @GetMapping("/user/filter/cartype")
-    public List<CarType> getCarType() {
+    public List<CarTypeDTO> getCarType() {
         return carService.getCarType();
     }
 
     @GetMapping("/user/filter/carmanufacturer")
-    public List<CarManufacturer> getCarManufacturer() {
+    public List<CarManufacturerDTO> getCarManufacturer() {
         return carService.getCarManufacturer();
     }
 
     @GetMapping("/user/filter/fueltype")
-    public List<FuelType> getFuelType() {
+    public List<FuelTypeDTO> getFuelType() {
         return carService.getFuelType();
     }
 
     @GetMapping("/user/filter/seatingcapacity")
-    public List<SeatingCapacity> getSeatingCapacity() {
+    public List<SeatingCapacityDTO> getSeatingCapacity() {
         return carService.getSeatingCapacity();
     }
 
     @GetMapping("/user/filter/modelyear")
-    public List<ModelYear> getModelYear() {
+    public List<ModelYearDTO> getModelYear() {
         return carService.getModelYear();
     }
 
     @GetMapping("/user/filter/cartypecategory")
-    public List<CarTypeCategory> getCarTypeCategory() {
+    public List<CarTypeCategoryDTO> getCarTypeCategory() {
         return carService.getCarTypeCategory();
     }
 
     @GetMapping("/user/branchs")
-    public List<Branchs> getAllBranchs() {
+    public List<BranchsDTO> getAllBranchs() {
         return carService.getAllBranchs();
     }
 }
