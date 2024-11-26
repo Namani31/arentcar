@@ -15,6 +15,7 @@ import RegisterUser from 'manager/system/RegisterUser';
 import PostNotices from './posts/PostNotices';
 import PostReviews from './posts/PostReviews';
 import ManagerReservation from 'manager/reservation/ManagerReservation';
+import RentalRates from 'manager/managepayment/RentalRates';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -43,6 +44,7 @@ const ManagerMenu = () => {
     manageNotices: <PostNotices onClick={handleCloseClick} />,
     managementCustomer: <PostReviews onClick={handleCloseClick}/>,//임시링크
     ManagerReservation: <ManagerReservation onClick={handleCloseClick} />,
+    RentalRates: <RentalRates onClick={handleCloseClick} />,
   };
 
   useEffect(() => {
