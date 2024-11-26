@@ -12,12 +12,9 @@ import RegisterAdmin from 'manager/system/RegisterAdmin';
 import ManagerUser from 'manager/system/ManagerUser';
 import ConnectionStatus from 'manager/system/ConnectionStatus';
 import RegisterUser from 'manager/system/RegisterUser';
-<<<<<<< HEAD
 import PostNotices from './posts/PostNotices';
 import PostReviews from './posts/PostReviews';
-=======
 import ManagerReservation from 'manager/reservation/ManagerReservation';
->>>>>>> b46ef0b23b7c4a1207425175a90e9532ada967ad
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -43,12 +40,9 @@ const ManagerMenu = () => {
     ManagerUser: <ManagerUser onClick={handleCloseClick} />,
     ConnectionStatus: <ConnectionStatus onClick={handleCloseClick} />,
     RegisterUser: <RegisterUser onClick={handleCloseClick} />,
-<<<<<<< HEAD
     manageNotices: <PostNotices onClick={handleCloseClick} />,
     managementCustomer: <PostReviews onClick={handleCloseClick}/>,//임시링크
-=======
     ManagerReservation: <ManagerReservation onClick={handleCloseClick} />,
->>>>>>> b46ef0b23b7c4a1207425175a90e9532ada967ad
   };
 
   useEffect(() => {

@@ -1,6 +1,5 @@
 package com.apple.arentcar.dto;
 
-import com.apple.arentcar.model.Admins;
 import com.apple.arentcar.model.Users;
 import lombok.Getter;
 import lombok.Setter;
