@@ -34,7 +34,10 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+<<<<<<< HEAD
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+=======
+>>>>>>> b46ef0b23b7c4a1207425175a90e9532ada967ad
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
