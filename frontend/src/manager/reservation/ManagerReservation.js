@@ -27,7 +27,7 @@ const ManagerReservation = () => {
   useEffect(() => {
     handleFetchBranchNames();
     handleFetchAllReservations();
-  }, [selectedBranch, reservationDate, reserverName]);
+  }, []);
 
     // 전체 예약 데이터 가져오기
     const handleFetchAllReservations = async () => {
@@ -58,10 +58,9 @@ const ManagerReservation = () => {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
-        console.log("필터링된 예약 데이터: ", response.data); // 디버깅용
+        
         setReservations(response.data); // 필터링된 데이터 설정
-        
-        
+
       } catch (error) {
         console.error("전체 예약 데이터를 가져오는 중 오류 발생", error);
       }
@@ -118,6 +117,7 @@ const ManagerReservation = () => {
             onChange={(e) => setReserverName(e.target.value)}
             className="manager-reservation-text-input"
           />
+          
           <select
             className="manager-reservation-select"
             value={selectedBranch}
@@ -130,6 +130,7 @@ const ManagerReservation = () => {
               </option>
             ))}
           </select>
+
           <input
             type="date"
             value={reservationDate}

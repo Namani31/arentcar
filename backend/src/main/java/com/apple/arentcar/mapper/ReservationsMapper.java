@@ -12,7 +12,7 @@ import java.util.List;
 public interface ReservationsMapper {
 
 
-    List<ReservationsResponseDTO> getAllReservations(ReservationRequestDTO requestDTO);
+    List<ReservationsResponseDTO> getReservations(ReservationRequestDTO requestDTO);
 
 //    List<ReservationsResponseDTO> getFilteredReservations(ReservationRequestDTO requestDTO);
 

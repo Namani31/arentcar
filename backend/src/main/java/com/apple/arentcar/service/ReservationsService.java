@@ -15,7 +15,7 @@ public class ReservationsService {
     private ReservationsMapper reservationsMapper;
 
     public List<ReservationsResponseDTO> getAllReservations(ReservationRequestDTO requestDTO) {
-        return reservationsMapper.getAllReservations(requestDTO); }
+        return reservationsMapper.getReservations(requestDTO); }
 
 //    public List<ReservationsResponseDTO> getFilteredReservations(ReservationRequestDTO requestDTO) {
 //        return reservationsMapper.getFilteredReservations(requestDTO);

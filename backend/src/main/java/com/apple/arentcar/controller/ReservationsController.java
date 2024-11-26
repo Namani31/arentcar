@@ -27,7 +27,7 @@ public class ReservationsController {
 //    }
 
     @GetMapping("/manager/reservations")
-    public ResponseEntity<List<ReservationsResponseDTO>> getAllReservations(
+    public ResponseEntity<List<ReservationsResponseDTO>> getReservations(
             @RequestParam(required = false) String userName,
             @RequestParam(required = false) String rentalLocationName,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate rentalDate) {

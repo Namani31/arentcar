@@ -6,7 +6,7 @@
 <mapper namespace="com.apple.arentcar.mapper.ReservationsMapper">
 
     <!-- 모든 조회 -->
-    <select id="getAllReservations"
+    <select id="getReservations"
             parameterType="com.apple.arentcar.dto.ReservationRequestDTO"
             resultType="com.apple.arentcar.dto.ReservationsResponseDTO">
         SELECT
