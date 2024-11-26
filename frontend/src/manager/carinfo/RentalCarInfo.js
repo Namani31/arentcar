@@ -13,8 +13,10 @@ const RentalCarInfo = ({ onClick }) => {
   const [pageNumber, setPageNumber] = useState(1);
   const pageSize = 15;
   const [totalCount, setTotalCount] = useState(0);
-  // const [availableRentalCarsCount, setAvailableRentalCarsCount] = useState(0);
-
+  const [availableRentalCarsCount, setAvailableRentalCarsCount] = useState(0);
+  const [rentedRentalCarsCount, setRentedRentalCarsCount] = useState(0);
+  const [maintenanceRentalCarsCount, setMaintenanceRentalCarsCount] = useState(0);
+  
   const [columnDefs] = useState([
     { headerName: '코드', field: 'car_code', width: 75, align: 'center' },
     { headerName: '차종명', field: 'car_type_name', width: 150, align: 'center' },
@@ -149,44 +151,114 @@ const RentalCarInfo = ({ onClick }) => {
     }
   };
 
-  // const getRentalCarsCount = async (carStatus) => {
-  //   try {
-  //     const token = localStorage.getItem('accessToken');
-  //     await getAvailabelRentalCarsCount(token, carStatus);
-  //   } catch (error) {
-  //     if (error.response && error.response.status === 403) {
-  //       try {
-  //         const newToken = await refreshAccessToken();
-  //         await getAvailabelRentalCarsCount(newToken, carStatus);
-  //       } catch (error) {
-  //         alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-  //         handleLogout();
-  //       }
-  //     } else {
-  //       console.error('There was an error fetching the vehicles pageing!', error);
-  //     }
-  //   }
-  // };
+  const getAvailabelRentalCarsCount = async (carStatus) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      await getAvailableRentalCarsByStatus(token, carStatus);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getAvailableRentalCarsByStatus(newToken, carStatus);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the vehicles pageing!', error);
+      }
+    }
+  };
 
-  // const getAvailabelRentalCarsCount = async (token, carStatus) => {
-  //   const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/count/${carStatus}`, 
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`
-  //       },
-  //       withCredentials: true,
-  //     });
+  const getAvailableRentalCarsByStatus = async (token, carStatus) => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/count/${carStatus}`, 
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
 
-  //   if (response.data) {
-  //     // console.log(response.data);
-  //     setAvailableRentalCarsCount(response.data);
-  //   }
-  // };
+    if (response.data) {
+      // console.log(response.data);
+      setAvailableRentalCarsCount(response.data);
+    }
+  };
+
+  const getRentedRentalCarsCount = async (carStatus) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      await getRentedRentalCarsByStatus(token, carStatus);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getRentedRentalCarsByStatus(newToken, carStatus);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the vehicles pageing!', error);
+      }
+    }
+  };
+
+  const getRentedRentalCarsByStatus = async (token, carStatus) => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/count/${carStatus}`, 
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+
+    if (response.data) {
+      // console.log(response.data);
+      setRentedRentalCarsCount(response.data);
+    }
+  };
+
+  const getMaintenanceRentalCarsCount = async (carStatus) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      await getMaintenanceRentalCarsCountByStatus(token, carStatus);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getMaintenanceRentalCarsCountByStatus(newToken, carStatus);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the vehicles pageing!', error);
+      }
+    }
+  };
+
+  const getMaintenanceRentalCarsCountByStatus = async (token, carStatus) => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/count/${carStatus}`, 
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+
+    if (response.data) {
+      // console.log(response.data);
+      setMaintenanceRentalCarsCount(response.data);
+    }
+  };
 
   useEffect(() => {
     pageingVehicles();
     getTotalCount();
-    // getRentalCarsCount();
+    getAvailabelRentalCarsCount("01");
+    getRentedRentalCarsCount("02");
+    getMaintenanceRentalCarsCount("03");
   }, [pageNumber]);
 
   const handleUpdateClick = (updateData, workMode) => {
@@ -202,7 +274,7 @@ const RentalCarInfo = ({ onClick }) => {
 
   const viewDataInit = () => {
     setCarCode("");
-    setCarTypeCode("01");
+    setCarTypeCode("05");
     setCarNumber("")
     setModelYear("");
     setBranchCode("01");
@@ -359,7 +431,7 @@ const RentalCarInfo = ({ onClick }) => {
 
   const validateCheck = () => {
     if (!carTypeCode || carTypeCode.trim() === '') {
-      alert("차종코드를 선택해주세요.");
+      alert("차종명을 선택해주세요.");
       return false;
     };
     if (!carNumber || carNumber.trim() === '') {
@@ -371,10 +443,10 @@ const RentalCarInfo = ({ onClick }) => {
       return false;
     };
     if (!branchCode || branchCode.trim() === '') {
-      alert("지점코드를 선택해주세요.");
+      alert("지점명을 선택해주세요.");
       return false;
     };
-  
+
     return true; 
   };
 
@@ -464,7 +536,7 @@ const RentalCarInfo = ({ onClick }) => {
                 <input className='width50  word-center' type="text" value={carCode} disabled />
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차종코드</label>
+                <label className='width80 word-right label-margin-right' htmlFor="">차종명</label>
                 <select className='width100' id="comboBox" value={carTypeCode} onChange={(e) => (setCarTypeCode(e.target.value))}>
                   {optionsMenuCarTypeCode.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -482,7 +554,7 @@ const RentalCarInfo = ({ onClick }) => {
                 <input className='width100  word-center' type="text" placeholder="2024" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">지점코드</label>
+                <label className='width80 word-right label-margin-right' htmlFor="">지점명</label>
                 <select className='width100' id="comboBox" value={branchCode} onChange={(e) => (setBranchCode(e.target.value))}>
                   {optionsMenuBranchCode.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -522,12 +594,12 @@ const RentalCarInfo = ({ onClick }) => {
         >다음</button>
       </div>
 
-      {/* <div className="flex-align-center">
-        <div>{availableRentalCarsCount}</div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div> */}
+      <div className="car-info-status-wrap flex-align-center">
+        <div className="car-info-status-display car-info-status-display-main">전체차량<div className="car-info-status-content car-info-status-content-main">{totalCount}</div></div>
+        <div className="car-info-status-display">대여가능<div className="car-info-status-content">{availableRentalCarsCount}</div></div>
+        <div className="car-info-status-display">대여중<div className="car-info-status-content">{rentedRentalCarsCount}</div></div>
+        <div className="car-info-status-display">정비중<div className="car-info-status-content">{maintenanceRentalCarsCount}</div></div>
+      </div>
 
       {loading && (<Loading />)}
       </div>
