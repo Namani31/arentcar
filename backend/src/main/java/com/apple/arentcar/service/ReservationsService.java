@@ -1,7 +1,7 @@
 package com.apple.arentcar.service;
 
 
-import com.apple.arentcar.dto.ReservationRequestDTO;
+import com.apple.arentcar.dto.ReservationsSearchRequestDTO;
 import com.apple.arentcar.dto.ReservationsResponseDTO;
 import com.apple.arentcar.mapper.ReservationsMapper;
 import com.apple.arentcar.model.Reservations;
@@ -14,8 +14,8 @@ public class ReservationsService {
     @Autowired
     private ReservationsMapper reservationsMapper;
 
-    public List<ReservationsResponseDTO> getAllReservations(ReservationRequestDTO requestDTO) {
-        return reservationsMapper.getAllReservations(requestDTO); }
+    public List<ReservationsResponseDTO> getReservations(ReservationsSearchRequestDTO requestDTO) {
+        return reservationsMapper.getReservations(requestDTO); }
 
 //    public List<ReservationsResponseDTO> getFilteredReservations(ReservationRequestDTO requestDTO) {
 //        return reservationsMapper.getFilteredReservations(requestDTO);

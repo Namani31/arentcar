@@ -12,6 +12,8 @@ const ManagerReservation = () => {
   const [reserverName, setReserverName] = useState("");
   const [isPopUp, setIsPopUp] = useState(false);
   const [reservations, setReservations] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
+  const pageSize = 10;
   const [columnDefs] = useState([
     { titlename: "예약 ID", field: "reservation_code", width: 100, align: "center" },
     { titlename: "성함", field: "user_name", width: 100, align: "center" },
@@ -27,26 +29,44 @@ const ManagerReservation = () => {
   useEffect(() => {
     handleFetchBranchNames();
     handleFetchAllReservations();
-  }, [selectedBranch, reservationDate, reserverName]);
+  }, [pageNumber, pageSize]);
 
-  // 예약 데이터 가져오기
+  // 전체 예약 데이터 가져오기
   const handleFetchAllReservations = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      console.log("필터 예약 데이터 API 호출: ", selectedBranch, reservationDate, reserverName); // 디버깅용
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/reservations`, {
-        params: {
-          rentalLocationName: selectedBranch,
-          rentalDate: reservationDate,
-          userName: reserverName,
-        },
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
-      console.log("필터 예약 응답 데이터: ", response.data); // 디버깅용
-      setReservations(response.data); // 상태 업데이트
+      setReservations(response.data); // 전체 데이터 설정
     } catch (error) {
-      console.error("필터 예약 데이터를 가져오는 중 오류가 발생했습니다.", error);
+      console.error("전체 예약 데이터를 가져오는 중 오류 발생", error);
+    }
+  };
+
+  // 필터링된 예약 데이터 가져오기 (검색 버튼 클릭 시 호출)
+  const handleFetchFilteredReservations = async () => {
+    const params = {
+      rentalLocationName: selectedBranch,
+      rentalDate: reservationDate,
+      userName: reserverName,
+      pageNumber,
+      pageSize,
+    };
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/reservations`, {
+        params,
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
+
+      setReservations(response.data); // 필터링된 데이터 설정
+
+    } catch (error) {
+      console.error("전체 예약 데이터를 가져오는 중 오류 발생", error);
     }
   };
 
@@ -80,10 +100,12 @@ const ManagerReservation = () => {
   // 팝업 열기 및 닫기
   const handleDetailClick = (reservations) => {
     setIsPopUp(true);
+    // setSelectedReservation(reservations); // 선택된 예약 데이터 설정
   };
 
   const handlePopupClodeClick = () => {
     setIsPopUp(false);
+    // setSelectedReservation(null);
   };
 
   return (
@@ -101,6 +123,7 @@ const ManagerReservation = () => {
             onChange={(e) => setReserverName(e.target.value)}
             className="manager-reservation-text-input"
           />
+
           <select
             className="manager-reservation-select"
             value={selectedBranch}
@@ -113,6 +136,7 @@ const ManagerReservation = () => {
               </option>
             ))}
           </select>
+
           <input
             type="date"
             value={reservationDate}
@@ -120,7 +144,7 @@ const ManagerReservation = () => {
             className="manager-reservation-date-input"
           />
           <button
-            onClick={handleFetchAllReservations}
+            onClick={handleFetchFilteredReservations}
             className="manager-reservation-button-search manager-button manager-button-search"
           >
             검색
@@ -181,18 +205,21 @@ const ManagerReservation = () => {
       </div>
 
       {/* 팝업 */}
-      {isPopUp &&
-          <div className='manager-reservation-popup manager-popup'>
-            <div className='manager-reservation-content-popup-wrap'>
-              <div className='manager-reservation-content-popup-close'>
-                <div className='manager-popup-title'>● 예약상세</div>
-                <div className='manager-reservation-content-popup-button'>
-                  <button className='manager-button manager-button-close' onClick={handlePopupClodeClick}>닫기</button>
-                </div>
+      {isPopUp && 
+        <div className='manager-reservation-popup manager-popup'>
+          <div className='manager-reservation-content-popup-wrap'>
+            <div className='manager-reservation-content-popup-close'>
+              <div className='manager-popup-title'>● 예약상세</div>
+              <div className='manager-reservation-content-popup-button'>
+                <button className='manager-button manager-button-close' onClick={handlePopupClodeClick}>닫기</button>
+              </div>
+              <div>
+                <div></div>
               </div>
             </div>
           </div>
-        }
+        </div>
+      }
     </div>
   );
 };

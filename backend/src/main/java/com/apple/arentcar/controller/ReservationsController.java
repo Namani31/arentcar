@@ -1,6 +1,6 @@
 package com.apple.arentcar.controller;
 
-import com.apple.arentcar.dto.ReservationRequestDTO;
+import com.apple.arentcar.dto.ReservationsSearchRequestDTO;
 import com.apple.arentcar.dto.ReservationsResponseDTO;
 import com.apple.arentcar.model.Reservations;
 import com.apple.arentcar.service.ReservationsService;
@@ -24,13 +24,15 @@ public class ReservationsController {
 //    }
 
     @GetMapping("/manager/reservations")
-    public ResponseEntity<List<ReservationsResponseDTO>> getAllReservations(
+    public ResponseEntity<List<ReservationsResponseDTO>> getReservations(
             @RequestParam(required = false) String userName,
             @RequestParam(required = false) String rentalLocationName,
-            @RequestParam(required = false) String rentalDate) {
+            @RequestParam(required = false) String rentalDate,
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "10") int pageSize) {
 
         // RequestDTO 생성 및 값 설정
-        ReservationRequestDTO requestDTO = new ReservationRequestDTO();
+        ReservationsSearchRequestDTO requestDTO = new ReservationsSearchRequestDTO();
 
         requestDTO.setUserName(userName);
         requestDTO.setRentalLocationName(rentalLocationName);
@@ -39,11 +41,12 @@ public class ReservationsController {
         System.out.println("userName: " + requestDTO.getUserName());
 
         // Service 호출
-        List<ReservationsResponseDTO> reservations = reservationsService.getAllReservations(requestDTO);
+        List<ReservationsResponseDTO> reservations = reservationsService.getReservations(requestDTO);
 
         if (reservations.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
         return ResponseEntity.ok(reservations);
     }
 

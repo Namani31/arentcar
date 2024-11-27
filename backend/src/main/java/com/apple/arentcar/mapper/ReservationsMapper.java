@@ -1,6 +1,6 @@
 package com.apple.arentcar.mapper;
 
-import com.apple.arentcar.dto.ReservationRequestDTO;
+import com.apple.arentcar.dto.ReservationsSearchRequestDTO;
 import com.apple.arentcar.dto.ReservationsResponseDTO;
 import com.apple.arentcar.model.Reservations;
 import org.apache.ibatis.annotations.Mapper;
@@ -12,7 +12,7 @@ import java.util.List;
 public interface ReservationsMapper {
 
 
-    List<ReservationsResponseDTO> getAllReservations(ReservationRequestDTO requestDTO);
+    List<ReservationsResponseDTO> getReservations(ReservationsSearchRequestDTO requestDTO);
 
 //    List<ReservationsResponseDTO> getFilteredReservations(ReservationRequestDTO requestDTO);
 
