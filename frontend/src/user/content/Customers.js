@@ -64,7 +64,7 @@ const Customers = () => {
     pageingCustomersNotices();
     getCustomerCount();
     pageNum();
-  },[pageNumber])
+  },[pageNumber, totalCustomers])
 
   const handleSearchClick = async () => {
     pageingCustomersNotices();
@@ -129,8 +129,7 @@ const Customers = () => {
                   style={{color: pageNumber === 0 ? '#aaa' : '#fff'}}
                   disabled={pageNumber === 0}>◀</button>
                 {/* , backgroundColor:  pageNumber === 0 ? '#c25d16' : '#ff7916' */}
-
-                {pageNums.map((e,i)=>(
+                {pageNums && pageNums.map((e,i)=>(
                   <>
                     <span key={i} className={i===pageNumber ? "on" : ""} onClick={()=>setPageNumber(i)}> {e} </span> {e < totalPages && ( <> / </> )}
                   </>
