@@ -1,6 +1,8 @@
 package com.apple.arentcar.service;
 
+import com.apple.arentcar.dto.RentalCarsBranchOptionAttrDTO;
 import com.apple.arentcar.dto.RentalCarsDTO;
+import com.apple.arentcar.dto.RentalCarsCarOptionAttrDTO;
 import com.apple.arentcar.mapper.RentalCarsMapper;
 import com.apple.arentcar.model.RentalCars;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,4 +54,14 @@ public class RentalCarsService {
 
     // 렌탈가능/렌탈중/정비중 전체 차량 수 조회
     public int countAvailableRentalCars(String carStatus) { return rentalCarsMapper.countAvailableRentalCars(carStatus); }
+
+    // <select>의 <option>값으로 차량코드/명 동적으로 불러오기
+    public List<RentalCarsCarOptionAttrDTO> getRentalCarsCodeName() {
+       return rentalCarsMapper.getRentalCarsCodeName();
+    }
+
+    // <select>의 <option>값으로 지점코드/명 동적으로 불러오기
+    public List<RentalCarsBranchOptionAttrDTO> getRentalCarsBranchCodeName() {
+        return rentalCarsMapper.getRentalCarsBranchCodeName();
+    }
 }

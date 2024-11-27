@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { refreshAccessToken, handleLogout } from 'common/Common';
+import { refreshAccessToken, handleAdminLogout } from 'common/Common';
 import Loading from 'common/Loading';
 import "manager/carinfo/CarInfo.css";
 
@@ -10,6 +10,8 @@ const RentalCarInfo = ({ onClick }) => {
   const [loading, setLoading] = useState(false);
   const [workMode, setWorkMode] = useState("");
   const [searchName, setSearchName] = useState("");
+  const [carMenuOptions, setCarMenuOptions] = useState([]);
+  const [branchMenuOptions, setBranchMenuOptions] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const pageSize = 15;
   const [totalCount, setTotalCount] = useState(0);
@@ -38,14 +40,6 @@ const RentalCarInfo = ({ onClick }) => {
   const [modelYear, setModelYear] = useState("");
   const [branchCode, setBranchCode] = useState("");
   const [carStatus, setCarStatus] = useState("");
-
-  const optionsMenuCarTypeCode = [
-    { value: 5, label: '레이' },
-    { value: 6, label: '캐스퍼' },
-    { value: 7, label: '모닝' },
-    { value: 8, label: '스파크' },
-    { value: 9, label: '레이(더뉴)' },
-  ];
 
   const optionsMenuBranchCode = [
     { value: 1, label: '수원 본점' },
@@ -80,7 +74,7 @@ const RentalCarInfo = ({ onClick }) => {
           await getVehicles(newToken);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the vehicles pageing!', error);
@@ -124,7 +118,7 @@ const RentalCarInfo = ({ onClick }) => {
           await getCount(newToken);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the vehicles count!', error);
@@ -162,7 +156,7 @@ const RentalCarInfo = ({ onClick }) => {
           await getAvailableRentalCarsByStatus(newToken, carStatus);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the vehicles pageing!', error);
@@ -196,7 +190,7 @@ const RentalCarInfo = ({ onClick }) => {
           await getRentedRentalCarsByStatus(newToken, carStatus);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the vehicles pageing!', error);
@@ -230,7 +224,7 @@ const RentalCarInfo = ({ onClick }) => {
           await getMaintenanceRentalCarsCountByStatus(newToken, carStatus);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the vehicles pageing!', error);
@@ -260,6 +254,65 @@ const RentalCarInfo = ({ onClick }) => {
     getRentedRentalCarsCount("02");
     getMaintenanceRentalCarsCount("03");
   }, [pageNumber]);
+
+  useEffect(() => {
+    const fetchCarMenus = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        await getCarMenuOptions(token);
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          try {
+            const newToken = await refreshAccessToken();
+            await getCarMenuOptions(newToken);
+          } catch (refreshError) {
+            alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+            handleAdminLogout();
+          }
+        } else {
+          console.error('There was an error fetching the carMenu!', error);
+        }
+      }
+    };
+
+    const fetchBranchMenus = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        await getBranchMenuOptions(token);
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          try {
+            const newToken = await refreshAccessToken();
+            await getBranchMenuOptions(newToken);
+          } catch (refreshError) {
+            alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+            handleAdminLogout();
+          }
+        } else {
+          console.error('There was an error fetching the branchMenu!', error);
+        }
+      }
+    };
+
+    fetchCarMenus();
+    fetchBranchMenus();
+  }, []);
+
+  const getCarMenuOptions = async (token) => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/car/option`, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true, 
+    });
+    setCarMenuOptions(response.data);
+  };
+
+  const getBranchMenuOptions = async (token) => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/branch/option`, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true, 
+    });
+    setBranchMenuOptions(response.data);
+  };
 
   const handleUpdateClick = (updateData, workMode) => {
     setIsPopUp(true);
@@ -310,7 +363,7 @@ const RentalCarInfo = ({ onClick }) => {
             await deleteVehicle(newToken, carCode);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-            handleLogout();
+            handleAdminLogout();
           }
         } else {
           alert("삭제 중 오류가 발생했습니다." + error);
@@ -356,7 +409,7 @@ const RentalCarInfo = ({ onClick }) => {
             await updateVehicle(newToken, newVehicle);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
-            handleLogout();
+            handleAdminLogout();
           }
         } else {
           alert("차량 수정 중 오류가 발생했습니다." + error);
@@ -376,7 +429,7 @@ const RentalCarInfo = ({ onClick }) => {
             await createVehicle(newToken, newVehicle);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
-            handleLogout();
+            handleAdminLogout();
           }
         } else {
           alert("차량 등록 중 오류가 발생했습니다." + error);
@@ -413,9 +466,11 @@ const RentalCarInfo = ({ onClick }) => {
         },
         withCredentials: true,
       });
+
+    const savedVehicle = response.data;
     newVehicle.car_code = response.data.car_code;
     newVehicle.car_password = response.data.car_password;
-    setVehicles((prevVehicle) => [...prevVehicle, newVehicle]);
+    setVehicles((prevVehicle) => [...prevVehicle, savedVehicle]);
     alert("차량이 등록되었습니다.");
   };
 
@@ -528,40 +583,40 @@ const RentalCarInfo = ({ onClick }) => {
                 </div>
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차량코드</label>
-                <input className='width50  word-center' type="text" value={carCode} disabled />
+                <label className='width80 word-right label-margin-right' htmlFor="carCode">차량코드</label>
+                <input className='width50  word-center' id="carCode" type="text" value={carCode} disabled />
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차종명</label>
-                <select className='width100' id="comboBox" value={carTypeCode} onChange={(e) => (setCarTypeCode(e.target.value))}>
-                  {optionsMenuCarTypeCode.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
+                <label className='width80 word-right label-margin-right' htmlFor="carTypeCode">차종명</label>
+                <select className='width100' id="carTypeCode" value={carTypeCode} onChange={(e) => (setCarTypeCode(e.target.value))}>
+                  {carMenuOptions.map((option) => (
+                    <option key={option.car_type_code} value={option.car_type_code}>
+                      {option.car_type_name}
                     </option>
                   ))}
                 </select>
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차량번호</label>
-                <input className='width100  word-center' type="text" placeholder="01가1001" value={carNumber} onChange={(e) => {setCarNumber(e.target.value)}} />
+                <label className='width80 word-right label-margin-right' htmlFor="carNumber">차량번호</label>
+                <input className='width100  word-center' id="carNumber" type="text" placeholder="01가1001" value={carNumber} onChange={(e) => {setCarNumber(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">년식</label>
-                <input className='width100  word-center' type="text" placeholder="2024" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
+                <label className='width80 word-right label-margin-right' htmlFor="modelYear">년식</label>
+                <input className='width100  word-center' id="modelYear" type="text" placeholder="2024" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">지점명</label>
-                <select className='width100' id="comboBox" value={branchCode} onChange={(e) => (setBranchCode(e.target.value))}>
-                  {optionsMenuBranchCode.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
+                <label className='width80 word-right label-margin-right' htmlFor="branchCode">지점명</label>
+                <select className='width100' id="branchCode" value={branchCode} onChange={(e) => (setBranchCode(e.target.value))}>
+                  {branchMenuOptions.map((option) => (
+                    <option key={option.branch_code} value={option.branch_code}>
+                      {option.branch_name}
                     </option>
                   ))}
                 </select>
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차량상태</label>
-                <select className='width100' id="comboBox" value={carStatus} onChange={(e) => (setCarStatus(e.target.value))}>
+                <label className='width80 word-right label-margin-right' htmlFor="carStatus">차량상태</label>
+                <select className='width100' id="carStatus" value={carStatus} onChange={(e) => (setCarStatus(e.target.value))}>
                   {optionsMenuCarStatus.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}

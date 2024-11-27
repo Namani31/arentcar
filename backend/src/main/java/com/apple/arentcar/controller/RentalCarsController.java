@@ -1,6 +1,8 @@
 package com.apple.arentcar.controller;
 
+import com.apple.arentcar.dto.RentalCarsBranchOptionAttrDTO;
 import com.apple.arentcar.dto.RentalCarsDTO;
+import com.apple.arentcar.dto.RentalCarsCarOptionAttrDTO;
 import com.apple.arentcar.model.RentalCars;
 import com.apple.arentcar.service.RentalCarsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,5 +88,17 @@ public class RentalCarsController {
     public ResponseEntity<Integer> getTotalAvailableRentalCars(@PathVariable String carStatus) {
         int count = rentalCarsService.countAvailableRentalCars(carStatus);
         return ResponseEntity.ok(count);
+    }
+
+    // <select>의 <option>값으로 차량코드/명 동적으로 불러오기
+    @GetMapping("manager/rentalcars/car/option")
+    public List<RentalCarsCarOptionAttrDTO> getRentalCarsCodeName() {
+        return rentalCarsService.getRentalCarsCodeName();
+    }
+
+    // <select>의 <option>값으로 지점코드/지점명 동적으로 불러오기
+    @GetMapping("manager/rentalcars/branch/option")
+    public List<RentalCarsBranchOptionAttrDTO> getRentalCarsBranchCodeName() {
+        return rentalCarsService.getRentalCarsBranchCodeName();
     }
 }
