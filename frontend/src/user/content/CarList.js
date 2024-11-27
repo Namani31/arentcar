@@ -39,7 +39,7 @@ const RentalCar = ({ ...selectedFilters }) => {
 
     const fetchCarsCount = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/user/filter/countall`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/user/cars/filter/countall`, {
           params: selectedFilters,
           signal: controller.signal, // 요청 취소 연결
         });

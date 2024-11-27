@@ -7,8 +7,8 @@ import UserMemberShip from 'user/content/UserMemberShip';
 import NaverCallback from 'user/content/NaverCallback';
 import KakaoCallback from 'user/content/KakaoCallback';
 import FooterMain from 'user/footer/FooterMain';
-import ReservationPage from 'reservations/ReservationPage';
-import ReservationDetail from 'reservations/ReservationDetail';
+import ReservationPage from 'user/content/ReservationPage';
+import ReservationDetail from 'user/content/ReservationDetail';
 
 const UserMenu = () => {
   return (
