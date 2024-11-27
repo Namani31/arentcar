@@ -1,10 +1,9 @@
-package com.apple.arentcar.controller.post;
+package com.apple.arentcar.controller;
 
-
-import com.apple.arentcar.model.post.Inquirys;
-import com.apple.arentcar.model.post.Notices;
-import com.apple.arentcar.model.post.Reviews;
-import com.apple.arentcar.service.post.PostsService;
+import com.apple.arentcar.model.Inquirys;
+import com.apple.arentcar.model.Notices;
+import com.apple.arentcar.model.Reviews;
+import com.apple.arentcar.service.PostsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +16,31 @@ public class PostsController {
 
     @Autowired
     PostsService postsService;
+
+    @GetMapping("/user/customers/notices")
+    public ResponseEntity<List<Notices>> getUserAllNotices(
+            @RequestParam int pageSize,
+            @RequestParam int pageNumber,
+            @RequestParam(required = false) String postName ){
+        List<Notices> notices;
+        if(postName != null && !postName.isEmpty()){
+            notices = postsService.getSearchNotices(postName, pageSize, pageNumber);
+        } else {
+            notices = postsService.getAllNotices(pageSize, pageNumber);
+        }
+        return ResponseEntity.ok(notices);
+    }
+
+    @GetMapping("/user/customers/notices/count")
+    public ResponseEntity<Integer> getUserNoticesCount( @RequestParam(required = false) String postName ){
+        int count;
+        if(postName != null && !postName.isEmpty()){
+            count = postsService.countSearchNotices(postName);
+        } else {
+            count = postsService.countAllNotices();
+        }
+        return ResponseEntity.ok(count);
+    }
 
     @GetMapping("/manager/post")
     public List<Notices> getPostsAll(){ return postsService.getPostsAll(); }
@@ -101,9 +125,9 @@ public class PostsController {
     public ResponseEntity<Integer> getReviewsCount( @RequestParam(required = false) String postName ){
         int count;
         if(postName != null && !postName.isEmpty()){
-            count = postsService.countSearchNotices(postName);
+            count = postsService.countSearchReviews(postName);
         } else {
-            count = postsService.countAllNotices();
+            count = postsService.countReviews();
         }
         return ResponseEntity.ok(count);
     }

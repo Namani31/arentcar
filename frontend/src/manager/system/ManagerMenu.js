@@ -9,8 +9,8 @@ import RegisterMenu from 'manager/system/RegisterMenu';
 import RegisterAdmin from 'manager/system/RegisterAdmin';
 import ManagerUser from 'manager/system/ManagerUser';
 import ConnectionStatus from 'manager/system/ConnectionStatus';
-import PostNotices from './posts/PostNotices';
-import PostReviews from './posts/PostReviews';
+import PostNotices from './PostNotices';
+import PostReviews from './PostReviews';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);

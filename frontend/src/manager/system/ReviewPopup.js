@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import "manager/system/posts/ReviewPopup.css";
-import { store } from '../../../redux/store';
+import { refreshAccessToken, handleLogout } from 'common/Common';
+import "manager/system/ReviewPopup.css";
+import { store } from '../../redux/store';
 import axios from "axios";
 
 const ReviewPopup = ( { colse } ) => {
@@ -18,14 +19,31 @@ const ReviewPopup = ( { colse } ) => {
 
   const postCreateReview = async (newPost) => {
     try {
-      await createReview(newPost);
+      const token = localStorage.getItem('accessToken');
+      await createReview(token, newPost);
     } catch (error) {
-      console.error('There was an error fetching the menus pageing!', error);
+      if(error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await createReview(newToken, newPost);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the movies!', error);
+      }
     }
   } 
-  const createReview = async (newPost) => {
+  const createReview = async (token, newPost) => {
     const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/reviews`,
       newPost,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,  
+      }
     );
   }
 

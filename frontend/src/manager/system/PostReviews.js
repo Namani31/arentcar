@@ -1,10 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { refreshAccessToken, handleLogout } from 'common/Common';
-import 'manager/system/posts/PostReviews.css';
-import ReviewPopup from 'manager/system/posts/ReviewPopup';
+import 'manager/system/PostReviews.css';
+import ReviewPopup from 'manager/system/ReviewPopup';
+import { AvgCharts, RvCharts } from './Charts';
+import Loading from 'common/Loading';
+
 
 const PostReviews = ({ onClick }) => {
+  const [loading, setLoading] = useState(false);
   //고객후기
   const [reviews, setReviews] = useState([]);
   const [totalReviews, setTotalReviews] = useState(0);
@@ -43,12 +47,23 @@ const PostReviews = ({ onClick }) => {
 
   const pageReviews = async () => {
     try {
-      await fetchReviews();
+      const token = localStorage.getItem('accessToken');
+      await fetchReviews(token);
     } catch (error) {
-      console.error('There was an error fetching the movies!', error);
+      if(error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await fetchReviews(newToken);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the movies!', error);
+      }
     }
   }
-  const fetchReviews = async () => {
+  const fetchReviews = async (token) => {
     const params = {
       pageSize,
       pageNumber,
@@ -59,6 +74,10 @@ const PostReviews = ({ onClick }) => {
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/reviews`,
       {
         params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
       }
     );
     if(response.data) {
@@ -66,16 +85,64 @@ const PostReviews = ({ onClick }) => {
     }
   }
 
-  const getByCodeReviews = async (code) => {
+  //검색된 개수
+  const getTotalCount = async () => {
     try {
-      await getReviews(code);
+      const token = localStorage.getItem('accessToken');
+      await getCount(token);
     } catch (error) {
-      console.error('There was an error fetching the movies!', error);
+      if (error.response && error.response.status === 403) {
+        const newToken = await refreshAccessToken();
+        await getCount(newToken);
+      } else {
+        console.error('There was an error fetching the movies!', error);
+      }
     }
   }
-  const getReviews = async (code) => {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/reviews/${code}`,
+  const getCount = async (token) => {
+    const params = searchName && searchName.trim() !== "" ? { postName: searchName } : {}
 
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/reviews/count`,
+      {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+    if(typeof response.data === "number") {
+      setTotalReviews(response.data);
+    } else {
+      console.error('Unexpected response:', response.data);
+    }
+  }
+
+  const getByCodeReviews = async (code) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      await getReviews(token, code);
+    } catch (error) {
+      if(error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getReviews(newToken, code);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the movies!', error);
+      }
+    }
+  }
+  const getReviews = async (token, code) => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/reviews/${code}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      }
     )
     if(response.data) {
       setPostTitle(response.data.post_title);
@@ -89,26 +156,45 @@ const PostReviews = ({ onClick }) => {
 
   const postDeleteReviews = async (code) => {
     try {
-      await deleteReviews(code);
+      const token = localStorage.getItem('accessToken');
+      await deleteReviews(token,code);
     } catch (error) {
-      console.error('There was an error fetching the movies!', error);
+      if(error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await deleteReviews(newToken, code);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the movies!', error);
+      }
+    } finally {
+      setLoading(false);
     }
   }
-  const deleteReviews = async (code) => {
+  const deleteReviews = async (token,code) => {
     const response = await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/reviews/${code}`,
-
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      }
     )
     pageReviews();
   }
 
   useEffect(()=>{
+    getTotalCount();
     pageReviews();
   }, [pageNumber])
 
   //검색
   const handleSearchClick = async () => {
     pageReviews();
-
+    getTotalCount();  
     setPageNumber(0);
   }
 
@@ -135,8 +221,10 @@ const PostReviews = ({ onClick }) => {
     setIsPopUp(true)
   }
 
+  let totalPages = Math.ceil(totalReviews/ pageSize);
+  if (totalPages < 1) { totalPages = 1; }
+  if (totalReviews === 0) { totalPages = 0; }
 
-  // const [score, setScore] = useState("");
   const scoreSeting = (star) => {
     const scoreStar = [];
     for (let index = 0; index < star; index++) {
@@ -145,9 +233,6 @@ const PostReviews = ({ onClick }) => {
     for (let index = 0; index < 5 - star; index++) {
       scoreStar.push("☆");
     }
-
-    // console.log(scoreStar.join(""));
-    // setScore(scoreStar.join(""))
     return <> {scoreStar} </>
   }
   const handleCloseClick = () => {
@@ -171,6 +256,7 @@ const PostReviews = ({ onClick }) => {
           <div className='flex-align-center'>
             <label className='manager-label' htmlFor="manager-post-serch">제목</label>
             <input id='manager-post-serch' className='width200' type="text" 
+              value={searchName}  
               onChange={(e)=>(setSearchName(e.target.value))} 
               onKeyDown={(e)=>{if(e.key === "Enter") {handleSearchClick()} }}></input>
             <button className='manager-button manager-button-search' onClick={()=>handleSearchClick()}> 검색 </button>
@@ -179,7 +265,7 @@ const PostReviews = ({ onClick }) => {
 
           <div>
               <button className='manager-button manager-button-insert' onClick={()=> handlePopupClick(["통계"])}> 통계 </button>
-              <button className='manager-button manager-button-insert' onClick={()=> setPopupType("추가")}> 추가 </button>
+              {/* <button className='manager-button manager-button-insert' onClick={()=> setPopupType("추가")}> 추가 </button> */}
               <button className='manager-button manager-button-close' onClick={() => handleCloseClick()}> 닫기</button>
           </div>
         </div>
@@ -203,8 +289,8 @@ const PostReviews = ({ onClick }) => {
                       style={{width:`${column.width}`, textAlign:`${column.align}`}}>
                       {column.field === '' ? (
                         <>
-                          <button className='manager-button post-btn3' onClick={()=> handlePopupClick([ "보기", review["post_code"] ])}> 보기 </button>
-                          <button className='manager-button post-btn2' > 수정 </button> 
+                          <button className='manager-button post-btn2' onClick={()=> handlePopupClick([ "보기", review["post_code"] ])}> 보기 </button>
+                          {/* <button className='manager-button post-btn3' > 수정 </button>  */}
                           <button className='manager-button post-btn1' onClick={()=> handleDeleteClick(review["post_code"]) }> 삭제 </button> 
                         </>
                       ) : (
@@ -251,22 +337,24 @@ const PostReviews = ({ onClick }) => {
                 </div>
                 <hr style={{margin:" 10px 0px "}}/>
                 <div className='manager-post-review-popup-line'>
-                  {/* 대분류  리뷰수 편균점수 */}
-                  {/* 소분류  날짜별   성별 */}
+                  {/* 대분류  리뷰수 전체평균 */}
+                  {/* 소분류  날짜별 연령별 성별 */}
                   <ul>
                     <li onClick={()=>{setStats(0)}} className={`${stats === 0 ? 'on' : ''}`}> 날짜별 </li>
                     <li onClick={()=>{setStats(1)}} className={`${stats === 1 ? 'on' : ''}`}> 연령별 </li>
-                    <li onClick={()=>{setStats(2)}} className={`${stats === 2 ? 'on' : ''}`}> 성별 </li>
+                    {/* <li onClick={()=>{setStats(2)}} className={`${stats === 2 ? 'on' : ''}`}> 성별 </li> 형님이 추가하기 귀찮은이까 하지말하심ㅠ */}
                   </ul>
                 </div>
                 <div className='manager-post-review-popup-line manager-post-review-popup-content'>
                   <div className='manager-post-review-popup-line-statistics'> 
                     {/* <차트> $ npm install recharts */}
+                    <RvCharts stats={stats}/>
                     <div className='manager-post-review-popup-bold'>리뷰수</div>
                   </div>
                   <div className='manager-post-review-popup-line-statistics'>
                     {/* <차트> $ npm install recharts */}
-                    <div className='manager-post-review-popup-bold'>편균점수</div>
+                    <AvgCharts stats={stats}/>
+                    <div className='manager-post-review-popup-bold'>전체평균</div>
                   </div>
                 </div>
               </div>
@@ -279,17 +367,19 @@ const PostReviews = ({ onClick }) => {
             style={{color: pageNumber === 0 ? '#aaa' : '#26319b'}}
             disabled={pageNumber === 0}
           >이전</button>
-          <div className='manager-post-reviews-table-paging-page'>{(pageNumber+1)} / {totalReviews}</div>
+          <div className='manager-post-reviews-table-paging-page'>{(pageNumber+1)} / {totalPages}</div>
           <button className='manager-button' onClick={()=>setPageNumber(pageNumber + 1)}
-            style={{color: (pageNumber + 1) >= totalReviews ? '#aaa' : '#26319b'}}
-            disabled={ (pageNumber + 1) >= totalReviews }
+            style={{color: (pageNumber + 1) >= totalPages ? '#aaa' : '#26319b'}}
+            disabled={ (pageNumber + 1) >= totalPages }
           >다음 </button>
         </div>
 
       </div>
-      
-      {popupType === "추가" && (
+      {/* {popupType === "추가" && (
       <ReviewPopup colse={handleClosePopup} />
+      )} */}
+      {loading && (
+        <Loading />
       )}
     </div>
   )

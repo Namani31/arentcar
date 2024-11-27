@@ -1,9 +1,9 @@
-package com.apple.arentcar.service.post;
+package com.apple.arentcar.service;
 
-import com.apple.arentcar.mapper.post.PostsMapper;
-import com.apple.arentcar.model.post.Inquirys;
-import com.apple.arentcar.model.post.Notices;
-import com.apple.arentcar.model.post.Reviews;
+import com.apple.arentcar.mapper.PostsMapper;
+import com.apple.arentcar.model.Inquirys;
+import com.apple.arentcar.model.Notices;
+import com.apple.arentcar.model.Reviews;
 import com.apple.arentcar.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +46,8 @@ public class PostsService {
         int offset = pageNumber * pageSize;
         return postsMapper.getSearchAllReviews(keyword, pageSize, offset);
     }
+    public int countReviews() { return postsMapper.countReviews(); }
+    public int countSearchReviews(String keyword) { return postsMapper.countSearchReviews(keyword); }
     public Reviews getReview(Integer postCode) { return postsMapper.getReview(postCode); }
     public void createReview(Reviews reviews) {
         postsMapper.createReviewPosts(reviews);

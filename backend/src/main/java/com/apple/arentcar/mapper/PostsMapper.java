@@ -1,9 +1,8 @@
-package com.apple.arentcar.mapper.post;
+package com.apple.arentcar.mapper;
 
-import com.apple.arentcar.model.Menus;
-import com.apple.arentcar.model.post.Inquirys;
-import com.apple.arentcar.model.post.Notices;
-import com.apple.arentcar.model.post.Reviews;
+import com.apple.arentcar.model.Inquirys;
+import com.apple.arentcar.model.Notices;
+import com.apple.arentcar.model.Reviews;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -21,7 +20,9 @@ public interface PostsMapper {
     void deleteNotice(Integer postCode);
 
     List<Reviews> getAllReviews(Integer pageSize, Integer pageNumber);
+    int countReviews();
     List<Reviews> getSearchAllReviews(String keyword, Integer pageSize, Integer pageNumber);
+    int countSearchReviews(String keyword);
     Reviews getReview(Integer postCode);
     void createReviewPosts(Reviews reviews);
     void createReview(Reviews reviews);

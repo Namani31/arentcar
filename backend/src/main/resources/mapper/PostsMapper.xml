@@ -3,9 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.apple.arentcar.mapper.post.PostsMapper">
+<mapper namespace="com.apple.arentcar.mapper.PostsMapper">
 
-    <select id="getPostsAll" resultType="com.apple.arentcar.model.post.Notices">
+    <select id="getPostsAll" resultType="com.apple.arentcar.model.Notices">
         SELECT p.*,
                CASE
                    when p.author_type = 'US' THEN us.user_name
@@ -15,7 +15,7 @@
             LEFT join users us on us.user_code = p.author_code;
     </select>
 
-    <select id="getAllNotices" resultType="com.apple.arentcar.model.post.Notices">
+    <select id="getAllNotices" resultType="com.apple.arentcar.model.Notices">
         SELECT p.*,
             CASE
                 when p.author_type = 'US' THEN us.user_name
@@ -31,7 +31,7 @@
         SELECT count(*) from posts p where p.post_type = 'NT';
     </select>
 
-    <select id="getsSearchNotices" resultType="com.apple.arentcar.model.post.Notices">
+    <select id="getsSearchNotices" resultType="com.apple.arentcar.model.Notices">
         SELECT p.*,
                CASE
                    when p.author_type = 'US' THEN us.user_name
@@ -47,7 +47,7 @@
         SELECT count(*) from posts p where p.post_type = 'NT' and p.post_title LIKE CONCAT('%', #{keyword}, '%');
     </select>
 
-    <select id="getNotice" resultType="com.apple.arentcar.model.post.Notices">
+    <select id="getNotice" resultType="com.apple.arentcar.model.Notices">
         SELECT p.*,
                CASE
                    when p.author_type = 'US' THEN us.user_name
@@ -58,12 +58,12 @@
         where p.post_type = 'NT' AND p.post_code = #{postCode};
     </select>
 
-    <insert id="createNotice" parameterType="com.apple.arentcar.model.post.Notices">
+    <insert id="createNotice" parameterType="com.apple.arentcar.model.Notices">
         INSERT INTO posts (post_type, post_title, post_content, author_code, author_type)
         values('NT', #{postTitle}, #{postContent}, #{authorCode},'AM');
     </insert>
 
-    <update id="updateNotice" parameterType="com.apple.arentcar.model.post.Notices">
+    <update id="updateNotice" parameterType="com.apple.arentcar.model.Notices">
         update posts SET
         post_title = #{postTitle},
         post_content = #{postContent},
@@ -75,7 +75,7 @@
         DELETE FROM posts where post_code = #{postCode};
     </delete>
 
-    <select id="getAllReviews" resultType="com.apple.arentcar.model.post.Reviews">
+    <select id="getAllReviews" resultType="com.apple.arentcar.model.Reviews">
         SELECT p.*, rv.review_rating,
             CASE
                 when p.author_type = 'US' THEN us.user_name
@@ -87,7 +87,11 @@
         ORDER BY p.post_code LIMIT #{pageSize} OFFSET #{pageNumber};
     </select>
 
-    <select id="getSearchAllReviews" resultType="com.apple.arentcar.model.post.Reviews">
+    <select id="countReviews" resultType="int">
+        SELECT count(*) from posts p where p.post_type = 'RV';
+    </select>
+
+    <select id="getSearchAllReviews" resultType="com.apple.arentcar.model.Reviews">
         SELECT p.*, rv.review_rating,
             CASE
                 when p.author_type = 'US' THEN us.user_name
@@ -100,7 +104,11 @@
         ORDER BY p.post_code LIMIT #{pageSize} OFFSET #{pageNumber};
     </select>
 
-    <select id="getReview" resultType="com.apple.arentcar.model.post.Reviews">
+    <select id="countSearchReviews" resultType="int">
+        SELECT count(*) from posts p where p.post_type = 'RV' and p.post_title LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <select id="getReview" resultType="com.apple.arentcar.model.Reviews">
         SELECT p.*, rv.review_rating,
             CASE
                 when p.author_type = 'US' THEN us.user_name
@@ -112,14 +120,14 @@
         where p.post_code = #{postCode};
     </select>
 
-    <insert id="createReviewPosts" parameterType="com.apple.arentcar.model.post.Reviews">
+    <insert id="createReviewPosts" parameterType="com.apple.arentcar.model.Reviews">
         <selectKey resultType="int" keyProperty="postCode" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
         INSERT INTO posts (post_type, post_title, post_content, author_code, author_type)
         values('RV', #{postTitle}, #{postContent}, #{authorCode},'US');
     </insert>
-    <insert id="createReview" parameterType="com.apple.arentcar.model.post.Reviews">
+    <insert id="createReview" parameterType="com.apple.arentcar.model.Reviews">
         INSERT INTO reviews (post_code, review_rating)
         values(#{postCode}, #{reviewRating});
     </insert>
@@ -132,7 +140,7 @@
     </delete>
 
 
-    <select id="getAllInquirys" resultType="com.apple.arentcar.model.post.Inquirys">
+    <select id="getAllInquirys" resultType="com.apple.arentcar.model.Inquirys">
         SELECT p.*, iq.inquiry_status from posts p
         join inquirys iq on iq.post_code = p.post_code;
     </select>
