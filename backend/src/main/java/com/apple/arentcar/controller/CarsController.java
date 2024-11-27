@@ -86,7 +86,8 @@ public class CarsController {
 //            if (Files.exists(filePath)) {
 //                return ResponseEntity.status(HttpStatus.CONFLICT).body("File with the same name already exists!");
 //            }
-
+            
+            // StandardCopyOption.REPLACE_EXISTING -> 중복된 파일은 덮어쓰겠음
             // 덮어쓰기를 허용하므로 중복 확인은 필요하지 않음
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 

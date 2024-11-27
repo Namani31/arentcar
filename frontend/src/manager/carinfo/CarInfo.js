@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { refreshAccessToken, handleLogout } from 'common/Common';
+import { refreshAccessToken, handleAdminLogout } from 'common/Common';
 import Loading from 'common/Loading';
 import "manager/carinfo/CarInfo.css";
 
@@ -113,7 +113,7 @@ const CarInfo = ({ onClick }) => {
           await getVehicles(newToken);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the vehicles pageing!', error);
@@ -156,7 +156,7 @@ const CarInfo = ({ onClick }) => {
           await getCount(newToken);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the vehicles count!', error);
@@ -192,14 +192,14 @@ const CarInfo = ({ onClick }) => {
     setIsPopUp(true);
     setWorkMode(workMode);
     setCarTypeCode(updateData.car_type_code);
-    setCarTypeCategory(updateData.car_type_category);
-    setOriginType(updateData.origin_type);
+    setCarTypeCategory(updateData.car_type_category_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
+    setOriginType(updateData.origin_type_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
     setCarTypeName(updateData.car_type_name);
-    setSeatingCapacity(updateData.seating_capacity);
-    setFuelType(updateData.fuel_type);
-    setSpeedLimit(updateData.speed_limit);
-    setLicenseRestriction(updateData.license_restriction);
-    setCarManufacturer(updateData.car_manufacturer)
+    setSeatingCapacity(updateData.seating_capacity_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
+    setFuelType(updateData.fuel_type_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
+    setSpeedLimit(updateData.speed_limit_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
+    setLicenseRestriction(updateData.license_restriction_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
+    setCarManufacturer(updateData.car_manufacturer_code) // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
     setModelYear(updateData.model_year)
     setCarImage("")
     setCarImageName("")
@@ -238,7 +238,7 @@ const CarInfo = ({ onClick }) => {
   };
 
   const handleDeleteClick = async (carTypeCode) => {
-    if (window.confirm('자료를 정말로 삭제하시겠습니까?')) {
+    if (window.confirm('차종을 정말로 삭제하시겠습니까?')) {
       try {
         const token = localStorage.getItem('accessToken');
         await deleteVehicle(token, carTypeCode);
@@ -249,10 +249,10 @@ const CarInfo = ({ onClick }) => {
             await deleteVehicle(newToken, carTypeCode);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-            handleLogout();
+            handleAdminLogout();
           }
         } else {
-          alert("삭제 중 오류가 발생했습니다." + error);
+          alert("차종 삭제 중 오류가 발생했습니다." + error);
         }
       }
     }
@@ -266,7 +266,7 @@ const CarInfo = ({ onClick }) => {
       withCredentials: true,
     });
     setVehicles((prevVehicle) => prevVehicle.filter(vehicle => vehicle.car_type_code !== carTypeCode));
-    alert("자료가 삭제되었습니다.");
+    alert("차종이 삭제되었습니다.");
   };
 
   const handleDataSaveClick = async () => {
@@ -303,10 +303,10 @@ const CarInfo = ({ onClick }) => {
             await updateVehicle(newToken, newVehicle, newVehicleImage);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
-            handleLogout();
+            handleAdminLogout();
           }
         } else {
-          alert("수정 중 오류가 발생했습니다." + error);
+          alert("차종 수정 중 오류가 발생했습니다." + error);
         }
       } finally {
         setLoading(false);
@@ -323,10 +323,10 @@ const CarInfo = ({ onClick }) => {
             await createVehicle(newToken, newVehicle, newVehicleImage);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
-            handleLogout();
+            handleAdminLogout();
           }
         } else {
-          alert("등록 중 오류가 발생했습니다." + error);
+          alert("차종 등록 중 오류가 발생했습니다." + error);
         }
       } finally {
         setLoading(false);
@@ -370,10 +370,10 @@ const CarInfo = ({ onClick }) => {
         }
       );
       setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.car_type_code === carTypeCode ? newVehicle : vehicle));
-      alert("자료가 수정되었습니다.");
+      alert("차종이 수정되었습니다.");
     } catch(error) {
       console.error("Error updating vehicle:", error);
-      alert("차량 수정 중 오류가 발생했습니다.");
+      alert("차종 수정 중 오류가 발생했습니다.");
     }
 
   };
@@ -385,20 +385,22 @@ const CarInfo = ({ onClick }) => {
         return;
       }
   
-      // Base64 문자열을 Blob으로 변환
-      const byteString = atob(newVehicleImage.car_image.split(',')[1]);
-      const mimeString = newVehicleImage.car_image.split(',')[0].split(':')[1].split(';')[0];
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
+      // Base64(데이터URL) 문자열을 Blob으로 변환 - newVehicleImage.car_images는 Base64로 인코딩된 이미지 데이터 URL임
+      const byteString = atob(newVehicleImage.car_image.split(',')[1]); // atob 함수를 이용해 Base64로 인코딩된(데이터URL) 문자열을 원래의 바이너리 데이터로 디코딩함, 데이터URL로 변환된 파일이 아니면 파일의 바이너리 데이터에 접근하기 어려움
+      // -> 데이터 URL은 data:[<MIME-type>];[base64],<data> 형식이므로, ,를 기준으로 나누면 두 번째 요소가 Base64 데이터가 됨
+      const mimeString = newVehicleImage.car_image.split(',')[0].split(':')[1].split(';')[0]; // URL(newVehicleImage.car_image)에서 MIME 타입을 추출함, MIME 타입은 파일의 형식과 내용을 설명하는 문자열임
+      const ab = new ArrayBuffer(byteString.length); // JavaScript에서 바이너리 데이터를 저장하기 위한 버퍼(데이터를 일시적으로 저장하는 고정된 메모리 공간), 데이터를 저장함, 메모리 공간만 할당함
+      const ia = new Uint8Array(ab); // 저장된 데이터를 특정 형식으로 읽고 쓰기위해 사용하는 TypedArray객체(Uint8Array, Int16Array, Float32Array 등...)
+      // -> Uint8Array는 데이터를 8비트 부호 없는 정수 배열로 해석함, 각 요소는 0에서 255 사이의 값을 가집니다
       for (let i = 0; i < byteString.length; i++) {
         ia[i] = byteString.charCodeAt(i);
       }
-      const blob = new Blob([ab], { type: mimeString });
+      const blob = new Blob([ab], { type: mimeString }); // Blob 객체를 생성하여 바이너리 데이터를 파일 형식으로 변환함. Blob은 파일과 유사한 객체, 서버에 전송 가능함
       
       // FormData 객체 생성
-      const formData = new FormData();
-      formData.append('file', blob, carImageName);
-      formData.append('carData', JSON.stringify(newVehicle));
+      const formData = new FormData(); // 파일과 데이터를 함께 전송할 수 있도록 준비, key와 value로 구성됨
+      formData.append('file', blob, carImageName); // blob형태로 파일(이미지) 저장, 파일(이미지)의 이름(carImageName)도 함께 저장
+      formData.append('carData', JSON.stringify(newVehicle)); // JSON형태로 데이타 저장
 
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars`, 
         formData,
@@ -411,34 +413,34 @@ const CarInfo = ({ onClick }) => {
         });
 
         const savedVehicle = response.data;
-        // newVehicle.car_type_code = response.data.car_type_code;
-        // newVehicle.car_type_password = response.data.car_type_password;
+        newVehicle.car_type_code = response.data.car_type_code;
+        newVehicle.car_type_password = response.data.car_type_password;
         setVehicles((prevVehicle) => [...prevVehicle, savedVehicle]);
-        alert("자료가 등록되었습니다.");
+        alert("차종이 등록되었습니다.");
     } catch (error) {
       console.error("Error creating vehicle:", error);
-      alert("차량 등록 중 오류가 발생했습니다.");
+      alert("차종 등록 중 오류가 발생했습니다.");
     }
   };
 
-  const onChangeImageUpload = (e) => {
+  const handleImageUpload = (e) => {
     const {files} = e.target;
-    if (files && files.length > 0) { // 파일이 선택되었는지 확인
-      const uploadFile = files[0];
+    if (files && files.length > 0) { // 하나 이상의 파일이 선택되었는지 확인
+      const uploadFile = files[0]; // 선택한 첫 번째 파일을 변수에 저장
       const fileName = uploadFile.name; // 원본 파일 이름 가져오기
 
-      const reader = new FileReader();
-      reader.readAsDataURL(uploadFile);
-      reader.onloadend = () => {
-        setCarImage(reader.result);
+      const reader = new FileReader(); // 파일을 읽고 그 내용을 다양한 형식으로 변활할 수 있는 API를 제공
+      reader.readAsDataURL(uploadFile); // 데이터를 URL로변환. 데이터 URL은 파일의 내용을 Base64로 인코딩한 문자열임, URL로 변환 안 하면 이미지 미리보기 불가능(<img> 태그의 src 속성에 설정할 수 있는 데이터가 없음)
+      reader.onloadend = () => { // 파일 읽기가 완료되면 호출되는 콜백 함수.
+        setCarImage(reader.result); // 파일의 결과(URL 포함)를 carImage에 저장, 이미지 미리보기에 이용 가능
       };
 
        // 원본 파일 이름을 다른 곳에서 사용하고 싶다면 상태로 저장할 수도 있습니다.
        setCarImageName(fileName);
     } else {
        // 파일 선택이 취소된 경우 상태 초기화
-       setCarImage(null);
-       setCarImageName('');
+       setCarImage(null); // 이미지 데이터 초기화
+       setCarImageName(''); 
     }
   }
 
@@ -462,7 +464,7 @@ const CarInfo = ({ onClick }) => {
       return false;
     };
     if (!carImage || carImage.trim() === '') {
-      alert("차량이미지를 등록해주세요.");
+      alert("차종이미지를 등록해주세요.");
       return false;
     };
   
@@ -551,12 +553,12 @@ const CarInfo = ({ onClick }) => {
                 </div>
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차종코드</label>
-                <input className='width50  word-center' type="text" value={carTypeCode} disabled />
+                <label className='width80 word-right label-margin-right' htmlFor="carTypeCode">차종코드</label>
+                <input className='width50  word-center' id='carTypeCode' type="text" value={carTypeCode} disabled />
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차종구분</label>
-                <select className='width100' id="comboBox" value={carTypeCategory} onChange={(e) => (setCarTypeCategory(e.target.value))}>
+                <label className='width80 word-right label-margin-right' htmlFor="carTypeCategory">차종구분</label>
+                <select className='width100' id="carTypeCategory" value={carTypeCategory} onChange={(e) => (setCarTypeCategory(e.target.value))}>
                   {optionsMenuCarTypeCategory.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -565,8 +567,8 @@ const CarInfo = ({ onClick }) => {
                 </select>
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">국산/수입</label>
-                <select className='width100' id="comboBox" value={originType} onChange={(e) => (setOriginType(e.target.value))}>
+                <label className='width80 word-right label-margin-right' htmlFor="originType">국산/수입</label>
+                <select className='width100' id="originType" value={originType} onChange={(e) => (setOriginType(e.target.value))}>
                   {optionsMenuOriginType.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -575,12 +577,12 @@ const CarInfo = ({ onClick }) => {
                 </select>
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차종명</label>
-                <input className='width100 word-center' type="text" placeholder="모닝" maxLength={6} value={carTypeName} onChange={(e) => setCarTypeName(e.target.value)} />
+                <label className='width80 word-right label-margin-right' htmlFor="carTypeName">차종명</label>
+                <input className='width100 word-center' id='carTypeName' type="text" placeholder="모닝" maxLength={6} value={carTypeName} onChange={(e) => setCarTypeName(e.target.value)} />
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">수용인원</label>
-                <select className='width100' id="comboBox" value={seatingCapacity} onChange={(e) => (setSeatingCapacity(e.target.value))}>
+                <label className='width80 word-right label-margin-right' htmlFor="seatingCapacity">수용인원</label>
+                <select className='width100' id="seatingCapacity" value={seatingCapacity} onChange={(e) => (setSeatingCapacity(e.target.value))}>
                   {optionsMenuSeatingCapacity.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -589,8 +591,8 @@ const CarInfo = ({ onClick }) => {
                 </select>
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">연료</label>
-                <select className='width100' id="comboBox" value={fuelType} onChange={(e) => (setFuelType(e.target.value))}>
+                <label className='width80 word-right label-margin-right' htmlFor="fuelType">연료</label>
+                <select className='width100' id="fuelType" value={fuelType} onChange={(e) => (setFuelType(e.target.value))}>
                   {optionsMenuFuelType.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -599,8 +601,8 @@ const CarInfo = ({ onClick }) => {
                 </select>
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">속도제한</label>
-                <select className='width100' id="comboBox" value={speedLimit} onChange={(e) => (setSpeedLimit(e.target.value))}>
+                <label className='width80 word-right label-margin-right' htmlFor="speedLimit">속도제한</label>
+                <select className='width100' id="speedLimit" value={speedLimit} onChange={(e) => (setSpeedLimit(e.target.value))}>
                   {optionsMenuSpeedLimit.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -609,8 +611,8 @@ const CarInfo = ({ onClick }) => {
                 </select>
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">면허제한</label>
-                <select className='width100' id="comboBox" value={licenseRestriction} onChange={(e) => (setLicenseRestriction(e.target.value))}>
+                <label className='width80 word-right label-margin-right' htmlFor="licenseRestriction">면허제한</label>
+                <select className='width100' id="licenseRestriction" value={licenseRestriction} onChange={(e) => (setLicenseRestriction(e.target.value))}>
                   {optionsMenuLicenseRestriction.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -619,8 +621,8 @@ const CarInfo = ({ onClick }) => {
                 </select>
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">제조사</label>
-                <select className='width100' id="comboBox" value={carManufacturer} onChange={(e) => (setCarManufacturer(e.target.value))}>
+                <label className='width80 word-right label-margin-right' htmlFor="carManufacturer">제조사</label>
+                <select className='width100' id="carManufacturer" value={carManufacturer} onChange={(e) => (setCarManufacturer(e.target.value))}>
                   {optionsMenuCarManufacturer.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -629,12 +631,12 @@ const CarInfo = ({ onClick }) => {
                 </select>
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">년식</label>
-                <input className='width100  word-center' type="text" placeholder="2020년식" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
+                <label className='width80 word-right label-margin-right' htmlFor="modelYear">년식</label>
+                <input className='width100  word-center' id='modelYear' type="text" placeholder="2020년식" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
-                <label className='width80 word-right label-margin-right' htmlFor="">차량이미지</label>
-                <input className='car-info-file-button' name="file" type="file" accept="image/*" onChange={onChangeImageUpload} />
+                <label className='width80 word-right label-margin-right' htmlFor="carImage">차량이미지</label>
+                <input className='car-info-file-button' id='carImage' name="file" type="file" accept="image/*" onChange={handleImageUpload} />
                 {carImage && <img className="width350" src={carImage} alt="Selected Car" />}
                 {/* <img className="width350" src = {carImage} alt={carImage}  /> */}
                 {carImageName && <p className='word-center'>파일 이름 : {carImageName}</p>}

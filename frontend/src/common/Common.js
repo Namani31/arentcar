@@ -183,5 +183,14 @@ export const refreshAccessToken = async () => {
 export const handleLogout = () => {
   // localStorage.removeItem('accessToken');
   // Cookies.remove('refreshToken'); 
+  window.location.href = '/'; 
+};
+
+/**
+ * 관리자 로그아웃 처리 함수
+ */
+export const handleAdminLogout = () => {
+  // localStorage.removeItem('accessToken');
+  // Cookies.remove('refreshToken'); 
   window.location.href = '/admin'; 
 };

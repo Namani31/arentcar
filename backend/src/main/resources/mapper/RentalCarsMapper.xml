@@ -44,9 +44,12 @@
         SELECT
         rc.car_code,
         ct.car_type_name,
+        ct.car_type_code, <!-- 수정 기능을 위해 RentalCarsDTO에 같이 전달 -->
         rc.car_number,
         cc1.common_name AS car_status,
+        rc.car_status AS car_status_code, <!-- 수정 기능을 위해 RentalCarsDTO에 같이 전달 -->
         b.branch_name,
+        b.branch_code, <!-- 수정 기능을 위해 RentalCarsDTO에 같이 전달 -->
         cc2.common_name AS car_type_category,
         cc3.common_name AS origin_type,
         cc4.common_name AS seating_capacity,
@@ -71,9 +74,12 @@
         SELECT
         rc.car_code,
         ct.car_type_name,
+        ct.car_type_code, <!-- 수정 기능을 위해 RentalCarsDTO에 같이 전달 -->
         rc.car_number,
         cc1.common_name AS car_status,
+        rc.car_status AS car_status_code, <!-- 수정 기능을 위해 RentalCarsDTO에 같이 전달 -->
         b.branch_name,
+        b.branch_code, <!-- 수정 기능을 위해 RentalCarsDTO에 같이 전달 -->
         cc2.common_name AS car_type_category,
         cc3.common_name AS origin_type,
         cc4.common_name AS seating_capacity,
@@ -108,5 +114,15 @@
     <!-- 렌탈가능/렌탈중/정비중 전체 차량 수 조회 -->
     <select id="countAvailableRentalCars" resultType="int">
         SELECT COUNT(*) FROM rental_cars WHERE car_status = #{carStatus}
+    </select>
+
+    <!-- <select>의 <option>값으로 차량코드/명 동적으로 불러오기 -->
+    <select id="getRentalCarsCodeName" resultType="com.apple.arentcar.dto.RentalCarsCarOptionAttrDTO">
+        SELECT car_type_code, car_type_name FROM car_types
+    </select>
+
+    <!-- <select>의 <option>값으로 지점코드/명 동적으로 불러오기 -->
+    <select id="getRentalCarsBranchCodeName" resultType="com.apple.arentcar.dto.RentalCarsBranchOptionAttrDTO">
+        SELECT branch_code, branch_name FROM branchs
     </select>
 </mapper>
