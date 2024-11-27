@@ -342,7 +342,7 @@ const PostReviews = ({ onClick }) => {
                   <ul>
                     <li onClick={()=>{setStats(0)}} className={`${stats === 0 ? 'on' : ''}`}> 날짜별 </li>
                     <li onClick={()=>{setStats(1)}} className={`${stats === 1 ? 'on' : ''}`}> 연령별 </li>
-                    {/* <li onClick={()=>{setStats(2)}} className={`${stats === 2 ? 'on' : ''}`}> 성별 </li> 형님이 추가하기 귀찮은이까 하지말하심ㅠ */}
+                    {/* <li onClick={()=>{setStats(2)}} className={`${stats === 2 ? 'on' : ''}`}> 성별 </li> 형님이 성별 추가하기 귀찮은이까 하지말라고 하신거 */}
                   </ul>
                 </div>
                 <div className='manager-post-review-popup-line manager-post-review-popup-content'>

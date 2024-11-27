@@ -8,6 +8,7 @@ import NaverCallback from 'user/content/NaverCallback';
 import KakaoCallback from 'user/content/KakaoCallback';
 import FooterMain from 'user/footer/FooterMain';
 import Customers from 'user/content/Customers';
+import Notices from 'user/content/Notices';
 
 const UserMenu = () => {
   return (
@@ -23,6 +24,8 @@ const UserMenu = () => {
           <Route path="/naver-callback" element={<NaverCallback />} /> 
           <Route path="/kakao-callback" element={<KakaoCallback />} /> 
           <Route path="/customers" element={<Customers />} ></Route>
+          <Route path="/customers/NT/"></Route>
+          <Route path="/customers/NT/:postId" element={<Notices />} ></Route>
         </Routes>
       </div>
       <div className='user-menu-footer-wrap'>

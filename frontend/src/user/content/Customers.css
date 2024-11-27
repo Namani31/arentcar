@@ -1,5 +1,5 @@
 .user-customers{
-    margin-top: 30px;
+    margin-top: 15px;
     width: 100%;
     background-color: #ededf0;
 }
@@ -35,6 +35,7 @@
 }
 .user-customers-wrap{
     max-width: 1280px;
+    min-height: 300px;
     margin: 0 auto;
     margin-top: 30px;
     padding: 25px 25px 0px 25px;
@@ -45,6 +46,9 @@
     /* background-color: #ffffff; */
 }
 .user-customers-wrap-post-notices{
+    padding: 0px 20px;
+}
+.user-customers-wrap-post-reviews{
     padding: 0px 20px;
 }
 .user-customers-wrap-post-header{

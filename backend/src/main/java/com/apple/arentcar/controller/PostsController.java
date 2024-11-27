@@ -30,7 +30,6 @@ public class PostsController {
         }
         return ResponseEntity.ok(notices);
     }
-
     @GetMapping("/user/customers/notices/count")
     public ResponseEntity<Integer> getUserNoticesCount( @RequestParam(required = false) String postName ){
         int count;
@@ -38,6 +37,40 @@ public class PostsController {
             count = postsService.countSearchNotices(postName);
         } else {
             count = postsService.countAllNotices();
+        }
+        return ResponseEntity.ok(count);
+    }
+    @GetMapping("/user/customers/notices/{postCode}")
+    public ResponseEntity<Notices> getUserNotice(@PathVariable Integer postCode) {
+        Notices notices = postsService.getNotice(postCode);
+
+        if (notices != null) {
+            return ResponseEntity.ok(notices);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/user/customers/reviews")
+    public ResponseEntity<List<Reviews>> getUserAllReviews(
+            @RequestParam int pageSize,
+            @RequestParam int pageNumber,
+            @RequestParam(required = false) String postName) {
+        List<Reviews> reviews;
+        if(postName != null && !postName.isEmpty()) {
+            reviews = postsService.getSearchAllReviews(postName, pageSize, pageNumber);
+        } else {
+            reviews = postsService.getAllReviews(pageSize, pageNumber);
+        }
+        return ResponseEntity.ok(reviews);
+    }
+    @GetMapping("/user/customers/reviews/count")
+    public ResponseEntity<Integer> getUserReviewsCount( @RequestParam(required = false) String postName ){
+        int count;
+        if(postName != null && !postName.isEmpty()){
+            count = postsService.countSearchReviews(postName);
+        } else {
+            count = postsService.countReviews();
         }
         return ResponseEntity.ok(count);
     }
