@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { refreshAccessToken, handleLogout } from 'common/Common';
-import './ManagePayment.css';
+import 'manager/managepayment/ManagePayment.css';
+import 'index.css'
 
 const ManagePayment = ({ onClick }) => {
 
   const [rentalRates, setRentalRates] = useState([]);
+  const [branchNames, setBranchNames] = useState([]);
   const [isPopUp, setIsPopUp] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const pageSize = 10;
   const [searchName, setSearchName] = useState("");
+  const [selectBranch, setSelectBranch] = useState("");
+  const [reservationDate, setReservationDate] = useState("");
   const [totalCount, setTotalCount] = useState(0);
   const [detailData, setDetailData] = useState(null);
   
@@ -27,7 +31,21 @@ const ManagePayment = ({ onClick }) => {
   useEffect(() => {
     pageingMenus();
     getTotalCount();
-  }, [pageNumber, pageSize, searchName]);
+    fetchBrabchNames();
+  }, [pageNumber, pageSize, searchName, selectBranch, reservationDate]);
+
+  const fetchBrabchNames = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branches`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
+      setBranchNames(response.data || []);
+    } catch (error) {
+      console.error("지점 데이터를 가져오는 중 오류 발생:", error);
+    }
+  };
 
   const pageingMenus = async () => {
     try {
@@ -67,11 +85,39 @@ const ManagePayment = ({ onClick }) => {
     }
   };
 
+  // 필터링 된 검색 데이터 가져오기
+  const handleSearchData = async () => {
+    const params = {
+      pageSize,
+      pageNumber,
+      searchName,
+      selectBranch,
+      reservationDate
+    };
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalrates/search`, {
+        params,
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
+        console.log("필터링된 예약 데이터: ", response.data); // 디버깅용
+        setRentalRates(response.data); // 필터링된 데이터 설정
+        
+        
+      } catch (error) {
+        console.error("전체 예약 데이터를 가져오는 중 오류 발생", error);
+      }
+  };
 
   const getRentalRates = async (token) => {
     const params = {
       pageSize,
       pageNumber,
+      searchName,
+      selectBranch,
+      reservationDate,
     };
   
     try {
@@ -95,7 +141,11 @@ const ManagePayment = ({ onClick }) => {
   
 
   const getCount = async (token) => {
-    const params = searchName ? { menuName: searchName } : {};
+    const params = {
+      searchName,
+      selectBranch,
+      reservationDate,
+    };
 
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalrates/count`,
       {
@@ -116,7 +166,7 @@ const ManagePayment = ({ onClick }) => {
   const fetchDetailData = async (id) => {
     try {
       const token = localStorage.getItem('accessToken'); // 인증 토큰 가져오기
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalrates/${id}`, 
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalrates/detail/${id}`, 
         {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -138,20 +188,43 @@ const ManagePayment = ({ onClick }) => {
     setIsPopUp(false);
   };
   
-  let totalPages = Math.ceil(totalCount / pageSize);
-  if (totalPages < 1) {
-    totalPages = 1;
-  }
+  let totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
   const handlePageChange = (newPage) => {
-    if (newPage > 0 && newPage <= totalPages) { // 유효한 범위인지 확인
+    if (newPage > 0 && newPage <= totalPages) { 
+      // 유효한 범위인지 확인
       setPageNumber(newPage);
     }
   };
 
-
    return (
     <div className="manage-payment-wrap">
+
+      {/* 검색 영역 */}
+      <div className="manage-payment-search-wrap">
+        <input
+          type="text"
+          placeholder="회원명"
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+        />
+        <select className='manage-payment-search-select'
+          value={selectBranch}
+          onChange={(e) => setSelectBranch(e.target.value)}>
+            <option value="">대여지점</option>
+            {branchNames.map((name, index) => (
+              <option key={index} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+        <input className='manage-payment-search-reservation-date'
+          type="date"
+          value={reservationDate}
+          onClick={(e) => setReservationDate(e.target.value)}
+        />
+        <button className='manager-button' onClick={() => handleSearchData}>검색</button>
+      </div>
 
     {/* 테이블 영역 */}
     <div className="manage-payment-table-wrap">
@@ -181,7 +254,7 @@ const ManagePayment = ({ onClick }) => {
                     row[col.field]
                   ) : (
                     col.headerName === '상세보기' && (
-                      <button onClick={() => fetchDetailData(row.id)}>
+                      <button className='manager-button' onClick={() => fetchDetailData(row.id)}>
                         상세보기
                       </button>
                     )
@@ -200,7 +273,7 @@ const ManagePayment = ({ onClick }) => {
     {isPopUp && detailData && (
       <div className="manage-payment-popup-wrap">
         <div className="manage-payment-popup-content-wrap">
-          <button onClick={handlePopupCloseClick} className="manage-payment-popup-close-btn">
+          <button onClick={handlePopupCloseClick} className="manage-payment-popup-close-btn manager-button">
             닫기
           </button>
           <h2>상세 정보</h2>
@@ -220,16 +293,16 @@ const ManagePayment = ({ onClick }) => {
 
     {/* 페이지네이션 */}
     <div className="manage-payment-pagination-wrap">
-      <button
+      <button className='manager-button'
         onClick={() => handlePageChange(pageNumber - 1)}
         disabled={pageNumber === 1}
       >
         이전
       </button>
       <span>
-        {pageNumber} / {Math.ceil(totalCount / pageSize)}
+        {pageNumber} / {totalPages}
       </span>
-      <button
+      <button className='manager-button'
         onClick={() => handlePageChange(pageNumber + 1)}
         disabled={pageNumber === Math.ceil(totalCount / pageSize)}
       >
@@ -239,6 +312,5 @@ const ManagePayment = ({ onClick }) => {
     </div>
   );
 };
-
 export default ManagePayment;
 
