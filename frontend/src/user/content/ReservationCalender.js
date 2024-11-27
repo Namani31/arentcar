@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import 'reservations/ReservationCalender.css';
+import 'user/content/ReservationCalender.css';
 
 const ReservationCalender = ({ onRentalPeriod }) => {
   const currentDate = new Date();
@@ -43,7 +43,7 @@ const ReservationCalender = ({ onRentalPeriod }) => {
     if (currentMonteDate > currentDate) {
       setCurrentMonteDate(new Date(year, month - 1, 1));
       setNextMonteDate(new Date(year, month, 1));
-     
+
     }
   };
 
@@ -54,35 +54,35 @@ const ReservationCalender = ({ onRentalPeriod }) => {
   };
 
   const handleSelected = (day, isNextMonth) => {
-    
-      if (!isNextMonth) {
-        if(currentDate.getTime() > new Date(year,month, day+1).getTime()){
-          alert("이전날짜는 선택 하실 수 없습니다.");
-        }else{
 
-          if (firstSelectedDay == null) {
-            setFirstSelectedDay(new Date(year, month, day));
-            console.log(firstSelectedDay);
-          } else {
-            setSecondSelectedDay(new Date(year, month, day));
-          }
-        }
+    if (!isNextMonth) {
+      if (currentDate.getTime() > new Date(year, month, day + 1).getTime()) {
+        alert("이전날짜는 선택 하실 수 없습니다.");
       } else {
+
         if (firstSelectedDay == null) {
-          setFirstSelectedDay(new Date(nextMonthYear, nextMonth, day));
+          setFirstSelectedDay(new Date(year, month, day));
           console.log(firstSelectedDay);
         } else {
-          setSecondSelectedDay(new Date(nextMonthYear, nextMonth, day));
+          setSecondSelectedDay(new Date(year, month, day));
         }
-      
+      }
+    } else {
+      if (firstSelectedDay == null) {
+        setFirstSelectedDay(new Date(nextMonthYear, nextMonth, day));
+        console.log(firstSelectedDay);
+      } else {
+        setSecondSelectedDay(new Date(nextMonthYear, nextMonth, day));
+      }
+
     }
-    };
+  };
 
   const filterRangeByCurrentMonth = (startDay, endDay, calendarStart, calendarEnd) => {
     const range = [];
     const rangeStart = Math.max(startDay.getTime(), calendarStart.getTime());
     const rangeEnd = Math.min(endDay.getTime(), calendarEnd.getTime());
-  
+
     if (rangeStart <= rangeEnd) {
       const startDate = new Date(rangeStart).getDate();
       const endDate = new Date(rangeEnd).getDate();
@@ -94,7 +94,7 @@ const ReservationCalender = ({ onRentalPeriod }) => {
   };
   useEffect(() => {
     if (firstSelectedDay && secondSelectedDay) {
-      if(firstSelectedDay > secondSelectedDay){
+      if (firstSelectedDay > secondSelectedDay) {
         let change = firstSelectedDay;
         setFirstSelectedDay(secondSelectedDay);
         setSecondSelectedDay(change);
@@ -112,7 +112,7 @@ const ReservationCalender = ({ onRentalPeriod }) => {
         firstDayOfNextMonth,
         lastDayOfNextMonth
       );
-  
+
       setFirstSelectedRange(newFirstRange);
       setSecondSelectedRange(newSecondRange);
     } else {
@@ -121,7 +121,7 @@ const ReservationCalender = ({ onRentalPeriod }) => {
       setSecondSelectedRange([]);
     }
   }, [firstSelectedDay, secondSelectedDay, currentMonteDate]);
-  
+
   useEffect(() => {
     setNextMonteDate(new Date(year, month + 1, 1));
   }, []);
@@ -135,9 +135,9 @@ const ReservationCalender = ({ onRentalPeriod }) => {
   return (
     <div className='reservation-calendar-wrap'>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16" onClick={goToPreviousMonth}>
-  <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
-  <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
-</svg>
+        <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+        <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+      </svg>
       <div className="reservation-calendar">
         <div className="reservation-calendar-header">
           <span>{year}년 {month + 1}월</span>
@@ -151,7 +151,7 @@ const ReservationCalender = ({ onRentalPeriod }) => {
               key={index}
               className={`reservation-calendar-day
                 ${isDayInFirstRange(day) ? 'selected-range' : ''}
-                ${index %7 === 0 ? 'day-off' : ''}
+                ${index % 7 === 0 ? 'day-off' : ''}
                 ${firstSelectedDay && firstSelectedDay.getMonth() === month && firstSelectedDay.getDate() === day ? 'selected' : ''}
                 ${secondSelectedDay && secondSelectedDay.getMonth() === month && secondSelectedDay.getDate() === day ? 'selected' : ''}
                 ${day ? '' : 'empty'}
@@ -177,7 +177,7 @@ const ReservationCalender = ({ onRentalPeriod }) => {
               key={index}
               className={`reservation-calendar-day 
                 ${isDayInSecondRange(day) ? 'selected-range' : ''}
-                ${index %7 === 0 ? 'day-off' : ''}
+                ${index % 7 === 0 ? 'day-off' : ''}
                 ${firstSelectedDay && firstSelectedDay.getMonth() === nextMonth && firstSelectedDay.getDate() === day ? 'selected' : ''}
                 ${secondSelectedDay && secondSelectedDay.getMonth() === nextMonth && secondSelectedDay.getDate() === day ? 'selected' : ''}
                 ${day ? '' : 'empty'}
@@ -190,9 +190,9 @@ const ReservationCalender = ({ onRentalPeriod }) => {
         </div>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16" onClick={goToNextMonth}>
-  <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708"/>
-  <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708"/>
-</svg>
+        <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708" />
+        <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708" />
+      </svg>
     </div>
   );
 };

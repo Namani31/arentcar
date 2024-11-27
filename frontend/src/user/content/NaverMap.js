@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import 'reservations/NaverMap.css';
+import 'user/content/NaverMap.css';
 
 const NaverMap = ({handleMapCloseClick , branchLocation}) => {
     const mapElement = useRef(null); // 지도 표시 영역을 참조

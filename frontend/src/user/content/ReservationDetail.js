@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import 'reservations/ReservationDetail.css'
-import NaverMap from 'reservations/NaverMap';
+import 'user/content/ReservationDetail.css'
+import NaverMap from 'user/content/NaverMap';
 import { useLocation } from 'react-router-dom';
 
 const ReservationDetail = (onClick) => {

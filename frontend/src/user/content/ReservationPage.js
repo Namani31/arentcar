@@ -19,31 +19,31 @@ const RentalCarsPage = ({onClick}) => {
     {
       id: "branchName",
       label: "지점",
-      api: `${process.env.REACT_APP_API_URL}/arentcar/user/branchs`,
+      api: `${process.env.REACT_APP_API_URL}/arentcar/user/cars/branchs`,
       displayKey: "branch_name",
     },
     {
       id: "fuelType",
       label: "연료 타입",
-      api: `${process.env.REACT_APP_API_URL}/arentcar/user/filter/fueltype`,
+      api: `${process.env.REACT_APP_API_URL}/arentcar/user/cars/filter/fueltype`,
       displayKey: "fuel_type",
     },
     {
       id: "carTypeCategory",
       label: "차종",
-      api: `${process.env.REACT_APP_API_URL}/arentcar/user/filter/cartypecategory`,
+      api: `${process.env.REACT_APP_API_URL}/arentcar/user/cars/filter/cartypecategory`,
       displayKey: "car_type_category",
     },
     {
       id: "carManufacturer",
       label: "제조사",
-      api: `${process.env.REACT_APP_API_URL}/arentcar/user/filter/carmanufacturer`,
+      api: `${process.env.REACT_APP_API_URL}/arentcar/user/cars/filter/carmanufacturer`,
       displayKey: "car_manufacturer",
     },
     {
       id: "seatingCapacity",
       label: "인승구분",
-      api: `${process.env.REACT_APP_API_URL}/arentcar/user/filter/seatingcapacity`,
+      api: `${process.env.REACT_APP_API_URL}/arentcar/user/cars/filter/seatingcapacity`,
       displayKey: "seating_capacity",
     },
   ];
