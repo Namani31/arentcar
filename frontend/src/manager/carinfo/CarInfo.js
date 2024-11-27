@@ -385,20 +385,22 @@ const CarInfo = ({ onClick }) => {
         return;
       }
   
-      // Base64 문자열을 Blob으로 변환
-      const byteString = atob(newVehicleImage.car_image.split(',')[1]); // atob 함수를 이용해 Base64 문자열을 바이너리 데이터로 디코딩함
-      const mimeString = newVehicleImage.car_image.split(',')[0].split(':')[1].split(';')[0]; // URL(newVehicleImage.car_image)에서 MIME 타입을 추출함
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
+      // Base64(데이터URL) 문자열을 Blob으로 변환 - newVehicleImage.car_images는 Base64로 인코딩된 이미지 데이터 URL임
+      const byteString = atob(newVehicleImage.car_image.split(',')[1]); // atob 함수를 이용해 Base64로 인코딩된(데이터URL) 문자열을 원래의 바이너리 데이터로 디코딩함, 데이터URL로 변환된 파일이 아니면 파일의 바이너리 데이터에 접근하기 어려움
+      // -> 데이터 URL은 data:[<MIME-type>][;base64],<data> 형식이므로, ,를 기준으로 나누면 두 번째 요소가 Base64 데이터가 됨
+      const mimeString = newVehicleImage.car_image.split(',')[0].split(':')[1].split(';')[0]; // URL(newVehicleImage.car_image)에서 MIME 타입을 추출함, MIME 타입은 파일의 형식과 내용을 설명하는 문자열임
+      const ab = new ArrayBuffer(byteString.length); // JavaScript에서 바이너리 데이터를 저장하기 위한 버퍼(데이터를 일시적으로 저장하는 고정된 메모리 공간), 데이터를 저장함, 메모리 공간만 할당함
+      const ia = new Uint8Array(ab); // 저장된 데이터를 특정 형식으로 읽고 쓰기위해 사용하는 TypedArray객체(Uint8Array, Int16Array, Float32Array 등...)
+      // -> Uint8Array는 데이터를 8비트 부호 없는 정수 배열로 해석함, 각 요소는 0에서 255 사이의 값을 가집니다
       for (let i = 0; i < byteString.length; i++) {
         ia[i] = byteString.charCodeAt(i);
       }
       const blob = new Blob([ab], { type: mimeString }); // Blob 객체를 생성하여 바이너리 데이터를 파일 형식으로 변환함. Blob은 파일과 유사한 객체, 서버에 전송 가능함
       
       // FormData 객체 생성
-      const formData = new FormData(); // 파일과 데이터를 함께 전송할 수 있도록 준비
-      formData.append('file', blob, carImageName);
-      formData.append('carData', JSON.stringify(newVehicle));
+      const formData = new FormData(); // 파일과 데이터를 함께 전송할 수 있도록 준비, key와 value로 구성됨
+      formData.append('file', blob, carImageName); // blob형태로 파일(이미지) 저장, 파일(이미지)의 이름(carImageName)도 함께 저장
+      formData.append('carData', JSON.stringify(newVehicle)); // JSON형태로 데이타 저장
 
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars`, 
         formData,
@@ -411,8 +413,8 @@ const CarInfo = ({ onClick }) => {
         });
 
         const savedVehicle = response.data;
-        // newVehicle.car_type_code = response.data.car_type_code;
-        // newVehicle.car_type_password = response.data.car_type_password;
+        newVehicle.car_type_code = response.data.car_type_code;
+        newVehicle.car_type_password = response.data.car_type_password;
         setVehicles((prevVehicle) => [...prevVehicle, savedVehicle]);
         alert("차종이 등록되었습니다.");
     } catch (error) {
@@ -428,7 +430,7 @@ const CarInfo = ({ onClick }) => {
       const fileName = uploadFile.name; // 원본 파일 이름 가져오기
 
       const reader = new FileReader(); // 파일을 읽고 그 내용을 다양한 형식으로 변활할 수 있는 API를 제공
-      reader.readAsDataURL(uploadFile); // 데이터를 URL로변환. 데이터 URL은 파일의 내용을  Base64로 인코딩한 문자열임임
+      reader.readAsDataURL(uploadFile); // 데이터를 URL로변환. 데이터 URL은 파일의 내용을 Base64로 인코딩한 문자열임, URL로 변환 안 하면 이미지 미리보기 불가능(<img> 태그의 src 속성에 설정할 수 있는 데이터가 없음)
       reader.onloadend = () => { // 파일 읽기가 완료되면 호출되는 콜백 함수.
         setCarImage(reader.result); // 파일의 결과(URL 포함)를 carImage에 저장, 이미지 미리보기에 이용 가능
       };
