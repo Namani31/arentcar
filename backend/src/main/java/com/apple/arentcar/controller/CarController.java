@@ -23,9 +23,11 @@ public class CarController {
             @RequestParam(name = "fuelType",required = false) String fuelType,
             @RequestParam(name = "carTypeCategory",required = false) String carTypeCategory,
             @RequestParam(name = "carManufacturer",required = false) String carManufacturer,
-            @RequestParam(name = "seatingCapacity",required = false) String seatingCapacity
+            @RequestParam(name = "seatingCapacity",required = false) String seatingCapacity,
+            @RequestParam(name = "rentalDate",required = false) String rentalDate,
+            @RequestParam(name = "returnDate",required = false) String returnDate
     ) {
-        return carService.getAllCars(branchName,fuelType,carTypeCategory,carManufacturer,seatingCapacity);
+        return carService.getAllCars(branchName,fuelType,carTypeCategory,carManufacturer,seatingCapacity, rentalDate,returnDate);
     }
 
     @GetMapping("/user/cars/filter/countall")
@@ -34,9 +36,11 @@ public class CarController {
             @RequestParam(name = "fuelType",required = false) String fuelType,
             @RequestParam(name = "carTypeCategory",required = false) String carTypeCategory,
             @RequestParam(name = "carManufacturer",required = false) String carManufacturer,
-            @RequestParam(name = "seatingCapacity",required = false) String seatingCapacity
+            @RequestParam(name = "seatingCapacity",required = false) String seatingCapacity,
+            @RequestParam(name = "rentalDate",required = false) String rentalDate,
+            @RequestParam(name = "returnDate",required = false) String returnDate
     ) {
-        return carService.getFilterCarsCount(branchName,fuelType,carTypeCategory,carManufacturer, seatingCapacity);
+        return carService.getFilterCarsCount(branchName,fuelType,carTypeCategory,carManufacturer, seatingCapacity,rentalDate,returnDate);
     }
 
     @GetMapping("/user/cars/filter/cartype")

@@ -28,4 +28,6 @@ public class CarCardDTO {
     private String branchLatitude;
 
     private String branchLongitude;
+
+    private Integer rentalRate;
 }

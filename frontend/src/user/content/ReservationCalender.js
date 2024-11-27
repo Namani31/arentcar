@@ -125,9 +125,6 @@ const ReservationCalender = ({ onRentalPeriod }) => {
   useEffect(() => {
     setNextMonteDate(new Date(year, month + 1, 1));
   }, []);
-  useEffect(() => {
-    console.log(nextMonthDays);
-  }, [nextMonthDays]);
 
   const isDayInFirstRange = (day) => firstSelectedRange.includes(day) || false;
   const isDayInSecondRange = (day) => secondSelectedRange.includes(day) || false;

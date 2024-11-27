@@ -78,7 +78,11 @@ const RentalCarsPage = ({onClick}) => {
   };
 
   const handleResetFilter = () => {
-    setSelectedFilters({});
+    setSelectedFilters({
+      ['branchName']: selectBranch,
+      ['rentalDate']: rentalPeriod[0].getFullYear().toString()+(rentalPeriod[0].getMonth()+1).toString()+rentalPeriod[0].getDate().toString(),
+      ['returnDate']:  rentalPeriod[1].getFullYear().toString()+(rentalPeriod[1].getMonth()+1).toString()+rentalPeriod[1].getDate().toString(),
+    });
   }
 
   const hendelSelectBranch = (branchName) => {
@@ -94,10 +98,23 @@ const RentalCarsPage = ({onClick}) => {
     setIsSelected(false);
   }
   const hendelSelectPeriod = () => {
-    setIsSelectBranch(true);
-    setIsSelectPeriod(true);
-    setIsSelected(true);
+    if(selectBranch !== '' && rentalPeriod.length !== 0){
+      setIsSelectBranch(true);
+      setIsSelectPeriod(true);
+      setIsSelected(true);
+      setSelectedFilters({
+        ['branchName']: selectBranch,
+        ['rentalDate']: rentalPeriod[0].getFullYear().toString()+(rentalPeriod[0].getMonth()+1).toString()+rentalPeriod[0].getDate().toString(),
+        ['returnDate']:  rentalPeriod[1].getFullYear().toString()+(rentalPeriod[1].getMonth()+1).toString()+rentalPeriod[1].getDate().toString(),
+      });
+    }else{
+      alert('대여 장소와 기간을 선택해 주세요.')
+    }
+    
   }
+  useEffect(()=>{
+    console.log(selectedFilters);
+  },[selectedFilters]);
 
   const onRentalPeriod= (rentalDate,returnDate) => {
     setRentalPeriod([rentalDate,returnDate]);

@@ -13,12 +13,12 @@ public class CarService {
     @Autowired
     private CarMapper CarMapper;
 
-    public List<CarCardDTO> getAllCars(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity) {
-        return CarMapper.getAllCars(branchName,fuelType,carTypeCategory,carManufacturer,seatingCapacity);
+    public List<CarCardDTO> getAllCars(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity,String rentalDate,String returnDate) {
+        return CarMapper.getAllCars(branchName,fuelType,carTypeCategory,carManufacturer,seatingCapacity, rentalDate,returnDate);
     }
 
-    public Integer getFilterCarsCount(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity) {
-        return CarMapper.getFilterCarsCount(branchName,fuelType,carTypeCategory,carManufacturer,seatingCapacity);
+    public Integer getFilterCarsCount(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity,String rentalDate,String returnDate) {
+        return CarMapper.getFilterCarsCount(branchName,fuelType,carTypeCategory,carManufacturer,seatingCapacity,rentalDate,returnDate);
     }
 
     public List<CarTypeDTO> getCarType() {return CarMapper.getCarType();}

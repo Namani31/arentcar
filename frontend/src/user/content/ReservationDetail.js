@@ -45,7 +45,7 @@ const ReservationDetail = (onClick) => {
                             <ul>
                                 <li>
                                     <span>대여료</span>
-                                    <span>600,000원</span>
+                                    <span>{car.rental_rate}원</span>
                                 </li>
                                 <li>
                                     <span>운전자 범위 추가 비용</span>

@@ -49,6 +49,15 @@
             <if test='seatingCapacity != null and seatingCapacity != ""'>
                 AND cc2.common_name = #{seatingCapacity}
             </if>
+            AND NOT EXISTS (
+            SELECT 1
+            FROM reservations r
+            WHERE r.car_code = rc.car_code
+            AND (
+            STR_TO_DATE(r.rental_date, '%Y%m%d') &lt;= STR_TO_DATE(#{returnDate}, '%Y%m%d')
+            AND STR_TO_DATE(r.return_date, '%Y%m%d') >= STR_TO_DATE(#{rentalDate}, '%Y%m%d')
+            )
+            )
         </where>
     </select>
     <select id="getFilterCarsCount" resultType="int">
@@ -84,6 +93,16 @@
             <if test='seatingCapacity != null and seatingCapacity != ""'>
                 AND cc2.common_name = #{seatingCapacity}
             </if>
+                AND NOT EXISTS (
+                SELECT 1
+                FROM reservations r
+                WHERE r.car_code = rc.car_code
+                AND (
+                STR_TO_DATE(r.rental_date, '%Y%m%d') &lt;= STR_TO_DATE(#{returnDate}, '%Y%m%d')
+                AND STR_TO_DATE(r.return_date, '%Y%m%d') >= STR_TO_DATE(#{rentalDate}, '%Y%m%d')
+                )
+                )
+
         </where>
     </select>
     <select id="getCarType" resultType="com.apple.arentcar.dto.CarTypeDTO">
