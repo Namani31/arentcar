@@ -6,6 +6,7 @@ import com.apple.arentcar.model.Branchs;
 import com.apple.arentcar.model.Menus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -15,8 +16,8 @@ public class BranchsService {
     @Autowired
     private BranchsMapper branchsMapper;
 
-    public List<Branchs> getBranchsByBranchName(String branchName) {
-        return branchsMapper.getBranchsByBranchName(branchName);
+    public List<Branchs> findBranchsByBranchName(String branchName) {
+        return branchsMapper.findBranchsByBranchName(branchName);
     }
 
     public List<ChartDataDTO> getBranchChartData(String startDate, String endDate) {

@@ -17,10 +17,10 @@ public class BranchsController {
     @Autowired
     private BranchsService branchsService;
 
-    @GetMapping("/manager/branchs/name/{branchName}")
-    public List<Branchs> getBranchsByBranchName(
-            @PathVariable String branchName) {
-        return branchsService.getBranchsByBranchName(branchName);
+    @GetMapping("/manager/branchs")
+    public List<Branchs> findBranchsByBranchName(
+            @RequestParam(name = "branchname") String branchName) {
+        return branchsService.findBranchsByBranchName(branchName);
     }
 
     @GetMapping("/manager/branchs/reservation")

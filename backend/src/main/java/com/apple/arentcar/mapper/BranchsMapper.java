@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface BranchsMapper {
 
-    List<Branchs> getBranchsByBranchName(@Param("branchName") String branchName);
+    List<Branchs> findBranchsByBranchName(@Param("branchname") String branchName);
 
     List<ChartDataDTO> getBranchChartData(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }
