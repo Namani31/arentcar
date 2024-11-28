@@ -10,17 +10,9 @@ import java.util.List;
 
 @Mapper
 public interface ReservationsMapper {
-
-
     List<ReservationsResponseDTO> getReservations(ReservationsSearchRequestDTO requestDTO);
-
-//    List<ReservationsResponseDTO> getFilteredReservations(ReservationRequestDTO requestDTO);
-
-    void createReservation(Reservations reservation);
-
-    void updateReservationById(Reservations reservation);
-
-    void deleteReservationById(@Param("reservationCode") Integer reservationCode);
-
-
+    // 조건에 따른 예약 개수 조회
+    int countByConditions(ReservationsSearchRequestDTO searchRequestDTO);
+    // 전체 예약 개수 조회
+    int countAllReservations();
 }

@@ -13,6 +13,6 @@ public class ReservationsSearchRequestDTO {
     private String userName;
     private String rentalLocationName;
     private String rentalDate;
-    private int pageNumber; // 페이지 번호
+    private int offset; // 페이지 번호
     private int pageSize;
 }

@@ -12,8 +12,9 @@ const ManagerReservation = () => {
   const [reserverName, setReserverName] = useState("");
   const [isPopUp, setIsPopUp] = useState(false);
   const [reservations, setReservations] = useState([]);
-  const [pageNumber, setPageNumber] = useState(1);
-  const pageSize = 10;
+  const [pageNumber, setPageNumber] = useState(1); // 현재 페이지 번호
+  const pageSize = 10; // 한 페이지에 보여줄 데이터 개수
+  const [totalCount, setTotalCount] = useState(0); // 전체 페이지 수
   const [columnDefs] = useState([
     { titlename: "예약 ID", field: "reservation_code", width: 100, align: "center" },
     { titlename: "성함", field: "user_name", width: 100, align: "center" },
@@ -25,50 +26,105 @@ const ManagerReservation = () => {
     { titlename: "", field: "", width: 100, align: "center" }, // 상세버튼 공백 열
   ]);
 
-  // 초기 데이터 가져오기
-  useEffect(() => {
-    handleFetchBranchNames();
-    handleFetchAllReservations();
-  }, [pageNumber, pageSize]);
-
-  // 전체 예약 데이터 가져오기
-  const handleFetchAllReservations = async () => {
+  const pageingReservations = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/reservations`, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-      });
-      setReservations(response.data); // 전체 데이터 설정
+      const token = localStorage.getItem('accessToken');
+      await getReservations(token);
     } catch (error) {
-      console.error("전체 예약 데이터를 가져오는 중 오류 발생", error);
+      if (error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getReservations(newToken);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the menus pageing!', error);
+      }
     }
   };
 
-  // 필터링된 예약 데이터 가져오기 (검색 버튼 클릭 시 호출)
-  const handleFetchFilteredReservations = async () => {
+  const getReservations = async (token) => {
     const params = {
-      rentalLocationName: selectedBranch,
-      rentalDate: reservationDate,
-      userName: reserverName,
-      pageNumber,
       pageSize,
+      pageNumber,
     };
 
-    try {
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/reservations`, {
+    // 조건이 참일 때만 필드 추가
+    if (selectedBranch && selectedBranch.trim() !== '') {
+      params.rentalLocationName = selectedBranch;
+    }
+    if (reservationDate) {
+      params.rentalDate = reservationDate;
+    }
+    if (reserverName && reserverName.trim() !== '') {
+      params.userName = reserverName;
+    }
+
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/reservations`, 
+      {
         params,
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
         withCredentials: true,
       });
 
-      setReservations(response.data); // 필터링된 데이터 설정
-
-    } catch (error) {
-      console.error("전체 예약 데이터를 가져오는 중 오류 발생", error);
+    if (response.data) {
+      setReservations(response.data);
     }
   };
+
+  const getTotalCount = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      await getCount(token);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getCount(newToken);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the Reservations count!', error);
+      }
+    }
+  };
+
+  const getCount = async (token) => {
+    const params = {
+      ...((selectedBranch && { rentalLocationName: selectedBranch }) || {}),
+      ...((reservationDate && { rentalDate: reservationDate }) || {}),
+      ...((reserverName && { userName: reserverName }) || {}),
+    };
+
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/reservations/count`,
+      {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+
+    if (typeof response.data === 'number') {
+      setTotalCount(response.data);
+    } else {
+      console.error('Unexpected response:', response.data);
+    }
+  };
+
+  useEffect(() => {
+    pageingReservations();
+    handleFetchBranchNames();
+    getTotalCount();
+  }, [pageNumber, pageSize]);
+
+
 
   // 지점명 데이터 가져오기
   const handleFetchBranchNames = async () => {
@@ -97,16 +153,29 @@ const ManagerReservation = () => {
       }
     }
   };
+
   // 팝업 열기 및 닫기
   const handleDetailClick = (reservations) => {
     setIsPopUp(true);
     // setSelectedReservation(reservations); // 선택된 예약 데이터 설정
   };
 
+
   const handlePopupClodeClick = () => {
     setIsPopUp(false);
     // setSelectedReservation(null);
   };
+  const handleSearchClick = async () => {
+    setPageNumber(1); // 검색 조건 변경 시 페이지 번호를 1로 초기화
+    await pageingReservations(); // 데이터 다시 로드
+    await getTotalCount(); // 총 데이터 개수 다시 로드
+  };
+  
+  const handlePageChange = (newPageNumber) => {
+    setPageNumber(newPageNumber);
+  };
+
+  let totalPages = totalCount > 0 ? Math.ceil(totalCount / pageSize) : 1;
 
   return (
     <div className="manager-reservation-wrap">
@@ -144,7 +213,7 @@ const ManagerReservation = () => {
             className="manager-reservation-date-input"
           />
           <button
-            onClick={handleFetchFilteredReservations}
+            onClick={handleSearchClick}
             className="manager-reservation-button-search manager-button manager-button-search"
           >
             검색
@@ -203,9 +272,29 @@ const ManagerReservation = () => {
           <div className="manager-reservation-content-no-data">예약 데이터가 없습니다.</div>
         )}
       </div>
-
+      <div className="manager-reservation-pagination-wrap flex-align-center">
+        <button
+          className="manager-reservation-pagination-button manager-button"
+          style={{ color: pageNumber === 1 ? "#aaa" : "rgb(38, 49, 155)" }}
+          onClick={() => handlePageChange(pageNumber - 1)}
+          disabled={pageNumber === 1}
+        >
+          이전
+        </button>
+        <div className="manager-reservation-pagination-info">
+          {pageNumber} / {totalPages}
+        </div>
+        <button
+          className="manager-reservation-pagination-button manager-button"
+          style={{ color: pageNumber === totalPages ? "#aaa" : "rgb(38, 49, 155)" }}
+          onClick={() => handlePageChange(pageNumber + 1)}
+          disabled={pageNumber === totalPages}
+        >
+          다음
+        </button>
+      </div>
       {/* 팝업 */}
-      {isPopUp && 
+      {isPopUp &&
         <div className='manager-reservation-popup manager-popup'>
           <div className='manager-reservation-content-popup-wrap'>
             <div className='manager-reservation-content-popup-close'>

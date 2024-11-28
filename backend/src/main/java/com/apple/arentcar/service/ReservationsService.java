@@ -15,21 +15,14 @@ public class ReservationsService {
     private ReservationsMapper reservationsMapper;
 
     public List<ReservationsResponseDTO> getReservations(ReservationsSearchRequestDTO requestDTO) {
-        return reservationsMapper.getReservations(requestDTO); }
-
-//    public List<ReservationsResponseDTO> getFilteredReservations(ReservationRequestDTO requestDTO) {
-//        return reservationsMapper.getFilteredReservations(requestDTO);
-//    }
-
-    public void createReservations(Reservations reservations) {
-        reservationsMapper.createReservation(reservations);
+        return reservationsMapper.getReservations(requestDTO);
     }
 
-    public void updateReservationsById(Reservations reservations) {
-        reservationsMapper.updateReservationById(reservations);
+    public int countByConditions(ReservationsSearchRequestDTO searchRequestDTO) {
+        return reservationsMapper.countByConditions(searchRequestDTO);
     }
 
-    public void deleteReservationsById(Integer reservationCode) {
-        reservationsMapper.deleteReservationById(reservationCode);
+    public int countAllReservations() {
+        return reservationsMapper.countAllReservations();
     }
 }
