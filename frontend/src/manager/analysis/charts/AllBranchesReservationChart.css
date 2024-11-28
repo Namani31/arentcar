@@ -1,6 +1,7 @@
 .reservation-statistics-list {
     display: flex;
     flex-direction: column; /* 정렬을 아래로 정함 */
+    margin-top: 20px;
 }
 
 /* 통계 필터 제목 */
@@ -20,12 +21,13 @@
     margin-bottom: 20px;
 }
 
+.chart-container h3 {
+    margin-top: 7%;
+}
+
 /* 전체 지점, 지역별 지점 버튼 */
-.chart-buttons {
-    color: red;
+.daily-and-monthly-filter-row {
+    color: green;
     font-size: 14px;
-    background-color: white;
-    border: 1px solid #cfcaca;
-    border-radius: 5px;
-    padding: 3px;
+    font-weight: bold;
 }
