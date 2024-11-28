@@ -5,14 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReservationRequestDTO {
+public class ReservationsSearchRequestDTO {
     private String userName;
     private String rentalLocationName;
     private String rentalDate;
+    private int offset; // 페이지 번호
+    private int pageSize;
 }

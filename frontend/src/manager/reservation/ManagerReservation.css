@@ -26,6 +26,11 @@
   display: flex; /* 플렉스 박스로 가로 정렬 */
 }
 
+.manager-reservation-pagination-wrap{
+  margin-top: 5px;
+}
+
+
 .manager-reservation-content-popup-wrap {
   width: 500px;
   margin: 250px auto;

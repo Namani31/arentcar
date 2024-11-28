@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/arentcar")
@@ -46,7 +45,7 @@ public class AdminsController {
     public ResponseEntity<Admins> createAdmins(@RequestBody Admins admins) {
         Admins savedAdmins = adminsService.createAdmins(admins);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmins);
-    }
+    }       
 
     @PutMapping("/manager/admins/{adminCode}")
     public ResponseEntity<Void> updateAdminsById(
@@ -105,9 +104,8 @@ public class AdminsController {
 
     @PostMapping("/manager/admins/login")
     public ResponseEntity<?> getAdminLogin(@RequestBody AdminsLoginDTO requestDTO) {
+//        System.out.println("login admins: " + requestDTO.getAdminId());
         Admins admins = adminsService.getAdminLogin(requestDTO);
-
-//        System.out.println("login admins: " + admins.getAdminId());
         if (admins == null) {
             return ResponseEntity.notFound().build();
         }

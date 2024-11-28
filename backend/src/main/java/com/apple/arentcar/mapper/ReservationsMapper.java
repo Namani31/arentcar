@@ -1,6 +1,6 @@
 package com.apple.arentcar.mapper;
 
-import com.apple.arentcar.dto.ReservationRequestDTO;
+import com.apple.arentcar.dto.ReservationsSearchRequestDTO;
 import com.apple.arentcar.dto.ReservationsResponseDTO;
 import com.apple.arentcar.model.Reservations;
 import org.apache.ibatis.annotations.Mapper;
@@ -10,17 +10,9 @@ import java.util.List;
 
 @Mapper
 public interface ReservationsMapper {
-
-
-    List<ReservationsResponseDTO> getReservations(ReservationRequestDTO requestDTO);
-
-//    List<ReservationsResponseDTO> getFilteredReservations(ReservationRequestDTO requestDTO);
-
-    void createReservation(Reservations reservation);
-
-    void updateReservationById(Reservations reservation);
-
-    void deleteReservationById(@Param("reservationCode") Integer reservationCode);
-
-
+    List<ReservationsResponseDTO> getReservations(ReservationsSearchRequestDTO requestDTO);
+    // 조건에 따른 예약 개수 조회
+    int countByConditions(ReservationsSearchRequestDTO searchRequestDTO);
+    // 전체 예약 개수 조회
+    int countAllReservations();
 }
