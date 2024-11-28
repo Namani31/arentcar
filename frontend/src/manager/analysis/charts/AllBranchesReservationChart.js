@@ -1,6 +1,6 @@
 // 전체 지점 예약 통계
 import React, { useEffect, useState } from 'react';
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import DatePicker from 'react-datepicker'; // 달력 라이브러리
 import { ko } from 'date-fns/locale'; // 달력을 한글로 바꾸기
@@ -15,7 +15,7 @@ import { format } from 'date-fns';
 
 
 // 차트 라이브러리의 필요한 요소를 등록
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
 
 const AllBranchesReservationChart = () => {
 
@@ -79,7 +79,6 @@ const AllBranchesReservationChart = () => {
         labels: chartData.map(branchsName => branchsName.branch_name),  // 지점 이름
         datasets: [
             {
-                label: '예약 건수',
                 // reservation_code 가 null, undefined,숫자가 아니면 0
                 data: chartData.map(reservations => Number(reservations.reservation_code) || 0),  // 예약 건수
                 backgroundColor: ['red', 'green', 'blue', 'yellow', 'purple'],
@@ -96,6 +95,17 @@ const AllBranchesReservationChart = () => {
                         return Number.isInteger(value) ? value : null; // 정수만 표시
                     },
                 },
+            },
+        },
+        plugins: {
+            legend: {
+                display: false,
+            },
+            // 범례 숨기기
+            title: {
+                display: true, // 제목 표시
+                text: '예약 건수', // 제목 내용
+                align: 'start', // 제목을 왼쪽 정렬
             },
         },
     };
