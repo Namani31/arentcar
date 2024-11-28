@@ -31,7 +31,7 @@ const ManagerMenu = () => {
   const componentMap = {
     RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
     manageNotices: <PostNotices onClick={handleCloseClick} />,
-    managementCustomer: <PostReviews onClick={handleCloseClick}/>,//임시링크
+    manageReviews: <PostReviews onClick={handleCloseClick}/>,//임시링크
     RegisterAdmin: <RegisterAdmin onClick={handleCloseClick} />,
     ManagerUser: <ManagerUser onClick={handleCloseClick} />,
     ConnectionStatus: <ConnectionStatus onClick={handleCloseClick} />,
