@@ -16,6 +16,8 @@ import PostNotices from './posts/PostNotices';
 import PostReviews from './posts/PostReviews';
 import ManagerReservation from 'manager/reservation/ManagerReservation';
 import RentalRates from 'manager/managepayment/RentalRates';
+import ReservationStatistics from 'manager/analysis/ReservationStatistics';
+import AllBranchesReservationChart from 'manager/analysis/charts/AllBranchesReservationChart';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -45,6 +47,8 @@ const ManagerMenu = () => {
     managementCustomer: <PostReviews onClick={handleCloseClick}/>,//임시링크
     ManagerReservation: <ManagerReservation onClick={handleCloseClick} />,
     RentalRates: <RentalRates onClick={handleCloseClick} />,
+    ReservationStatistics: <ReservationStatistics onClick={handleCloseClick} />,
+    AllBranchesReservationChart: <AllBranchesReservationChart onClick={handleCloseClick} />,
   };
 
   useEffect(() => {
@@ -156,7 +160,7 @@ const ManagerMenu = () => {
             className='manager-menu-sub-header'
             style={{ top: `${mainPosition.top}px`, left: `${mainPosition.left}px` }}
           >
-            <ul 
+            <ul
               onMouseEnter={handleSubMenuMouseEnter}
               onMouseLeave={handleSubMenuMouseLeave}
             >
