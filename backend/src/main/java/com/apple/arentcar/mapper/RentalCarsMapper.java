@@ -38,4 +38,6 @@ public interface RentalCarsMapper {
     List<RentalCarsCarOptionAttrDTO> getRentalCarsCodeName();
     // <select>의 <option>값으로 지점코드/명 동적으로 불러오기
     List<RentalCarsBranchOptionAttrDTO> getRentalCarsBranchCodeName();
+    // 엑셀 파일 다운로드용 차량 조회
+    List<RentalCarsDTO> getRentalCarsForExcel();
 }

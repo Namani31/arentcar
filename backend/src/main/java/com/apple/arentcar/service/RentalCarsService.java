@@ -5,9 +5,16 @@ import com.apple.arentcar.dto.RentalCarsDTO;
 import com.apple.arentcar.dto.RentalCarsCarOptionAttrDTO;
 import com.apple.arentcar.mapper.RentalCarsMapper;
 import com.apple.arentcar.model.RentalCars;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -64,4 +71,54 @@ public class RentalCarsService {
     public List<RentalCarsBranchOptionAttrDTO> getRentalCarsBranchCodeName() {
         return rentalCarsMapper.getRentalCarsBranchCodeName();
     }
+
+    // 차량 데이터를 엑셀 파일로 생성하기
+    public byte[] generateExcelFile() throws IOException {
+        List<RentalCarsDTO> rentalCarsDTO = rentalCarsMapper.getRentalCarsForExcel();
+
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet("RentalCars");
+
+            // 헤더 생성
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("Car Code");
+            headerRow.createCell(1).setCellValue("Car Type Name");
+            headerRow.createCell(2).setCellValue("Car Type Code");
+            headerRow.createCell(3).setCellValue("Car Number");
+            headerRow.createCell(4).setCellValue("Car Status");
+            headerRow.createCell(5).setCellValue("Car Status Code");
+            headerRow.createCell(6).setCellValue("Branch Name");
+            headerRow.createCell(7).setCellValue("Branch Code");
+            headerRow.createCell(8).setCellValue("Car Type Category");
+            headerRow.createCell(9).setCellValue("Origin Type");
+            headerRow.createCell(10).setCellValue("Seating Capacity");
+            headerRow.createCell(11).setCellValue("Fuel Type");
+            headerRow.createCell(12).setCellValue("Car Manufacturer");
+            headerRow.createCell(13).setCellValue("Model Year");
+
+            // 데이터 행 생성
+            int rowIdx = 1;
+            for (RentalCarsDTO rentalCar : rentalCarsDTO) {
+                Row row = sheet.createRow(rowIdx++);
+                row.createCell(0).setCellValue(rentalCar.getCarCode());
+                row.createCell(1).setCellValue(rentalCar.getCarTypeName());
+                row.createCell(2).setCellValue(rentalCar.getCarTypeCode());
+                row.createCell(3).setCellValue(rentalCar.getCarNumber());
+                row.createCell(4).setCellValue(rentalCar.getCarStatus());
+                row.createCell(5).setCellValue(rentalCar.getCarStatusCode());
+                row.createCell(6).setCellValue(rentalCar.getBranchName());
+                row.createCell(7).setCellValue(rentalCar.getBranchCode());
+                row.createCell(8).setCellValue(rentalCar.getCarTypeCategory());
+                row.createCell(9).setCellValue(rentalCar.getOriginType());
+                row.createCell(10).setCellValue(rentalCar.getSeatingCapacity());
+                row.createCell(11).setCellValue(rentalCar.getFuelType());
+                row.createCell(12).setCellValue(rentalCar.getCarManufacturer());
+                row.createCell(13).setCellValue(rentalCar.getModelYear());
+            }
+
+            workbook.write(out);
+            return out.toByteArray();
+        }
+    }
+
 }
