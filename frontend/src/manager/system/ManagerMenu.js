@@ -8,6 +8,8 @@ import RegisterMenu from 'manager/system/RegisterMenu';
 import RegisterUser from 'manager/system/RegisterUser';
 import ReservationStatistics from 'manager/analysis/ReservationStatistics';
 import AllBranchesReservationChart from 'manager/analysis/charts/AllBranchesReservationChart';
+import BranchesReservationChart from 'manager/analysis/charts/BranchesReservationChart';
+import AllCarTypeReservationChart from 'manager/analysis/charts/AllCarTypeReservationChart';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -29,6 +31,8 @@ const ManagerMenu = () => {
     RegisterUser: <RegisterUser onClick={handleCloseClick} />,
     ReservationStatistics: <ReservationStatistics onClick={handleCloseClick} />,
     AllBranchesReservationChart: <AllBranchesReservationChart onClick={handleCloseClick} />,
+    BranchesReservationChart: <BranchesReservationChart onClick={handleCloseClick} />,
+    AllCarTypeReservationChart: <AllCarTypeReservationChart onClick={handleCloseClick} />,
   };
 
   useEffect(() => {
