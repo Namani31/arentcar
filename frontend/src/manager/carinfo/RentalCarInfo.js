@@ -509,6 +509,50 @@ const RentalCarInfo = ({ onClick }) => {
     setPageNumber(newPageNumber);
   };
 
+  const handleDownloadExcel = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      await getRentalCarsExcel(token);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getRentalCarsExcel(newToken);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleAdminLogout();
+        }
+      } else {
+        console.error('There was an error fetching the rental cars excel!', error);
+      }
+    }
+  };
+
+  const getRentalCarsExcel = async (token) => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/download`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          responseType: 'blob', // 서버에서 파일을 blob 형태로 받기 위해 설정
+          withCredentials: true,
+        });
+
+      // 파일 다운로드를 위한 URL 생성
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'rentalcars.xlsx'); // 다운로드할 파일 이름 설정
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+    } catch (error) {
+      console.error('Error downloading the Excel file', error);
+    }
+  };
+
   let totalPages = Math.ceil(totalCount / pageSize);
   if (totalPages < 1) {
     totalPages = 1;
@@ -650,6 +694,13 @@ const RentalCarInfo = ({ onClick }) => {
         <div className="car-info-status-display">대여가능<div className="car-info-status-content">{availableRentalCarsCount}</div></div>
         <div className="car-info-status-display">대여중<div className="car-info-status-content">{rentedRentalCarsCount}</div></div>
         <div className="car-info-status-display">정비중<div className="car-info-status-content">{maintenanceRentalCarsCount}</div></div>
+        <div className="car-info-status-display">
+          <div className="car-info-status-excel">
+              <button onClick={handleDownloadExcel}>
+                <img className="car-info-excel-download" src={`${process.env.REACT_APP_IMAGE_URL}/excel-logo.png`} alt="rentalCars excel downlod button" />
+            </button>
+          </div>
+        </div>
       </div>
 
       {loading && (<Loading />)}
