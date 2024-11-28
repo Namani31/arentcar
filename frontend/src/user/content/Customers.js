@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./Customers.css"
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Customers = () => {
   const menus = ["공지사항","고객후기","고객문의"];
@@ -122,7 +123,7 @@ const Customers = () => {
             <div className="user-customers-wrap-post-notices">
               <ul className="user-customers-wrap-post-list">
                 {customers.map((notices, index)=>(
-                  <li key={index}> <a href={`/customers/${notices.post_type}/${notices.post_code}`}> {notices.post_title} </a> 
+                  <li key={index}> <Link to={`/customers/${notices.post_type}/${notices.post_code}`}> {notices.post_title} </Link> 
                   <div className="user-customers-wrap-post-list-info"> <span>{notices.author}</span> <span> {notices.created_at.substr(0,10)} </span> </div>  </li>
                 ))}
                 {/* <li> <a href="/customers/코드"> 제목 </a> <div className="user-customers-wrap-post-list-info"> <span>작성자</span> <span>작성일</span> </div>  </li> */}
@@ -165,7 +166,7 @@ const Customers = () => {
             <div className="user-customers-wrap-post-reviews">
               <ul className="user-customers-wrap-post-list">
                 {customers.map((notices, index)=>(
-                  <li key={index}> <a href={`/customers/${notices.post_type}/${notices.post_code}`}> {notices.post_title} </a> 
+                  <li key={index}> <Link to={`/customers/${notices.post_type}/${notices.post_code}`}> {notices.post_title} </Link> 
                   <div className="user-customers-wrap-post-list-info"> <span>{notices.author}</span> <span> {notices.created_at.substr(0,10)} </span> </div>  </li>
                 ))}
                 {/* <li> <a href="/customers/코드"> 제목 </a> <div className="user-customers-wrap-post-list-info"> <span>작성자</span> <span>작성일</span> </div>  </li> */}
@@ -186,6 +187,10 @@ const Customers = () => {
                   style={{color: (pageNumber + 1) >= totalPages ? '#aaa' : '#fff'}}
                   disabled={ (pageNumber + 1) >= totalPages }>▶</button>
                 {/* , backgroundColor:  (pageNumber + 1) >= totalPages ? '#c25d16' : '#ff7916' */}
+
+                <div className="create">
+                  <Link className="createBut" to="/customers/RV">후기작성</Link>
+                </div>
               </div>
             </div>
           </div>

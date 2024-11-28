@@ -74,6 +74,23 @@ public class PostsController {
         }
         return ResponseEntity.ok(count);
     }
+    @GetMapping("/user/customers/reviews/{postCode}")
+    public ResponseEntity<Reviews> getUserReview(@PathVariable Integer postCode) {
+        Reviews review = postsService.getReview(postCode);
+
+        if (review != null) {
+            return ResponseEntity.ok(review);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PostMapping("/user/customers/reviews")
+    public ResponseEntity<Reviews> createUserReview(@RequestBody Reviews reviews) {
+        postsService.createReview(reviews);
+        System.out.println(reviews.getPostTitle());
+        return ResponseEntity.ok(reviews);
+    }
+
 
     @GetMapping("/manager/post")
     public List<Notices> getPostsAll(){ return postsService.getPostsAll(); }

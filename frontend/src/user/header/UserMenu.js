@@ -9,6 +9,7 @@ import KakaoCallback from 'user/content/KakaoCallback';
 import FooterMain from 'user/footer/FooterMain';
 import Customers from 'user/content/Customers';
 import Notices from 'user/content/Notices';
+import Reviews from 'user/content/Reviews';
 
 const UserMenu = () => {
   return (
@@ -23,9 +24,12 @@ const UserMenu = () => {
           <Route path="/membership" element={<UserMemberShip />} ></Route>
           <Route path="/naver-callback" element={<NaverCallback />} /> 
           <Route path="/kakao-callback" element={<KakaoCallback />} /> 
+          {/* 고객지원 */}
           <Route path="/customers" element={<Customers />} ></Route>
-          <Route path="/customers/NT/"></Route>
           <Route path="/customers/NT/:postId" element={<Notices />} ></Route>
+          <Route path="/customers/RV" element={<Reviews />} ></Route>
+          <Route path="/customers/RV/:postId" element={<Reviews />} ></Route>
+
         </Routes>
       </div>
       <div className='user-menu-footer-wrap'>
