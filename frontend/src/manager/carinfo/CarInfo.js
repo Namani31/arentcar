@@ -202,8 +202,8 @@ const CarInfo = ({ onClick }) => {
     setLicenseRestriction(updateData.license_restriction_code); // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
     setCarManufacturer(updateData.car_manufacturer_code) // String타입으로 가져온(GET) 데이터를 다시 Char(2)타입으로 서버에 보내기위해 DB에서 전달(GET) 받은 code 이용
     setModelYear(updateData.model_year)
-    setCarImage("")
-    setCarImageName("")
+    setCarImage(`${process.env.REACT_APP_IMAGE_URL}/${updateData.car_image_name}`)
+    setCarImageName(updateData.car_image_name)
   };
 
   const viewDataInit = () => {
