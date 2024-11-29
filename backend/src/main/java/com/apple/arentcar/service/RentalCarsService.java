@@ -76,11 +76,14 @@ public class RentalCarsService {
     public byte[] generateExcelFile() throws IOException {
         List<RentalCarsDTO> rentalCarsDTO = rentalCarsMapper.getRentalCarsForExcel();
 
+        // Workbook은 엑셀 파일을 생성하는 데 사용되며, ByteArrayOutputStream은 엑셀 파일을 바이트 배열로 변환하는 데 사용됨
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            // Workbook 내에 새로운 시트(Sheet) 생성
             Sheet sheet = workbook.createSheet("RentalCars");
 
-            // 헤더 생성
+            // 헤더 행(Row) 생성
             Row headerRow = sheet.createRow(0);
+            // 각 셀에 제목을 설정(createCell)하여 데이터의 각 열을 설명(setCellValue)
             headerRow.createCell(0).setCellValue("Car Code");
             headerRow.createCell(1).setCellValue("Car Type Name");
             headerRow.createCell(2).setCellValue("Car Type Code");
@@ -96,9 +99,9 @@ public class RentalCarsService {
             headerRow.createCell(12).setCellValue("Car Manufacturer");
             headerRow.createCell(13).setCellValue("Model Year");
 
-            // 데이터 행 생성
-            int rowIdx = 1;
-            for (RentalCarsDTO rentalCar : rentalCarsDTO) {
+            // 데이터 행(Row) 생성
+            int rowIdx = 1; // 헤더 행(Row)이 0에서 시작이라 데이터는 1에서부터 입력함
+            for (RentalCarsDTO rentalCar : rentalCarsDTO) { // DB에서 읽어온 데이터를 반복문을 이용해 셀에 입력
                 Row row = sheet.createRow(rowIdx++);
                 row.createCell(0).setCellValue(rentalCar.getCarCode());
                 row.createCell(1).setCellValue(rentalCar.getCarTypeName());
@@ -117,7 +120,7 @@ public class RentalCarsService {
             }
 
             workbook.write(out);
-            return out.toByteArray();
+            return out.toByteArray(); // 엑셀 파일을 바이트 배열로 반환
         }
     }
 
