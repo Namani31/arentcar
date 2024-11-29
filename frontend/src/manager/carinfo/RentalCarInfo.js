@@ -459,7 +459,7 @@ const RentalCarInfo = ({ onClick }) => {
   
   const createVehicle = async (token, newVehicle) => {
     const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars`, 
-      newVehicle,
+      newVehicle, // Spring Boot에서 @RequestBody로 받는 객체 데이터
       {
         headers: {
           Authorization: `Bearer ${token}`

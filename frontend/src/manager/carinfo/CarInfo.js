@@ -5,14 +5,15 @@ import Loading from 'common/Loading';
 import "manager/carinfo/CarInfo.css";
 
 const CarInfo = ({ onClick }) => {
-  const [vehicles, setVehicles] = useState([])
+  const [vehicles, setVehicles] = useState([]) // DB에서 읽어온 차종 데이터를 배열로 담기
   const [isPopUp, setIsPopUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [workMode, setWorkMode] = useState("");
-  const [searchName, setSearchName] = useState("");
-  const [pageNumber, setPageNumber] = useState(1);
+  const [searchName, setSearchName] = useState(""); 
+  const [pageNumber, setPageNumber] = useState(1); // 현재 페이지 번호(기본 1페이지)가 변경 될때마다 pageingVehicles(), getTotalCount() 함수 호출,
+                                                   // pageingVehicles() 함수는 pageNumber(기본 1페이지, -1 또는 +1씩 가감)와 pageSize를 서버로 보내고 LIMIT와 OFFSET으로 적절한 데이터를 불러온다
   const pageSize = 10;
-  const [totalCount, setTotalCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0); // 전체 차종 수(검색건수 표시, 페이지네이션)
 
   const [columnDefs] = useState([
     { headerName: '코드', field: 'car_type_code', width: 85, align: 'center' },
@@ -123,12 +124,12 @@ const CarInfo = ({ onClick }) => {
 
   const getVehicles = async (token) => {
     const params = {
-      pageSize,
-      pageNumber,
+      pageSize, // 화면에 보여줄 차종 개수(10개의 데이터 고정)
+      pageNumber, // 현재 페이지 번호(기본 1페이지)
     };
 
     if (searchName && searchName.trim() !== '') {
-      params.carTypeName = searchName;
+      params.carTypeName = searchName; // 검색어가 있으면 params에 carTypeName도 같이 넣어서 서버에 요청함
     }
 
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/cars/paged`, 
@@ -186,7 +187,7 @@ const CarInfo = ({ onClick }) => {
   useEffect(() => {
     pageingVehicles();
     getTotalCount();
-  }, [pageNumber]);
+  }, [pageNumber]); // pageNumber가 변경될때면 pageingVehicles(), getTotalCount() 함수 호출
 
   const handleUpdateClick = (updateData, workMode) => {
     setIsPopUp(true);
@@ -476,10 +477,10 @@ const CarInfo = ({ onClick }) => {
   }, 0);
 
   const handlePageChange = (newPageNumber) => {
-    setPageNumber(newPageNumber);
+    setPageNumber(newPageNumber); // 변경된 현재 페이지 번호(-1씩 또는 +1씩 가감)
   };
 
-  let totalPages = Math.ceil(totalCount / pageSize);
+  let totalPages = Math.ceil(totalCount / pageSize); // 총 페이지 수 = 올림(전체 차종 수 / 화면에 보여줄 데이터 수(현재 페이지에서는 10개씩 보여줌))
   if (totalPages < 1) {
     totalPages = 1;
   }
@@ -653,7 +654,7 @@ const CarInfo = ({ onClick }) => {
           onClick={() => handlePageChange(pageNumber - 1)} 
           disabled={pageNumber === 1}
         >이전</button>
-        <div className='car-info-pageing-display'>{pageNumber} / {totalPages}</div>
+        <div className='car-info-pageing-display'>{pageNumber} / {totalPages}</div> {/* 현재 페이지 / 전체 페이지 */}
         <button 
           className='manager-button' 
           style={{color: pageNumber === totalPages ?  '#aaa' : 'rgb(38, 49, 155)'}} 
