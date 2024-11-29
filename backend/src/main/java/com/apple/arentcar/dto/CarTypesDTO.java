@@ -26,5 +26,6 @@ public class CarTypesDTO {
     private String carManufacturer;
     private String carManufacturerCode; // 수정 기능을 위해 데이터 전송
     private String modelYear;
+    private String carImageName; // 수정 기능을 위해 데이터 전송
 
 }

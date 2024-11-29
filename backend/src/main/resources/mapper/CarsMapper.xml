@@ -31,7 +31,8 @@
         cc5.common_code AS license_restriction_code, <!-- 수정 기능을 위해 CarTypesDTO에 같이 전달 -->
         cc6.common_name AS car_manufacturer,
         cc6.common_code AS car_manufacturer_code, <!-- 수정 기능을 위해 CarTypesDTO에 같이 전달 -->
-        ct.model_year
+        ct.model_year,
+        ct.car_image_name
         FROM car_types ct
         JOIN common_codes cc0 ON cc0.common_code = ct.car_type_category AND cc0.common_kind_code = 'car_type_category'
         JOIN common_codes cc1 ON cc1.common_code = ct.origin_type AND cc1.common_kind_code = 'origin_type'
