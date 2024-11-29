@@ -239,8 +239,37 @@
 
 
     <select id="getAllInquirys" resultType="com.apple.arentcar.model.Inquirys">
-        SELECT p.*, iq.inquiry_status from posts p
+        SELECT p.*, iq.inquiry_status,
+               CASE
+                   when p.author_type = 'US' THEN us.user_name
+                   when p.author_type = 'AM' THEN am.admin_name
+                   END as 'author' from posts p
+               LEFT join admins am on am.admin_code = p.author_code
+               LEFT join users us on us.user_code = p.author_code
         join inquirys iq on iq.post_code = p.post_code;
+    </select>
+
+    <select id="getInquirys" resultType="com.apple.arentcar.model.Inquirys">
+        SELECT p.*, iq.inquiry_status,
+               CASE
+                   when p.author_type = 'US' THEN us.user_name
+                   when p.author_type = 'AM' THEN am.admin_name
+                   END as 'author' from posts p
+               LEFT join admins am on am.admin_code = p.author_code
+               LEFT join users us on us.user_code = p.author_code
+               join inquirys iq on iq.post_code = p.post_code
+        WHERE p.post_code = #{postCode};
+    </select>
+
+    <select id="getResponses" resultType="com.apple.arentcar.model.Responses">
+        SELECT rp.*,
+               CASE
+                   when rp.author_type = 'US' THEN us.user_name
+                   when rp.author_type = 'AM' THEN am.admin_name
+                   END as 'author' from responses rp
+                LEFT join admins am on am.admin_code = rp.author_code
+                LEFT join users us on us.user_code = rp.author_code
+        where rp.post_code = #{postCode};
     </select>
 
 </mapper>

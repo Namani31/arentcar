@@ -48,7 +48,7 @@ const Reviews = () => {
 
   const isLogin = () => {
     let loginState = store.getState().userState.loginState;
-    if(!loginState) { navigate('/login') }
+    if(!loginState) { alert("로그인이 필요합니다."); navigate('/login') }
     return loginState;
   }
 

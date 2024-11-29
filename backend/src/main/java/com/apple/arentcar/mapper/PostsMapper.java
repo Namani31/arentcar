@@ -32,4 +32,6 @@ public interface PostsMapper {
     List<ChartsCount> ageChartsCount();
 
     List<Inquirys> getAllInquirys();
+    Inquirys getInquirys(Integer postCode);
+    List<Responses> getResponses(Integer postCode);
 }

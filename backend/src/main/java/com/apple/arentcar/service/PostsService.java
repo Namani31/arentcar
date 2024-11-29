@@ -72,4 +72,6 @@ public class PostsService {
 
 
     public List<Inquirys> getAllInquirys() { return postsMapper.getAllInquirys(); }
+    public Inquirys getInquirys(Integer postCode) { return postsMapper.getInquirys(postCode); }
+    public List<Responses> getResponses(Integer pageCode) { return postsMapper.getResponses(pageCode); }
 }

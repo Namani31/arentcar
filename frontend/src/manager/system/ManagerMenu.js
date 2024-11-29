@@ -11,6 +11,7 @@ import ManagerUser from 'manager/system/ManagerUser';
 import ConnectionStatus from 'manager/system/ConnectionStatus';
 import PostNotices from './PostNotices';
 import PostReviews from './PostReviews';
+import PostInquirys from './PostInquirys';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -30,8 +31,10 @@ const ManagerMenu = () => {
 
   const componentMap = {
     RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
+    // 관리자 게시판
     manageNotices: <PostNotices onClick={handleCloseClick} />,
-    manageReviews: <PostReviews onClick={handleCloseClick}/>,//임시링크
+    manageReviews: <PostReviews onClick={handleCloseClick}/>,
+    managementCustomer: <PostInquirys/>,
     RegisterAdmin: <RegisterAdmin onClick={handleCloseClick} />,
     ManagerUser: <ManagerUser onClick={handleCloseClick} />,
     ConnectionStatus: <ConnectionStatus onClick={handleCloseClick} />,

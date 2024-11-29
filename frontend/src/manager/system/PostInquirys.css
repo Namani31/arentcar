@@ -1,0 +1,21 @@
+.manager-post-inquirys-wrap{
+    margin: 20px;
+}
+
+.manager-post-inquirys-header-h5{
+    margin: 20px 0px;
+    font-weight: bold;
+    padding-left: 15px;
+}
+
+.manager-post-inquirys-table-head{
+    width: 1180px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.manager-post-inquirys-table-body{
+    width: 1180px;
+    margin-top: 10px;
+    box-sizing : border-box;
+}

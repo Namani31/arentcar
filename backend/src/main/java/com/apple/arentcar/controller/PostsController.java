@@ -222,7 +222,17 @@ public class PostsController {
     }
 
 
-    @GetMapping("/manager/post/inquirys")
-    public List<Inquirys> getAllInquirys(){ return postsService.getAllInquirys(); }
+    @GetMapping("/user/post/inquirys")
+    public ResponseEntity<List<Inquirys>> getAllInquirys(){ return ResponseEntity.ok(postsService.getAllInquirys()); }
+
+    @GetMapping("/user/post/inquirys/{postCode}")
+    public ResponseEntity<Inquirys> getInquirys(
+            @PathVariable Integer postCode
+    ){ return ResponseEntity.ok(postsService.getInquirys(postCode)); }
+
+    @GetMapping("/user/post/responses/{postCode}")
+    public ResponseEntity<List<Responses>> getResponses(
+            @PathVariable Integer postCode
+    ){ return ResponseEntity.ok(postsService.getResponses(postCode)); }
 
 }

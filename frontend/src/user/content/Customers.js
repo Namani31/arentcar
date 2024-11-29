@@ -92,9 +92,9 @@ const Customers = () => {
   return(
     <div className="user-customers">
       <div className="user-customers-header">
-        <h3 className="user-customers-header-h3">
+        {/* <h3 className="user-customers-header-h3">
           고객지원 
-        </h3>
+        </h3> */}
         <ul className="user-customers-header-menu">
           {menus.map((menu, index)=>(
             <li key={index} onClick={()=>setPostState(index)} className={postState === index ? "on" : ""}> <h5>{menu}</h5> </li>
