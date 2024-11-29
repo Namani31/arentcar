@@ -1,9 +1,7 @@
 package com.apple.arentcar.service;
 
 import com.apple.arentcar.mapper.PostsMapper;
-import com.apple.arentcar.model.Inquirys;
-import com.apple.arentcar.model.Notices;
-import com.apple.arentcar.model.Reviews;
+import com.apple.arentcar.model.*;
 import com.apple.arentcar.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,8 +57,18 @@ public class PostsService {
         postsMapper.deleteReview(postCode);
         postsMapper.deletePostsRV(postCode);
     }
-
-
+    public List<ChartsCount> dayChartsCount() {
+        return postsMapper.dayChartsCount();
+    }
+    public List<ChartsAvg> dayChartsAvg() {
+        return postsMapper.dayChartsAvg();
+    }
+    public List<ChartsCount> ageChartsCount() {
+        return postsMapper.ageChartsCount();
+    }
+    public List<ChartsAvg> ageChartsAvg() {
+        return postsMapper.ageChartsAvg();
+    }
 
 
     public List<Inquirys> getAllInquirys() { return postsMapper.getAllInquirys(); }

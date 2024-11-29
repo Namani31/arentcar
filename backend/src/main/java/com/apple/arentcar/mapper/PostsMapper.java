@@ -1,8 +1,6 @@
 package com.apple.arentcar.mapper;
 
-import com.apple.arentcar.model.Inquirys;
-import com.apple.arentcar.model.Notices;
-import com.apple.arentcar.model.Reviews;
+import com.apple.arentcar.model.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -28,6 +26,10 @@ public interface PostsMapper {
     void createReview(Reviews reviews);
     void deleteReview(Integer postCode);
     void deletePostsRV(Integer postCode);
+    List<ChartsAvg> dayChartsAvg();
+    List<ChartsCount> dayChartsCount();
+    List<ChartsAvg> ageChartsAvg();
+    List<ChartsCount> ageChartsCount();
 
     List<Inquirys> getAllInquirys();
 }

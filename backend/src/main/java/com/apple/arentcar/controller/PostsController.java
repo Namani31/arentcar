@@ -1,8 +1,6 @@
 package com.apple.arentcar.controller;
 
-import com.apple.arentcar.model.Inquirys;
-import com.apple.arentcar.model.Notices;
-import com.apple.arentcar.model.Reviews;
+import com.apple.arentcar.model.*;
 import com.apple.arentcar.service.PostsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -202,7 +200,26 @@ public class PostsController {
         postsService.deleteReview(postCode);
         return ResponseEntity.noContent().build();
     }
-
+    @GetMapping("/manager/post/reviews/dayCount")
+    public ResponseEntity<List<ChartsCount>> getDayChartsCount(){
+        List<ChartsCount> chartsCount = postsService.dayChartsCount();
+        return ResponseEntity.ok(chartsCount);
+    }
+    @GetMapping("/manager/post/reviews/dayAvg")
+    public ResponseEntity<List<ChartsAvg>> getDayChartsAvg(){
+        List<ChartsAvg> chartsAvg = postsService.dayChartsAvg();
+        return ResponseEntity.ok(chartsAvg);
+    }
+    @GetMapping("/manager/post/reviews/ageCount")
+    public ResponseEntity<List<ChartsCount>> getAgeChartsCount(){
+        List<ChartsCount> chartsCount = postsService.ageChartsCount();
+        return ResponseEntity.ok(chartsCount);
+    }
+    @GetMapping("/manager/post/reviews/ageAvg")
+    public ResponseEntity<List<ChartsAvg>> getAgeChartsAvg(){
+        List<ChartsAvg> chartsAvg = postsService.ageChartsAvg();
+        return ResponseEntity.ok(chartsAvg);
+    }
 
 
     @GetMapping("/manager/post/inquirys")

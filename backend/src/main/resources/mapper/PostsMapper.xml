@@ -139,6 +139,104 @@
         DELETE FROM posts where post_code = #{postCode};
     </delete>
 
+    <select id="dayChartsCount" resultType="com.apple.arentcar.model.ChartsCount">
+        SELECT
+            CONCAT(year, '년 ',
+                         CASE
+                             WHEN month = '12' THEN '12월'
+            WHEN month = '11' THEN '11월'
+            WHEN month = '10' THEN '10월'
+            WHEN month = '09' THEN '09월'
+            WHEN month = '08' THEN '08월'
+            WHEN month = '07' THEN '07월'
+            WHEN month = '06' THEN '06월'
+            WHEN month = '05' THEN '05월'
+            WHEN month = '04' THEN '04월'
+            WHEN month = '03' THEN '03월'
+            WHEN month = '02' THEN '02월'
+            WHEN month = '01' THEN '01월'
+        END
+            ) AS column_name, COUNT(review_rating) as countRV
+        from(
+                SELECT date_format(rv.created_at,"%Y") as year, date_format(rv.created_at,"%m") as month, rv.review_rating
+                from posts p
+                    LEFT join users us on us.user_code = p.author_code
+                    join reviews rv on rv.post_code = p.post_code
+            ) as c
+        GROUP BY column_name
+        ORDER BY column_name DESC
+            LIMIT 5 OFFSET 0;
+    </select>
+    <select id="dayChartsAvg" resultType="com.apple.arentcar.model.ChartsAvg">
+        SELECT
+            CONCAT(year, '년 ',
+                         CASE
+                             WHEN month = '12' THEN '12월'
+            WHEN month = '11' THEN '11월'
+            WHEN month = '10' THEN '10월'
+            WHEN month = '09' THEN '09월'
+            WHEN month = '08' THEN '08월'
+            WHEN month = '07' THEN '07월'
+            WHEN month = '06' THEN '06월'
+            WHEN month = '05' THEN '05월'
+            WHEN month = '04' THEN '04월'
+            WHEN month = '03' THEN '03월'
+            WHEN month = '02' THEN '02월'
+            WHEN month = '01' THEN '01월'
+        END
+            ) AS column_name, avg(avg_review_rating) as avgRV
+        from(
+                SELECT year, month, review_rating, AVG(review_rating) OVER(PARTITION BY year ORDER BY month) AS avg_review_rating
+                FROM
+                    (
+                    SELECT date_format(rv.created_at,"%Y") as year, date_format(rv.created_at,"%m") as month, rv.review_rating
+                    from posts p
+                    LEFT join users us on us.user_code = p.author_code
+                    join reviews rv on rv.post_code = p.post_code
+                    ) as a
+            ) as c
+        GROUP BY column_name
+        ORDER BY column_name DESC
+            LIMIT 5 OFFSET 0;
+    </select>
+
+    <select id="ageChartsCount" resultType="com.apple.arentcar.model.ChartsCount">
+        SELECT CASE
+        WHEN age BETWEEN 20 AND 29 THEN '20대'
+        WHEN age BETWEEN 30 AND 39 THEN '30대'
+        WHEN age BETWEEN 40 AND 49 THEN '40대'
+        WHEN age BETWEEN 50 AND 59 THEN '50대'
+        WHEN age >= 60 THEN '60대 이상'
+        END AS column_name
+        , count(review_rating) as countRV
+        FROM(
+        SELECT date_format(now(), '%Y') - date_format(us.user_birth_date, '%Y') AS age, rv.review_rating
+        from posts p
+        LEFT join users us on us.user_code = p.author_code
+        join reviews rv on rv.post_code = p.post_code
+        ) AS c
+        GROUP BY column_name
+        ORDER BY column_name;
+    </select>
+    <select id="ageChartsAvg" resultType="com.apple.arentcar.model.ChartsAvg">
+        SELECT CASE
+        WHEN age BETWEEN 20 AND 29 THEN '20대'
+        WHEN age BETWEEN 30 AND 39 THEN '30대'
+        WHEN age BETWEEN 40 AND 49 THEN '40대'
+        WHEN age BETWEEN 50 AND 59 THEN '50대'
+        WHEN age >= 60 THEN '60대 이상'
+        END AS column_name
+        , avg(review_rating) as avgRV
+        FROM(
+        SELECT date_format(now(), '%Y') - date_format(us.user_birth_date, '%Y') AS age, rv.review_rating
+        from posts p
+        LEFT join users us on us.user_code = p.author_code
+        join reviews rv on rv.post_code = p.post_code
+        ) AS c
+        GROUP BY column_name
+        ORDER BY column_name;
+    </select>
+
 
     <select id="getAllInquirys" resultType="com.apple.arentcar.model.Inquirys">
         SELECT p.*, iq.inquiry_status from posts p
