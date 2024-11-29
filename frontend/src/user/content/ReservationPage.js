@@ -102,11 +102,11 @@ const RentalCarsPage = ({onClick}) => {
       setIsSelectBranch(true);
       setIsSelectPeriod(true);
       setIsSelected(true);
-      setSelectedFilters({
-        ['branchName']: selectBranch,
-        ['rentalDate']: rentalPeriod[0].getFullYear().toString()+(rentalPeriod[0].getMonth()+1).toString()+rentalPeriod[0].getDate().toString(),
-        ['returnDate']:  rentalPeriod[1].getFullYear().toString()+(rentalPeriod[1].getMonth()+1).toString()+rentalPeriod[1].getDate().toString(),
-      });
+        setSelectedFilters({
+          ['branchName']: selectBranch,
+          ['rentalDate']: rentalPeriod[0].getFullYear().toString()+(rentalPeriod[0].getMonth()+1).toString().padStart(2, '0')+rentalPeriod[0].getDate().toString().padStart(2, '0'),
+          ['returnDate']:  rentalPeriod[1].getFullYear().toString()+(rentalPeriod[1].getMonth()+1).toString().padStart(2, '0')+rentalPeriod[1].getDate().toString().padStart(2, '0'),
+        });
     }else{
       alert('대여 장소와 기간을 선택해 주세요.')
     }

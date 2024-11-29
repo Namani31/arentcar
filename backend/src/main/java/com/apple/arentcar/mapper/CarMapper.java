@@ -25,4 +25,6 @@ public interface CarMapper {
     List<BranchsDTO> getAllBranchs();
 
     List<CarTypeCategoryDTO> getCarTypeCategory();
+
+    List<InsuranceDTO> getInsurance();
 }

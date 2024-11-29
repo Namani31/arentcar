@@ -46,4 +46,8 @@ public class CarService {
     public List<CarTypeCategoryDTO> getCarTypeCategory() {
         return CarMapper.getCarTypeCategory();
     }
+
+    public List<InsuranceDTO> getInsurance()  {
+        return CarMapper.getInsurance();
+    }
 }

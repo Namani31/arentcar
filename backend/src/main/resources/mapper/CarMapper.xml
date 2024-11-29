@@ -18,7 +18,9 @@
         b.branch_name,
         b.branch_latitude,
         b.branch_longitude,
-        cc3.brand_image_name
+        cc3.brand_image_name,
+        rr.rental_rate,
+        rr.rental_discount_rate
         FROM
         rental_cars rc
         JOIN
@@ -33,6 +35,7 @@
         common_codes cc4 ON cc4.common_code = ct.car_type_category AND cc4.common_kind_code = 'car_type_category'
         JOIN
         branchs b on b.branch_code = rc.branch_code
+        JOIN rental_rates rr on rr.car_type_code  = rc.car_type_code
         <where>
             <if test='branchName != null and branchName != ""'>
                 AND b.branch_name = #{branchName}
@@ -58,6 +61,7 @@
             AND STR_TO_DATE(r.return_date, '%Y%m%d') >= STR_TO_DATE(#{rentalDate}, '%Y%m%d')
             )
             )
+            AND (#{returnDate} - #{rentalDate}) * 24 >= rr.rental_start_hours AND (#{returnDate} - #{rentalDate}) * 24 &lt;=rr.rental_end_hours
         </where>
     </select>
     <select id="getFilterCarsCount" resultType="int">
@@ -127,7 +131,12 @@
         SELECT branch_name from branchs ORDER BY branch_name;
     </select>
 
-
+    <select id="getInsurance" resultType="com.apple.arentcar.dto.InsuranceDTO">
+        SELECT common_name AS insurance_type,
+        common_insurance_fee AS insurance_fee
+        FROM common_codes cc
+        WHERE common_kind_code = 'insurance_type'
+    </select>
 
 
 </mapper>

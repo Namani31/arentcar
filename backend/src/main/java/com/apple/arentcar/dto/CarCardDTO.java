@@ -30,4 +30,6 @@ public class CarCardDTO {
     private String branchLongitude;
 
     private Integer rentalRate;
+
+    private Integer rentalDiscountRate;
 }

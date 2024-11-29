@@ -77,4 +77,8 @@ public class CarController {
     public List<BranchsDTO> getAllBranchs() {
         return carService.getAllBranchs();
     }
+
+    @GetMapping("/user/cars/insurance")
+        public List<InsuranceDTO> getInsurance() { return carService.getInsurance(); }
+
 }
