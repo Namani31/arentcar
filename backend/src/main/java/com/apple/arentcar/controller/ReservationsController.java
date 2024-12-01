@@ -1,5 +1,7 @@
 package com.apple.arentcar.controller;
 
+import com.apple.arentcar.dto.CarReturnRequestDTO;
+import com.apple.arentcar.dto.ReservationDetailDTO;
 import com.apple.arentcar.dto.ReservationsSearchRequestDTO;
 import com.apple.arentcar.dto.ReservationsResponseDTO;
 import com.apple.arentcar.service.ReservationsService;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/arentcar")
@@ -69,5 +72,22 @@ public class ReservationsController {
 
             return ResponseEntity.ok(count);
     }
+    @GetMapping("/manager/reservations/detail/{reservationCode}")
+    public ReservationDetailDTO getReservationDetailById(@PathVariable("reservationCode") String reservationCode) {
+        return reservationsService.getReservationDetailById(reservationCode);
+    }
 
+    @PutMapping("/manager/reservations/carreturn/{carNumber}")
+    public ResponseEntity<Void> updateCarStatus(
+            @PathVariable String carNumber,
+            @RequestBody Map<String, Object> carReturnRequest) {
+        System.out.println("Received carNumber: " + carNumber);
+        System.out.println("Received carStatus: " + carReturnRequest.get("carStatus"));
+
+        // 서비스 호출
+        reservationsService.updateCarStatus(carNumber, carReturnRequest);
+
+        // No Content 반환
+        return ResponseEntity.noContent().build();
+    }
 }

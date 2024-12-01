@@ -9,10 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReservationsSearchRequestDTO {
-    private String userName;
-    private String rentalLocationName;
-    private String rentalDate;
-    private int offset;
-    private int pageSize;
+public class CarReturnRequestDTO {
+    private String carNumber; // 차량 번호
+    private String carStatus; // 차량 상태
 }

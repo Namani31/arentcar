@@ -1,5 +1,6 @@
 package com.apple.arentcar.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ReservationsResponseDTO {
     private String reservationCode;      // 예약 코드
     private String userName;             // 사용자 이름
