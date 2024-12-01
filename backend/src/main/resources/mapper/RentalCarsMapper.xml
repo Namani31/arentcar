@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.apple.arentcar.mapper.RentalCarsMapper">
+
+    <!-- 모든 렌탈 차량 조회 -->
+    <select id="getAllRentalCars" resultType="com.apple.arentcar.model.RentalCars">
+        SELECT * FROM rental_cars;
+    </select>
+
+    <!-- 많이 예약된 차 5개 조회  -->
+    <select id="getTop5ReservedCars" resultType="com.apple.arentcar.model.RentalCars">
+        SELECT rc.car_type_code AS carTypeCode, COUNT(*) AS reservationCode
+        FROM rental_cars rc
+        JOIN reservations r ON rc.car_code = r.car_code
+        GROUP BY rc.car_type_code
+        ORDER BY reservation_count DESC
+        LIMIT 5;
+    </select>
+</mapper>
