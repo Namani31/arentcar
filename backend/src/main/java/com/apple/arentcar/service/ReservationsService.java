@@ -34,18 +34,9 @@ public class ReservationsService {
         return reservationsMapper.getReservationsDetailById(reservationCode);
     }
     public void updateCarStatus(String carNumber, Map<String, Object> carReturnRequest) {
-        // Map에서 carStatus 값 추출
+
         String carStatus = (String) carReturnRequest.get("carStatus");
 
-        // 디버깅 로그
-        System.out.println("Service 호출 - carNumber: " + carNumber);
-        System.out.println("Service 호출 - carStatus: " + carStatus);
-
-        // Mapper 호출
         reservationsMapper.updateCarStatus(carNumber, carStatus);
-
-        // 디버깅 로그
-        System.out.println("Mapper 호출 완료 - carNumber: " + carNumber);
-        System.out.println("Mapper 호출 완료 - carStatus: " + carStatus);
     }
 }

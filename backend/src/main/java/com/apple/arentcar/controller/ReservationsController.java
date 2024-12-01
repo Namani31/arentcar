@@ -81,13 +81,9 @@ public class ReservationsController {
     public ResponseEntity<Void> updateCarStatus(
             @PathVariable String carNumber,
             @RequestBody Map<String, Object> carReturnRequest) {
-        System.out.println("Received carNumber: " + carNumber);
-        System.out.println("Received carStatus: " + carReturnRequest.get("carStatus"));
 
-        // 서비스 호출
         reservationsService.updateCarStatus(carNumber, carReturnRequest);
 
-        // No Content 반환
         return ResponseEntity.noContent().build();
     }
 }
