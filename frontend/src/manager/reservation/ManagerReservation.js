@@ -3,6 +3,7 @@ import axios from "axios";
 import "manager/reservation/ManagerReservation.css";
 import "index.css";
 import { refreshAccessToken, handleLogout } from "common/Common";
+import { formatDate } from "common/Common";
 
 const ManagerReservation = () => {
 
@@ -467,7 +468,7 @@ const ManagerReservation = () => {
               </div>
               <div className="manager-reservation-popup-field-row">
                 <label>생년월일 : </label>
-                <span>{reservationDetails.user_birth_date}</span>
+                <span>{formatDate(reservationDetails.user_birth_date)}</span>
                 <label>연락처 : </label>
                 <span>{reservationDetails.user_phone_number}</span>
               </div>
@@ -477,9 +478,9 @@ const ManagerReservation = () => {
               </div>
               <div className="manager-reservation-popup-field-row">
                 <label>면허발급일 : </label>
-                <span>{reservationDetails.license_issue_date}</span>
+                <span>{formatDate(reservationDetails.license_issue_date)}</span>
                 <label>면허갱신일 : </label>
-                <span>{reservationDetails.license_expiry_date}</span>
+                <span>{formatDate(reservationDetails.license_expiry_date)}</span>
               </div>
             </div>
 
@@ -504,13 +505,13 @@ const ManagerReservation = () => {
               </div>
               <div className="manager-reservation-popup-field-row">
                 <label>대여일시 : </label>
-                <span>{reservationDetails.rental_date}{' '}{reservationDetails.rental_time}</span>
+                <span>{formatDate(reservationDetails.rental_date)}{' '}{reservationDetails.rental_time}</span>
                 <label>대여지점 : </label>
                 <span>{reservationDetails.rental_location_name}</span>
               </div>
               <div className="manager-reservation-popup-field-row">
                 <label>반납일시 : </label>
-                <span>{reservationDetails.return_date}{' '}{reservationDetails.return_time}</span>
+                <span>{formatDate(reservationDetails.return_date)}{' '}{reservationDetails.return_time}</span>
                 <label>반납지점 : </label>
                 <span>{reservationDetails.return_location_name}</span>
               </div>

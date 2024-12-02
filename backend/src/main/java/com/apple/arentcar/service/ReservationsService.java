@@ -38,8 +38,9 @@ public class ReservationsService {
     }
 
     public void updateReservationStatus(String reservationCode, Map<String, Object> reservationStatusRequest) {
+
         String reservationStatus = (String) reservationStatusRequest.get("reservationStatus");
-        System.out.println("Extracted Reservation Status: " + reservationStatus);
+
         reservationsMapper.updateReservationStatus(reservationCode, reservationStatus);
     }
 
