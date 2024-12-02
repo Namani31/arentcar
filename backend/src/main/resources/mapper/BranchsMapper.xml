@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.apple.arentcar.mapper.BranchsMapper">
+    <select id="findAllBranches" resultType="com.apple.arentcar.model.Branchs">
+        SELECT * FROM branchs
+    </select>
+
+    <select id="findBranchsByBranchName" resultType="com.apple.arentcar.model.Branchs">
+        SELECT * FROM branchs
+        WHERE branch_name LIKE CONCAT('%', #{branchname}, '%')
+    </select>
+
+    <select id="getBranchChartData" resultType="com.apple.arentcar.dto.ChartDataDTO">
+        SELECT b.branch_name AS branchName , COUNT(r.reservation_code) as reservationCode
+        FROM reservations r
+        LEFT JOIN branchs b ON r.rental_location = b.branch_code
+        WHERE r.rental_date BETWEEN #{startDate} AND #{endDate}
+        GROUP BY b.branch_name
+        order by reservationCode DESC
+        LIMIT 5;
+    </select>
+</mapper>
