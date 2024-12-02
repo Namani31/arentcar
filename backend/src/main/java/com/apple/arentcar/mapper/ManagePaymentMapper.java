@@ -2,8 +2,6 @@ package com.apple.arentcar.mapper;
 
 import com.apple.arentcar.dto.ManagePaymentDTO;
 import com.apple.arentcar.dto.ManagePaymentDetailDTO;
-import com.apple.arentcar.dto.ManagePaymentRequestDTO;
-import com.apple.arentcar.model.Menus;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
@@ -15,14 +13,24 @@ public interface ManagePaymentMapper {
 
     List<ManagePaymentDTO> getAllManagePayment();
 
-    List<ManagePaymentDTO> getManagePaymentWithPaging(@Param("pageSize") int pageSize, @Param("offset") int offset);
+    List<ManagePaymentDTO> getManagePaymentWithPaging(
+            @Param("pageSize") int pageSize,
+            @Param("offset") int offset);
+
+    List<ManagePaymentDTO> getManagePaymentBySearchWithPaging(
+            @Param("userName") String userName,
+            @Param("branchName") String branchName,
+            @Param("rentalDate") String rentalDate,
+            @Param("pagSize") int PagaSize,
+            @Param("offset") int offset);
 
     int countAllManagePayment();
 
-    int countByManagePayment(@Param("managePayment") String managePayment);
+    int countBySearchData(
+            @Param("userName") String userName,
+            @Param("branchName") String branchName,
+            @Param("rentalDate") String rentalDate);
 
-    ManagePaymentDetailDTO getManagePaymentDetailById(@Param("id") int id);
-
-    List<ManagePaymentRequestDTO> getManagePaymentSearchData (ManagePaymentRequestDTO searchDataDTO);
+    ManagePaymentDetailDTO getManagePaymentDetailById(@Param("reservationCode") Integer reservationCode);
 
 }

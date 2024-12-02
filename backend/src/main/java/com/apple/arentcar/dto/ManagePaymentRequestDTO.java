@@ -12,7 +12,5 @@ public class ManagePaymentRequestDTO {
     private String rentalDate;
     private int pageNumber;
     private int pageSize;
-    private int offset;
-
 
 }

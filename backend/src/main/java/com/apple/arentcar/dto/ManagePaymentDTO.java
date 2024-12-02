@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ManagePaymentDTO {
 
-    private int id;
+    private int reservationCode;
     private String userName;
     private String branchName;
     private String carType;

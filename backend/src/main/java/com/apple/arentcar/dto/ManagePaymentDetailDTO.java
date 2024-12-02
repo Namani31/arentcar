@@ -7,10 +7,11 @@ import java.time.LocalDateTime;
 @Data
 public class ManagePaymentDetailDTO {
 
-    private int id;
+    private Integer reservationCode;
     private String userName;
     private String phoneNumber;
     private String driverLicense;
+    private String driverExpiry;
     private String branchName;
     private String carType;
     private String carNumber;
