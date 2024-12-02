@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/arentcar")
@@ -222,17 +223,41 @@ public class PostsController {
     }
 
 
-    @GetMapping("/user/post/inquirys")
-    public ResponseEntity<List<Inquirys>> getAllInquirys(){ return ResponseEntity.ok(postsService.getAllInquirys()); }
+    @GetMapping("/manager/post/inquirys")
+    public ResponseEntity<List<Inquirys>> getAllInquirys(){
+        return ResponseEntity.ok(postsService.getAllInquirys());
+    }
 
-    @GetMapping("/user/post/inquirys/{postCode}")
+    @GetMapping("/manager/post/inquirys/{postCode}")
     public ResponseEntity<Inquirys> getInquirys(
             @PathVariable Integer postCode
     ){ return ResponseEntity.ok(postsService.getInquirys(postCode)); }
 
-    @GetMapping("/user/post/responses/{postCode}")
+    @GetMapping("/manager/post/responses/{postCode}")
     public ResponseEntity<List<Responses>> getResponses(
             @PathVariable Integer postCode
     ){ return ResponseEntity.ok(postsService.getResponses(postCode)); }
 
+    @PostMapping("/manager/post/responses")
+    public ResponseEntity<Responses> createResponses(
+            @RequestBody Responses responses) {
+        postsService.createResponses(responses);
+        return ResponseEntity.ok(responses);
+    }
+    @PutMapping("/manager/post/responses")
+    public ResponseEntity<List<Responses>> updateResponses(
+            @RequestBody List<Responses> responses ){
+        for(Responses response : responses){
+            if(response.getAuthorType().equals("AM")) {
+                postsService.updateResponses(response);
+            }
+        }
+        return ResponseEntity.ok(responses);
+    }
+
+    @DeleteMapping("/manager/post/responses/{postCode}")
+    public ResponseEntity<Responses> deleteResponse(@PathVariable Integer postCode) {
+        postsService.deleteResponses(postCode);
+        return ResponseEntity.noContent().build();
+    }
 }

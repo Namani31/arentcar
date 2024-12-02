@@ -34,4 +34,7 @@ public interface PostsMapper {
     List<Inquirys> getAllInquirys();
     Inquirys getInquirys(Integer postCode);
     List<Responses> getResponses(Integer postCode);
+    void createResponses(Responses responses);
+    void updateResponses(Responses responses);
+    void deleteResponses(Integer responseCode);
 }

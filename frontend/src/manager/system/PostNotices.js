@@ -433,7 +433,7 @@ const PostNotices = ({ onClick }) => {
         </table>
         {isPopUp && (
           <div className='manager-post-notice-popup'>
-            {(popupType == "추가" || popupType == "수정") && (
+            {(popupType === "추가" || popupType === "수정") && (
               <div className='manager-post-notice-popup-wrap'>
                 <div className='manager-post-notice-popup-header'>
                   <div className='manager-post-notice-popup-title'> <h6 className='manager-post-notice-h6'>공지사항 {popupType}</h6> </div>
@@ -472,7 +472,7 @@ const PostNotices = ({ onClick }) => {
             )}
 
             {/* 사용자 페이지랑 비슷하게 */}
-            {popupType == "보기" && (
+            {popupType === "보기" && (
               <div className='manager-post-notice-popup-wrap manager-post-notice-popup-read'>
                 <div className='manager-post-notice-popup-header'>
                   <div className='manager-post-notice-popup-title'> <h6 className='manager-post-notice-h6'> {postTitle}</h6> </div>

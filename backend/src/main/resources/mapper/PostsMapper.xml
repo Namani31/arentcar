@@ -272,4 +272,20 @@
         where rp.post_code = #{postCode};
     </select>
 
+    <insert id="createResponses" parameterType="com.apple.arentcar.model.Responses">
+        INSERT INTO responses (post_code, response_content, author_code, author_type)
+        values(#{postCode}, #{responseContent}, #{authorCode}, 'AM');
+    </insert>
+
+    <update id="updateResponses" parameterType="com.apple.arentcar.model.Responses">
+        UPDATE responses SET
+            response_content = #{responseContent},
+            updated_at = NOW()
+        WHERE post_code = #{postCode} AND response_code = #{responseCode};
+    </update>
+
+    <delete id="deleteResponses">
+        DELETE FROM responses where response_code = #{responseCode};
+    </delete>
+
 </mapper>
