@@ -24,12 +24,16 @@
 
 .manager-reservation-content-item {
   display: flex; /* 플렉스 박스로 가로 정렬 */
+ 
+}
+
+.manager-reservation-content-no-data{
+  text-align: center;
 }
 
 .manager-reservation-pagination-wrap{
   margin-top: 5px;
 }
-
 
 .manager-reservation-content-popup-wrap {
   width: 500px;

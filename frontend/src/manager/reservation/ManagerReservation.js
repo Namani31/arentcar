@@ -73,9 +73,11 @@ const ManagerReservation = () => {
         withCredentials: true,
       });
 
-    if (response.data) {
-      setReservations(response.data);
-    }
+      if (response.data && response.data.length > 0) {
+        setReservations(response.data); // 데이터가 있는 경우
+      } else {
+        setReservations([]); // 데이터가 없는 경우 빈 배열로 설정
+      }
   };
 
   const getTotalCount = async () => {
@@ -328,6 +330,7 @@ const ManagerReservation = () => {
             placeholder="예약자 성함"
             value={reserverName}
             onChange={(e) => setReserverName(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearchClick()}
             className="manager-reservation-text-input"
           />
 
