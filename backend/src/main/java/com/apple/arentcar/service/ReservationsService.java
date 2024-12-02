@@ -1,10 +1,7 @@
 package com.apple.arentcar.service;
 
 
-import com.apple.arentcar.dto.CarReturnRequestDTO;
-import com.apple.arentcar.dto.ReservationDetailDTO;
-import com.apple.arentcar.dto.ReservationsSearchRequestDTO;
-import com.apple.arentcar.dto.ReservationsResponseDTO;
+import com.apple.arentcar.dto.*;
 import com.apple.arentcar.mapper.ReservationsMapper;
 import com.apple.arentcar.model.Reservations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,4 +36,11 @@ public class ReservationsService {
 
         reservationsMapper.updateCarStatus(carNumber, carStatus);
     }
+
+    public void updateReservationStatus(String reservationCode, Map<String, Object> reservationStatusRequest) {
+        String reservationStatus = (String) reservationStatusRequest.get("reservationStatus");
+        System.out.println("Extracted Reservation Status: " + reservationStatus);
+        reservationsMapper.updateReservationStatus(reservationCode, reservationStatus);
+    }
+
 }

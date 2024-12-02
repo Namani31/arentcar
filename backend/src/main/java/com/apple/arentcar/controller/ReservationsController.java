@@ -86,4 +86,18 @@ public class ReservationsController {
 
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/manager/reservations/cancel/{reservationCode}")
+    public ResponseEntity<Void> updateReservationStatus(
+            @PathVariable String reservationCode,
+            @RequestBody Map<String, Object> reservationStatusRequest) {
+
+        // 디버깅용 출력
+        System.out.println("Reservation Code: " + reservationCode);
+        System.out.println("Request Body: " + reservationStatusRequest);
+        reservationsService.updateReservationStatus(reservationCode, reservationStatusRequest);
+
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

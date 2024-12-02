@@ -220,15 +220,53 @@ const ManagerReservation = () => {
     setPageNumber(newPageNumber);
   };
 
-  const handleReservationCancel = () => {
+  const handleReservationCancel = async (reservationCode) => {
+    // 예약 취소 여부 확인
     const reservationCancelConfirmed = window.confirm("예약을 취소하시겠습니까?");
-    if (reservationCancelConfirmed) {
-      alert("예약이 취소되었습니다.");
-      // 여기에서 예약 취소 로직을 실행하세요
-    } else {
+    if (!reservationCancelConfirmed) {
       alert("예약 취소가 취소되었습니다.");
+      return;
+    }
+  
+    try {
+      const token = localStorage.getItem("accessToken"); // 토큰 가져오기
+      const requestBody = { reservationStatus: "2" }; // 예약 상태: '취소'
+      
+      console.log("Reservation Code:", reservationCode); // 예약 코드 확인
+      console.log("Request Body:", requestBody); // 요청 본문 확인
+      // 예약 상태 업데이트 API 호출
+      await axios.put(
+        `${process.env.REACT_APP_API_URL}/arentcar/manager/reservations/cancel/${reservationCode}`,
+        requestBody,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // 인증 헤더
+          },
+          withCredentials: true, // 쿠키 포함
+        }
+      );
+  
+      alert("예약이 취소되었습니다."); // 성공 메시지
+      // 예약 목록 새로고침 (필요시 구현)
+      await fetchReservationDetail(reservationCode);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        try {
+          // 토큰 갱신 처리
+          const newToken = await refreshAccessToken();
+          localStorage.setItem("accessToken", newToken); // 갱신된 토큰 저장
+          // 갱신된 토큰으로 재시도
+          await handleReservationCancel(reservationCode);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요."); // 인증 만료 알림
+          handleLogout(); // 로그아웃 처리
+        }
+      } else {
+        alert("예약 취소에 실패했습니다."); // 사용자 알림
+      }
     }
   };
+  
 
   const handleCarReturn = async (carNumber) => {
     // 반납 여부 확인
@@ -255,7 +293,7 @@ const ManagerReservation = () => {
 
       alert("차량 상태가 '정비중'으로 업데이트되었습니다."); // 성공 메시지
 
-      await pageingReservations(); // 예약 목록 새로고침
+      await fetchReservationDetail(carNumber); // 예약 목록 새로고침
     } catch (error) {
       if (error.response && error.response.status === 403) {
         try {
@@ -500,9 +538,9 @@ const ManagerReservation = () => {
             {/* 액션 버튼 */}
 
             <div className="manager-reservation-content-popup-footer-wrap">
-              <button className="manager-button" onClick={handleReservationCancel}>예약 취소</button>
+              <button className="manager-reservation-content-popup-footer-cancel manager-button" onClick={() => handleReservationCancel(reservationDetails.reservation_code)}>예약 취소</button>
               <button
-                className="manager-button"
+                className="manager-reservation-content-popup-footer-return manager-button"
                 onClick={() => { handleCarReturn(reservationDetails.car_number); }}>
                 차량 반납
               </button>

@@ -1,9 +1,6 @@
 package com.apple.arentcar.mapper;
 
-import com.apple.arentcar.dto.CarReturnRequestDTO;
-import com.apple.arentcar.dto.ReservationsSearchRequestDTO;
-import com.apple.arentcar.dto.ReservationsResponseDTO;
-import com.apple.arentcar.dto.ReservationDetailDTO;
+import com.apple.arentcar.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,4 +17,6 @@ public interface ReservationsMapper {
     ReservationDetailDTO getReservationsDetailById(@Param("reservationCode") String reservationCode);
 
     void updateCarStatus(@Param("carNumber") String carNumber, @Param("carStatus") String carStatus);
+
+    void updateReservationStatus(@Param("reservationCode") String reservationCode, @Param("reservationStatus") String reservationStatus);
 }
