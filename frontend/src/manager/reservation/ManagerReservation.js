@@ -254,8 +254,7 @@ const ManagerReservation = () => {
       );
 
       alert("차량 상태가 '정비중'으로 업데이트되었습니다."); // 성공 메시지
-      console.log("carNumber:", carNumber);
-      console.log("requestBody:", requestBody);
+
       await pageingReservations(); // 예약 목록 새로고침
     } catch (error) {
       if (error.response && error.response.status === 403) {
@@ -271,7 +270,6 @@ const ManagerReservation = () => {
           handleLogout(); // 로그아웃 처리
         }
       } else {
-        console.error("차량 상태 업데이트 중 오류 발생:", error); // 에러 로그
         alert("차량 상태 업데이트에 실패했습니다."); // 사용자 알림
       }
     }
@@ -414,29 +412,29 @@ const ManagerReservation = () => {
             </div>
 
             {/* 예약 ID */}
-            <div className="reservation-id-high">
+            <div className="manager-reservation-popup-high-reservation-id">
               <label>예약ID : </label>
               <span>{reservationDetails.reservation_code}</span>
             </div>
 
             {/* 고객정보 */}
-            <div className="manager-reservation-section">
-              <div className="section-title">고객정보</div>
-              <div className="field-row">
+            <div className="manager-reservation-popup-section">
+              <div className="manager-reservation-popup-section-title">고객정보</div>
+              <div className="manager-reservation-popup-field-row">
                 <label>성명 : </label>
                 <span>{reservationDetails.user_name}</span>
               </div>
-              <div className="field-row">
+              <div className="manager-reservation-popup-field-row">
                 <label>생년월일 : </label>
                 <span>{reservationDetails.user_birth_date}</span>
                 <label>연락처 : </label>
                 <span>{reservationDetails.user_phone_number}</span>
               </div>
-              <div className="field-row">
+              <div className="manager-reservation-popup-field-row">
                 <label>이메일 : </label>
                 <span>{reservationDetails.user_email}</span>
               </div>
-              <div className="field-row">
+              <div className="manager-reservation-popup-field-row">
                 <label>면허발급일 : </label>
                 <span>{reservationDetails.license_issue_date}</span>
                 <label>면허갱신일 : </label>
@@ -445,53 +443,57 @@ const ManagerReservation = () => {
             </div>
 
             {/* 예약정보 */}
-            <div className="manager-reservation-section">
-              <div className="section-title">예약정보</div>
-              <div className="field-row">
+            <div className="manager-reservation-popup-section">
+              <div className="manager-reservation-popup-section-title">예약정보</div>
+              <div className="manager-reservation-popup-field-row">
                 <label>예약ID : </label>
                 <span>{reservationDetails.reservation_code}</span>
               </div>
-              <div className="field-row">
+              <div className="manager-reservation-popup-field-row">
                 <label>차량번호 :{' '}</label>
                 <span>{reservationDetails.car_number}</span>
                 <label>차량명 : </label>
                 <span>{reservationDetails.car_type_name}</span>
               </div>
-              <div className="field-row">
+              <div className="manager-reservation-popup-field-row">
                 <label>연식 : </label>
                 <span>{reservationDetails.model_year}</span>
                 <label>연료 : </label>
                 <span>{reservationDetails.fuel_type_name}</span>
               </div>
-              <div className="field-row">
+              <div className="manager-reservation-popup-field-row">
                 <label>대여일시 : </label>
                 <span>{reservationDetails.rental_date}{' '}{reservationDetails.rental_time}</span>
                 <label>대여지점 : </label>
                 <span>{reservationDetails.rental_location_name}</span>
               </div>
-              <div className="field-row">
+              <div className="manager-reservation-popup-field-row">
                 <label>반납일시 : </label>
                 <span>{reservationDetails.return_date}{' '}{reservationDetails.return_time}</span>
                 <label>반납지점 : </label>
                 <span>{reservationDetails.return_location_name}</span>
               </div>
-              <div className="field-row">
+              <div className="manager-reservation-popup-field-row">
                 <label>보험 : </label>
                 <span>{reservationDetails.insurance_name}</span>
               </div>
             </div>
             {/* 결제정보 */}
-            <div className="manager-reservation-section">
-              <div className="section-title">결제정보</div>
-              <div className="field-row">
+            <div className="manager-reservation-popup-section">
+              <div className="manager-reservation-popup-section-title">결제정보</div>
+              <div className="manager-reservation-popup-field-row">
                 <label>결제방식 : </label>
                 <span>{reservationDetails?.payment_category_name || ""}</span>
                 <label>결제수단 : </label>
                 <span>{reservationDetails?.payment_type_name || ""}</span>
               </div>
-              <div className="field-row">
+              <div className="manager-reservation-popup-field-row">
                 <label>결제금액 : </label>
                 <span>{reservationDetails?.payment_amount || ""}</span>
+              </div>
+              <div className="manager-reservation-popup-field-row">
+                <label>예약상태 : </label>
+                <span>{reservationDetails?.reservation_status || ""}</span>
               </div>
             </div>
 

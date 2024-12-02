@@ -80,7 +80,8 @@
     cc_insurance.common_name AS insuranceName,
     cc_payment_category.common_name AS paymentCategoryName,
     cc_payment_type.common_name AS paymentTypeName,
-    r.payment_amount
+    r.payment_amount,
+    cc_status.common_name AS reservationStatus
     FROM
     reservations r
     JOIN users u ON r.user_code = u.user_code
@@ -105,6 +106,9 @@
     WHEN r.payment_category = '2' THEN 'payment_type_pay'
     ELSE NULL
     END
+    JOIN common_codes cc_status
+    ON r.reservation_status = cc_status.common_code
+    AND cc_status.common_kind_code = 'reservation_status'
     WHERE
     r.reservation_code = #{reservationCode};
     </select>

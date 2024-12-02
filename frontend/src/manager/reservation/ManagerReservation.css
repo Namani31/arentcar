@@ -47,11 +47,11 @@
   display: flex;
   justify-content: space-between;
 }
-.reservation-id-high{
+.manager-reservation-popup-high-reservation-id{
   margin-bottom: 5px;
 }
 
-.manager-reservation-section {
+.manager-reservation-popup-section {
   margin-bottom: 10px; /* 섹션 간 간격 */
   padding-bottom: 10px; /* 구분선 위쪽 여백 */
   padding: 10px; /* 내부 여백 */
@@ -61,14 +61,14 @@
   border: 1px solid #ddd; /* 구분을 위한 테두리 */
 }
 
-.section-title {
+.manager-reservation-popup-section-title {
   font-weight: bold; /* 섹션 제목 강조 */
   color: #333; /* 글자 색상 */
   margin-left: 10px;
   margin-bottom: 5px;
 }
 
-.field-row {
+.manager-reservation-popup-field-row {
   display: flex; /* 라벨과 값을 한 줄에 배치 */
   justify-content: space-between; /* 라벨과 값 간의 간격 균등 배치 */
   align-items: center; /* 세로 중앙 정렬 */
@@ -76,14 +76,15 @@
   margin-bottom: 1px; /* 필드 간 간격 최소화 */
 }
 
-.field-row label {
-  flex: 0 0 20%; /* 라벨의 고정 너비를 20%로 줄임 */
-  text-align: left; /* 라벨 왼쪽 정렬 */
+.manager-reservation-popup-field-row label {
+  width: 16%;
+  /* flex: 0 0 10%; 라벨의 고정 너비를 20%로 줄임 */
+  text-align: right; /* 라벨 왼쪽 정렬 */
   font-weight: bold; /* 라벨 강조 */
   margin-right: 5px; /* 라벨과 값 사이의 간격 최소화 */
 }
 
-.field-row span {
+.manager-reservation-popup-field-row span {
   flex: 1; /* 값이 남은 공간을 차지 */
   text-align: left; /* 값도 왼쪽 정렬 */
 }
