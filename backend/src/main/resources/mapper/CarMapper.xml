@@ -8,10 +8,12 @@
     <!-- 모든 조회 -->
     <select id="getAllCars" resultType="com.apple.arentcar.dto.CarCardDTO">
         SELECT
+        ct.car_type_code,
         ct.car_type_name,
         cc1.common_name AS fuel_type,
         cc2.common_name AS seating_capacity,
         rc.model_year,
+        rc.car_code,
         ct.car_image_name,
         cc3.common_name AS car_manufacturer,
         cc4.common_name AS car_type_category,
@@ -137,6 +139,41 @@
         FROM common_codes cc
         WHERE common_kind_code = 'insurance_type'
     </select>
+
+    <insert id="InsertUserReservation" parameterType="com.apple.arentcar.dto.UserReservationDTO">
+        INSERT INTO reservations (
+        user_code,
+        car_code,
+        rental_location,
+        rental_date,
+        rental_time,
+        return_location,
+        return_date,
+        return_time,
+        insurance_type,
+        payment_category,
+        payment_type,
+        payment_amount
+        ) VALUES (
+        #{userCode},
+        #{carCode},
+        (SELECT branch_code
+        FROM branchs b
+        WHERE branch_name = #{rentalLocation}),
+        #{rentalDate},
+        #{rentalTime},
+        (SELECT branch_code
+        FROM branchs b
+        WHERE branch_name = #{returnLocation}),
+        #{returnDate},
+        #{returnTime},
+        #{insuranceType},
+        #{paymentCategory},
+        #{paymentType},
+        #{paymentAmount}
+        );
+    </insert>
+
 
 
 </mapper>

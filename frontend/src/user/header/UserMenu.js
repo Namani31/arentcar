@@ -9,6 +9,7 @@ import KakaoCallback from 'user/content/KakaoCallback';
 import FooterMain from 'user/footer/FooterMain';
 import ReservationPage from 'user/content/ReservationPage';
 import ReservationDetail from 'user/content/ReservationDetail';
+import PaymentPage from 'user/content/PaymentPage';
 
 const UserMenu = () => {
   return (
@@ -25,6 +26,7 @@ const UserMenu = () => {
           <Route path="/kakao-callback" element={<KakaoCallback />} /> 
           <Route path="/reservation" element={<ReservationPage />} /> 
           <Route path="/reservationdetail" element={<ReservationDetail />} /> 
+          <Route path="/paymentpage" element={<PaymentPage />} /> 
         </Routes>
       </div>
       <div className='user-menu-footer-wrap'>

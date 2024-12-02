@@ -3,6 +3,7 @@ package com.apple.arentcar.service;
 import com.apple.arentcar.dto.*;
 import com.apple.arentcar.mapper.CarMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,5 +50,13 @@ public class CarService {
 
     public List<InsuranceDTO> getInsurance()  {
         return CarMapper.getInsurance();
+    }
+
+
+    public void InsertUserReservation(UserReservationDTO userReservationDTO) {
+        int rowsInserted = CarMapper.InsertUserReservation(userReservationDTO);
+        if (rowsInserted == 0) {
+            throw new IllegalStateException("Reservation could not be inserted");
+        }
     }
 }

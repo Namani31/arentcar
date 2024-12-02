@@ -62,7 +62,6 @@ const ReservationCalender = ({ onRentalPeriod }) => {
 
         if (firstSelectedDay == null) {
           setFirstSelectedDay(new Date(year, month, day));
-          console.log(firstSelectedDay);
         } else {
           setSecondSelectedDay(new Date(year, month, day));
         }
@@ -70,7 +69,6 @@ const ReservationCalender = ({ onRentalPeriod }) => {
     } else {
       if (firstSelectedDay == null) {
         setFirstSelectedDay(new Date(nextMonthYear, nextMonth, day));
-        console.log(firstSelectedDay);
       } else {
         setSecondSelectedDay(new Date(nextMonthYear, nextMonth, day));
       }

@@ -7,10 +7,13 @@ import axios from 'axios';
 
 const ReservationDetail = () => {
     const location = useLocation();
+    const navigate = useNavigate();
+    const carInfoLocation = useLocation();
     const car = location.state;
     const rentalRate = car.rental_rate;
     const [insurance,setInsurance] = useState([0,0]);
     const [insuranceType,setInsuranceType] = useState('일반 자차');
+    const [insuranceTypeCode,setInsuranceTypeCode] = useState('01');
     const [isMapClick, setIsMapClick] = useState(false);
     const [driverRangeFee, setDriverRangeFee] = useState('standard');
     const [discountFee, setDiscountFee] = useState(0);
@@ -18,8 +21,8 @@ const ReservationDetail = () => {
     const [totalRentalFee, setTotalRentalFee] = useState(0);
     const [carInfo, setCarInfo] = useState({});
     const isLoginState = useSelector((state) => state.userState.loginState);
-    const navigate = useNavigate();
-    const carInfoLocation = useLocation();
+    const userCode = useSelector((state) => state.userState.userCode);
+    
 
     useEffect(()=>{
         const fetchInsurance = async () => {
@@ -39,11 +42,13 @@ const ReservationDetail = () => {
           };
     
           fetchInsurance();
+        //   console.log(car);
+        //   setCarInfo({...car,user_code : userCode,payment_amount : totalRentalFee});
     },[])
-    
-    useEffect(() => {
-        console.log(insurance);
-    },[insurance])
+
+    useEffect(()=>{
+        setCarInfo({...car,user_code : userCode,payment_amount : totalRentalFee,insurance_type : insuranceTypeCode});
+    },[userCode,totalRentalFee,insuranceTypeCode])
 
     useEffect(() => {
         if (car.rental_discount_rate !== 0)
@@ -56,6 +61,10 @@ const ReservationDetail = () => {
     }, [insurance]);
 
     useEffect(() => {
+        setInsuranceTypeCode(insuranceType === '일반 자차' ? '01':'02');
+    }, [insuranceType]);
+
+    useEffect(() => {
         if (driverRangeFee === 'everyone' && insuranceType === '일반 자차') {
             setTotalRentalFee(Number(estimatedRentalFee) + 20000);
         }
@@ -66,10 +75,7 @@ const ReservationDetail = () => {
         }else{
             setTotalRentalFee(Number(estimatedRentalFee) +Number( insurance[1].insurance_fee)-Number( insurance[0].insurance_fee));
         }
-        console.log(456);
     }, [driverRangeFee,insuranceType]);
-    
-   
 
     const branchLocation = {
         branch_latitude: car.branch_latitude,
@@ -95,14 +101,16 @@ const ReservationDetail = () => {
     }
     const handleInsurancefee = (value) => {
         setInsuranceType(value);
+        
     }
     const handelReservationClick = () => {
-        if(isLoginState){
+        // if(isLoginState){
             alert('결제로 이동');
-        }else{
-            alert('로그인이 필요한 서비스 입니다.')
-            navigate('/login',{state : {...carInfo}});
-        }
+            navigate('/paymentpage',{state : {...carInfo}});
+        // }else{
+        //     alert('로그인이 필요한 서비스 입니다.');
+        //     navigate('/login',{state : {...carInfo}});
+        // }
     }
     return (
         <>

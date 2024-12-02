@@ -11,7 +11,9 @@ const RentalCar = ({ ...selectedFilters }) => {
   const handleCarClick = (car) => {
     navigate('/reservationdetail',{
       state: {
-        ...car
+        ...car,
+        rental_date : selectedFilters.rentalDate,
+        return_date : selectedFilters.returnDate,
       }
     });
   };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUserState } from '../../redux/UserState';
 import axios from 'axios';
@@ -22,6 +22,9 @@ const UserLogin = () => {
   const [isPasswordFind, setIsPasswordFind] = useState(false);
   const [idSaveChk, setIdSaveChk] = useState(false);
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  //로케이션
+  // const carInfoLocation = useLocation();
+  // const carInfo = carInfoLocation.state;
 
   useEffect(() => {
     setUserEmail(localStorage.getItem('saveUserEmail'));
@@ -29,6 +32,8 @@ const UserLogin = () => {
     if (idSaveChkValue) {
       setIdSaveChk(idSaveChkValue);
     }
+    //오는지 확인
+    // console.log(carInfo);
   }, []);
 
   const handleIdSaveChkChange = (e) => {

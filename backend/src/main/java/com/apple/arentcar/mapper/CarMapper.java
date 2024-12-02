@@ -2,6 +2,7 @@ package com.apple.arentcar.mapper;
 
 import com.apple.arentcar.dto.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -27,4 +28,6 @@ public interface CarMapper {
     List<CarTypeCategoryDTO> getCarTypeCategory();
 
     List<InsuranceDTO> getInsurance();
+
+    int InsertUserReservation(UserReservationDTO userReservationDTO);
 }
