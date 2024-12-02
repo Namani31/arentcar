@@ -271,6 +271,7 @@ const PostInquirys = ({ onClick }) => {
   };
 
   const handleAnswer = (i) => {
+    setCreateContent("");
     postGetCodeInquiry(i);
     postGetResponses(i);
     setIsPopUp(true);
