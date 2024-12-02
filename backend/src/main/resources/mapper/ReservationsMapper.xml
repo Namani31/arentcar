@@ -15,8 +15,8 @@
         rc.car_number,
         ct.car_type_name,
         rl.branch_name AS rentalLocationName,
-        DATE_FORMAT(r.rental_date, '%Y-%m-%d') AS rentalDate,  <!-- 날짜 변환 -->
-        DATE_FORMAT(r.return_date, '%Y-%m-%d') AS returnDate  <!-- 날짜 변환 -->
+        r.rental_date AS rentalDate,
+        r.return_date AS returnDate
         FROM reservations r
         JOIN users u ON r.user_code = u.user_code
         JOIN rental_cars rc ON r.car_code = rc.car_code
@@ -27,7 +27,7 @@
             AND rl.branch_name = #{rentalLocationName}
         </if>
         <if test="rentalDate != null and rentalDate != ''">
-            AND r.rental_date = DATE_FORMAT(#{rentalDate}, '%Y%m%d')
+            AND r.rental_date = #{rentalDate}
         </if>
         <if test="userName != null and userName != ''">
             AND u.user_name = #{userName}
@@ -48,7 +48,7 @@
             AND rl.branch_name = #{rentalLocationName}
         </if>
         <if test="rentalDate != null and rentalDate != ''">
-            AND r.rental_date = DATE_FORMAT(#{rentalDate}, '%Y%m%d')
+            AND r.rental_date = #{rentalDate}
         </if>
         <if test="userName != null and userName != ''">
             AND u.user_name = #{userName}
@@ -59,58 +59,58 @@
         SELECT COUNT(*) FROM reservations
     </select>
     <select id="getReservationsDetailById" parameterType="String" resultType="com.apple.arentcar.dto.ReservationDetailDTO">
-    SELECT
-    r.reservation_code,
-    u.user_name,
-    u.user_birth_date,
-    u.user_phone_number,
-    u.user_email,
-    u.license_issue_date,
-    u.license_expiry_date,
-    rc.car_number,
-    ct.car_type_name,
-    ct.model_year,
-    cc_fuel.common_name AS fuelTypeName,
-    rl.branch_name AS rentalLocationName,
-    DATE(r.rental_date) AS rentalDate,
-    TIME_FORMAT(r.rental_time, '%H:%i:%s') AS rentalTime,
-    rr.branch_name AS returnLocationName,
-    DATE(r.return_date) AS returnDate,
-    TIME_FORMAT(r.return_time, '%H:%i:%s') AS returnTime,
-    cc_insurance.common_name AS insuranceName,
-    cc_payment_category.common_name AS paymentCategoryName,
-    cc_payment_type.common_name AS paymentTypeName,
-    r.payment_amount,
-    cc_status.common_name AS reservationStatus
-    FROM
-    reservations r
-    JOIN users u ON r.user_code = u.user_code
-    JOIN rental_cars rc ON r.car_code = rc.car_code
-    JOIN car_types ct ON rc.car_type_code = ct.car_type_code
-    JOIN branchs rl ON r.rental_location = rl.branch_code
-    JOIN branchs rr ON r.return_location = rr.branch_code
-    JOIN common_codes cc_fuel
-    ON ct.fuel_type = cc_fuel.common_code
-    AND cc_fuel.common_kind_code = 'fuel_type'
-    JOIN common_codes cc_insurance
-    ON r.insurance_type = cc_insurance.common_code
-    AND cc_insurance.common_kind_code = 'insurance_type'
-    JOIN common_codes cc_payment_category
-    ON r.payment_category = cc_payment_category.common_code
-    AND cc_payment_category.common_kind_code = 'payment_category'
-    JOIN common_codes cc_payment_type
-    ON r.payment_type = cc_payment_type.common_code
-    AND cc_payment_type.common_kind_code =
-    CASE
-    WHEN r.payment_category = '1' THEN 'payment_type_card'
-    WHEN r.payment_category = '2' THEN 'payment_type_pay'
-    ELSE NULL
-    END
-    JOIN common_codes cc_status
-    ON r.reservation_status = cc_status.common_code
-    AND cc_status.common_kind_code = 'reservation_status'
-    WHERE
-    r.reservation_code = #{reservationCode};
+        SELECT
+        r.reservation_code,
+        u.user_name,
+        u.user_birth_date,
+        u.user_phone_number,
+        u.user_email,
+        u.license_issue_date,
+        u.license_expiry_date,
+        rc.car_number,
+        ct.car_type_name,
+        ct.model_year,
+        cc_fuel.common_name AS fuelTypeName,
+        rl.branch_name AS rentalLocationName,
+        r.rental_date AS rentalDate,
+        r.rental_time AS rentalTime,
+        rr.branch_name AS returnLocationName,
+        r.return_date AS returnDate,
+        r.return_time AS returnTime,
+        cc_insurance.common_name AS insuranceName,
+        cc_payment_category.common_name AS paymentCategoryName,
+        cc_payment_type.common_name AS paymentTypeName,
+        r.payment_amount,
+        cc_status.common_name AS reservationStatus
+        FROM
+        reservations r
+        JOIN users u ON r.user_code = u.user_code
+        JOIN rental_cars rc ON r.car_code = rc.car_code
+        JOIN car_types ct ON rc.car_type_code = ct.car_type_code
+        JOIN branchs rl ON r.rental_location = rl.branch_code
+        JOIN branchs rr ON r.return_location = rr.branch_code
+        JOIN common_codes cc_fuel
+        ON ct.fuel_type = cc_fuel.common_code
+        AND cc_fuel.common_kind_code = 'fuel_type'
+        JOIN common_codes cc_insurance
+        ON r.insurance_type = cc_insurance.common_code
+        AND cc_insurance.common_kind_code = 'insurance_type'
+        JOIN common_codes cc_payment_category
+        ON r.payment_category = cc_payment_category.common_code
+        AND cc_payment_category.common_kind_code = 'payment_category'
+        JOIN common_codes cc_payment_type
+        ON r.payment_type = cc_payment_type.common_code
+        AND cc_payment_type.common_kind_code =
+        CASE
+        WHEN r.payment_category = '1' THEN 'payment_type_card'
+        WHEN r.payment_category = '2' THEN 'payment_type_pay'
+        ELSE NULL
+        END
+        JOIN common_codes cc_status
+        ON r.reservation_status = cc_status.common_code
+        AND cc_status.common_kind_code = 'reservation_status'
+        WHERE
+        r.reservation_code = #{reservationCode};
     </select>
     <update id="updateCarStatus" parameterType="com.apple.arentcar.dto.CarReturnRequestDTO">
         UPDATE rental_cars

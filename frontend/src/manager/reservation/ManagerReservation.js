@@ -2,12 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "manager/reservation/ManagerReservation.css";
 import "index.css";
-import { refreshAccessToken, handleLogout } from "common/Common";
-import { formatDate } from "common/Common";
+import { refreshAccessToken, handleLogout, formatDate, formatTime, formatPhone } from "common/Common";
 
 const ManagerReservation = () => {
-
-  // 상태 관리
   const [branchNames, setBranchNames] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState("");
   const [reservationDate, setReservationDate] = useState("");
@@ -28,6 +25,22 @@ const ManagerReservation = () => {
     { titlename: "반납일", field: "return_date", width: 150, align: "center" },
     { titlename: "", field: "", width: 100, align: "center" }, // 상세버튼 공백 열
   ]);
+
+  // YYYY-MM-DD → YYYYMMDD 변환 함수
+  const formatDateToCompact = (date) => {
+    if (!date) {
+      return ""; // 날짜가 없으면 빈 문자열 반환
+    }
+    return date.replace(/-/g, ""); // "-"를 제거하여 반환
+  };
+  const formatNumberWithCommas = (number) => {
+    if (!number && number !== 0) {
+      return ""; // 숫자가 없으면 빈 문자열 반환
+    }
+
+    // 숫자를 문자열로 변환 후 정규식 사용 + 원(₩) 추가
+    return `${number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원`;
+  };
 
   const pageingReservations = async () => {
     try {
@@ -59,7 +72,7 @@ const ManagerReservation = () => {
       params.rentalLocationName = selectedBranch;
     }
     if (reservationDate) {
-      params.rentalDate = reservationDate;
+      params.rentalDate = formatDateToCompact(reservationDate);
     }
     if (reserverName && reserverName.trim() !== '') {
       params.userName = reserverName;
@@ -74,11 +87,11 @@ const ManagerReservation = () => {
         withCredentials: true,
       });
 
-      if (response.data && response.data.length > 0) {
-        setReservations(response.data); // 데이터가 있는 경우
-      } else {
-        setReservations([]); // 데이터가 없는 경우 빈 배열로 설정
-      }
+    if (response.data && response.data.length > 0) {
+      setReservations(response.data); // 데이터가 있는 경우
+    } else {
+      setReservations([]); // 데이터가 없는 경우 빈 배열로 설정
+    }
   };
 
   const getTotalCount = async () => {
@@ -130,34 +143,38 @@ const ManagerReservation = () => {
   }, [pageNumber, pageSize]);
 
 
-
   // 지점명 데이터 가져오기
   const handleFetchBranchNames = async () => {
+    let token = localStorage.getItem("accessToken"); // 기존 토큰 가져오기
+
     try {
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs`, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-      });
-      setBranchNames(response.data.map((branch) => branch.branch_name));
+      await fetchBranchNamesData(token); // 기존 토큰으로 데이터 요청
     } catch (error) {
       if (error.response && error.response.status === 403) {
         try {
-          const newToken = await refreshAccessToken();
-          const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs`, {
-            headers: { Authorization: `Bearer ${newToken}` },
-            withCredentials: true,
-          });
-          setBranchNames(response.data.map((branch) => branch.branch_name));
-        } catch (error) {
+          token = await refreshAccessToken(); // 새 토큰 발급
+          await fetchBranchNamesData(token); // 새 토큰으로 데이터 요청
+        } catch (refreshError) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleLogout(); // 로그아웃 처리
         }
       } else {
         console.error("지점명 데이터를 가져오는 중 오류가 발생했습니다.", error);
       }
     }
   };
+
+  const fetchBranchNamesData = async (token) => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs`, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    });
+
+    if (response.data) {
+      setBranchNames(response.data.map((branch) => branch.branch_name)); // 데이터 설정
+    }
+  };
+
 
   const fetchReservationDetail = async (reservationCode) => {
     try {
@@ -208,6 +225,7 @@ const ManagerReservation = () => {
   };
 
 
+
   const handlePopupClodeClick = () => {
     setIsPopUp(false);
     setReservationDetails([]);
@@ -230,11 +248,11 @@ const ManagerReservation = () => {
       alert("예약 취소가 취소되었습니다.");
       return;
     }
-  
+
     try {
       const token = localStorage.getItem("accessToken"); // 토큰 가져오기
       const requestBody = { reservationStatus: "2" }; // 예약 상태: '취소'
-      
+
       console.log("Reservation Code:", reservationCode); // 예약 코드 확인
       console.log("Request Body:", requestBody); // 요청 본문 확인
       // 예약 상태 업데이트 API 호출
@@ -248,7 +266,7 @@ const ManagerReservation = () => {
           withCredentials: true, // 쿠키 포함
         }
       );
-  
+
       alert("예약이 취소되었습니다."); // 성공 메시지
       // 예약 목록 새로고침 (필요시 구현)
       await fetchReservationDetail(reservationCode);
@@ -269,7 +287,7 @@ const ManagerReservation = () => {
       }
     }
   };
-  
+
 
   const handleCarReturn = async (carNumber) => {
     // 반납 여부 확인
@@ -337,8 +355,8 @@ const ManagerReservation = () => {
 
           <select
             className="manager-reservation-select"
-            value={selectedBranch}
-            onChange={(e) => setSelectedBranch(e.target.value)}
+            value={selectedBranch} // 선택된 값
+            onChange={(e) => setSelectedBranch(e.target.value)} // 선택값 변경
           >
             <option value="">대여지점</option>
             {branchNames.map((name, index) => (
@@ -406,7 +424,13 @@ const ManagerReservation = () => {
                       상세
                     </button>
                   ) : (
-                    reservation[column.field]
+                    column.field === 'rental_date' ? (
+                      formatDate(reservation[column.field])
+                    ) :
+                      column.field === 'return_date' ? (
+                        formatDate(reservation[column.field])
+                      ) :
+                        reservation[column.field]
                   )}
                 </div>
               ))}
@@ -470,7 +494,7 @@ const ManagerReservation = () => {
                 <label>생년월일 : </label>
                 <span>{formatDate(reservationDetails.user_birth_date)}</span>
                 <label>연락처 : </label>
-                <span>{reservationDetails.user_phone_number}</span>
+                <span>{formatPhone(reservationDetails.user_phone_number)}</span>
               </div>
               <div className="manager-reservation-popup-field-row">
                 <label>이메일 : </label>
@@ -505,13 +529,13 @@ const ManagerReservation = () => {
               </div>
               <div className="manager-reservation-popup-field-row">
                 <label>대여일시 : </label>
-                <span>{formatDate(reservationDetails.rental_date)}{' '}{reservationDetails.rental_time}</span>
+                <span>{formatDate(reservationDetails.rental_date)}{' '}{formatTime(reservationDetails.rental_time)}</span>
                 <label>대여지점 : </label>
                 <span>{reservationDetails.rental_location_name}</span>
               </div>
               <div className="manager-reservation-popup-field-row">
                 <label>반납일시 : </label>
-                <span>{formatDate(reservationDetails.return_date)}{' '}{reservationDetails.return_time}</span>
+                <span>{formatDate(reservationDetails.return_date)}{' '}{formatTime(reservationDetails.return_time)}</span>
                 <label>반납지점 : </label>
                 <span>{reservationDetails.return_location_name}</span>
               </div>
@@ -531,7 +555,7 @@ const ManagerReservation = () => {
               </div>
               <div className="manager-reservation-popup-field-row">
                 <label>결제금액 : </label>
-                <span>{reservationDetails?.payment_amount || ""}</span>
+                <span>{formatNumberWithCommas(reservationDetails?.payment_amount) || ""}</span>
               </div>
               <div className="manager-reservation-popup-field-row">
                 <label>예약상태 : </label>

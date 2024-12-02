@@ -18,6 +18,6 @@ public class ReservationsResponseDTO {
     private String carNumber;            // 차량 번호
     private String carTypeName;          // 차량 타입 이름
     private String rentalLocationName;   // 대여 지점 이름
-    private LocalDate rentalDate;        // 대여 날짜
-    private LocalDate returnDate;        // 반납 날짜
+    private String rentalDate;        // 대여 날짜
+    private String returnDate;        // 반납 날짜
 }

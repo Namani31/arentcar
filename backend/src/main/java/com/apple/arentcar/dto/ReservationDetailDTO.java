@@ -23,11 +23,11 @@ public class ReservationDetailDTO {
     private String modelYear;            // 차량 연도
     private String fuelTypeName;         // 연료 유형 이름
     private String rentalLocationName;   // 대여 지점 이름
-    private LocalDate rentalDate;        // 대여 날짜 (LocalDate)
-    private LocalTime rentalTime;        // 대여 시간 (LocalTime)
+    private String rentalDate;           // 대여 날짜
+    private String rentalTime;           // 대여 시간
     private String returnLocationName;   // 반납 지점 이름
-    private LocalDate returnDate;        // 반납 날짜 (LocalDate)
-    private LocalTime returnTime;        // 반납 시간 (LocalTime)
+    private String returnDate;           // 반납 날짜
+    private String returnTime;           // 반납 시간
     private String insuranceName;        // 보험 유형 이름
     private String paymentCategoryName;  // 결제 카테고리 이름
     private String paymentTypeName;      // 결제 방식 이름
