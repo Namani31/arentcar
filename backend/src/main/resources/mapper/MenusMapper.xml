@@ -58,7 +58,6 @@
         SELECT * FROM menus
         ORDER BY menu_code
         LIMIT #{pageSize} OFFSET #{offset}
-
     </select>
 
     <!-- 메뉴 수 조회 -->
@@ -72,7 +71,6 @@
         WHERE menu_name LIKE CONCAT('%', #{menuName}, '%')
         ORDER BY menu_code
         LIMIT #{pageSize} OFFSET #{offset}
-
     </select>
 
     <!-- 메뉴 수 조회 -->

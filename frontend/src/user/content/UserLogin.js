@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setUserState } from '../../redux/UserState';
 import axios from 'axios';
 import api from 'common/api';
+import Cookies from 'js-cookie';
 import Loading from 'common/Loading';
 import 'user/content/UserLogin.css';
 
@@ -45,6 +46,8 @@ const UserLogin = () => {
 
   const handleLoginClick = async () => {
     try {
+      localStorage.removeItem('accessToken');
+      Cookies.remove('refreshToken'); 
       const response = await api.post(`${process.env.REACT_APP_API_URL}/arentcar/user/users/login`, {
         user_email: userEmail,
         user_password: userPassword,
@@ -148,7 +151,7 @@ const UserLogin = () => {
       window.Kakao.Auth.logout(() => {
         console.log('카카오 로그아웃 완료');
         window.Kakao.Auth.authorize({
-          redirectUri: 'http://localhost:3000/kakao-callback',
+          redirectUri: `${process.env.REACT_APP_API_URL_FRONTEND}/kakao-callback`,
         });
       });
     } catch (error) {
@@ -159,7 +162,7 @@ const UserLogin = () => {
   const handleNaverClick = () => {
     const naverLogin = new window.naver.LoginWithNaverId({
       clientId: 'tZmqhZO1NzVp8B5iVi2F',
-      callbackUrl: 'http://localhost:3000/naver-callback',
+      callbackUrl: `${process.env.REACT_APP_API_URL_FRONTEND}/naver-callback`,
       isPopup: false,
       loginButton: { color: 'green', type: 3, height: '40' },
       state: Math.random().toString(36).substring(2, 10),

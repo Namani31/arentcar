@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAdminState } from '../../redux/AdminState';
-import { refreshAccessToken, handleLogout } from 'common/Common';
+import { refreshAccessToken, handleAdminLogout } from 'common/Common';
 import 'manager/system/ManagerMenu.css';
 import RegisterMenu from 'manager/system/RegisterMenu';
 import RentalCarInfo from 'manager/carinfo/RentalCarInfo';
@@ -11,13 +11,10 @@ import CarInfo from 'manager/carinfo/CarInfo';
 import RegisterAdmin from 'manager/system/RegisterAdmin';
 import ManagerUser from 'manager/system/ManagerUser';
 import ConnectionStatus from 'manager/system/ConnectionStatus';
-import RegisterUser from 'manager/system/RegisterUser';
 import PostNotices from './posts/PostNotices';
 import PostReviews from './posts/PostReviews';
 import ManagerReservation from 'manager/reservation/ManagerReservation';
 import RentalRates from 'manager/managepayment/RentalRates';
-import ReservationStatistics from 'manager/analysis/ReservationStatistics';
-import AllBranchesReservationChart from 'manager/analysis/charts/AllBranchesReservationChart';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -42,13 +39,10 @@ const ManagerMenu = () => {
     RegisterAdmin: <RegisterAdmin onClick={handleCloseClick} />,
     ManagerUser: <ManagerUser onClick={handleCloseClick} />,
     ConnectionStatus: <ConnectionStatus onClick={handleCloseClick} />,
-    RegisterUser: <RegisterUser onClick={handleCloseClick} />,
     manageNotices: <PostNotices onClick={handleCloseClick} />,
     managementCustomer: <PostReviews onClick={handleCloseClick}/>,//임시링크
     ManagerReservation: <ManagerReservation onClick={handleCloseClick} />,
     RentalRates: <RentalRates onClick={handleCloseClick} />,
-    ReservationStatistics: <ReservationStatistics onClick={handleCloseClick} />,
-    AllBranchesReservationChart: <AllBranchesReservationChart onClick={handleCloseClick} />,
   };
 
   useEffect(() => {
@@ -63,7 +57,7 @@ const ManagerMenu = () => {
             await getMenus(newToken);
           } catch (refreshError) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-            handleLogout();
+            handleAdminLogout();
           }
         } else {
           console.error('There was an error fetching the menu!', error);
@@ -124,7 +118,7 @@ const ManagerMenu = () => {
     dispatch(setAdminState({
       loginState: false
     }));
-    handleLogout()
+    handleAdminLogout()
   }
 
   const handleHomePageClick = () => {
@@ -160,7 +154,7 @@ const ManagerMenu = () => {
             className='manager-menu-sub-header'
             style={{ top: `${mainPosition.top}px`, left: `${mainPosition.left}px` }}
           >
-            <ul
+            <ul 
               onMouseEnter={handleSubMenuMouseEnter}
               onMouseLeave={handleSubMenuMouseLeave}
             >

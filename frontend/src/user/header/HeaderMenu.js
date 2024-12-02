@@ -29,13 +29,13 @@ const HeaderMenu = () => {
     fetchMenus();
   }, []);
 
-  // useEffect(() => {
-  //   if (location.pathname === "/") {
-  //     setIsHome(true);
-  //   } else {
-  //     setIsHome(false);
-  //   }
-  // }, [location]);
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setIsHome(true);
+    } else {
+      setIsHome(false);
+    }
+  }, [location]);
 
   const handleMenuMainClick = (menuUrl) => {
     navigate(menuUrl);

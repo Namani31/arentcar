@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { refreshAccessToken, handleLogout } from 'common/Common';
+import { refreshAccessToken, handleAdminLogout } from 'common/Common';
 import Loading from 'common/Loading';
 import 'manager/system/RegisterMenu.css';
 
@@ -13,6 +13,7 @@ const RegisterMenu = ({ onClick }) => {
   const [pageNumber, setPageNumber] = useState(1);
   const pageSize = 10;
   const [totalCount, setTotalCount] = useState(0);
+
   const [columnDefs] = useState([
     { headerName: '코드', field: 'menu_code', width: 80, align: 'center' },
     { headerName: '메뉴구분', field: 'menu_kind', width: 80, align: 'center' },
@@ -63,7 +64,7 @@ const RegisterMenu = ({ onClick }) => {
           await getMenus(newToken);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the menus pageing!', error);
@@ -106,7 +107,7 @@ const RegisterMenu = ({ onClick }) => {
           await getCount(newToken);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the Menus count!', error);
@@ -187,7 +188,7 @@ const RegisterMenu = ({ onClick }) => {
             await deleteMenu(newToken, menuCode);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-            handleLogout();
+            handleAdminLogout();
           }
         } else {
           alert("삭제 중 오류가 발생했습니다." + error);
@@ -236,7 +237,7 @@ const RegisterMenu = ({ onClick }) => {
             await updateMenu(newToken, newMenu);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
-            handleLogout();
+            handleAdminLogout();
           }
         } else {
           alert("수정 중 오류가 발생했습니다." + error);
@@ -256,7 +257,7 @@ const RegisterMenu = ({ onClick }) => {
             await createMenu(newToken, newMenu);
           } catch (error) {
             alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
-            handleLogout();
+            handleAdminLogout();
           }
         } else {
           alert("등록 중 오류가 발생했습니다." + error);

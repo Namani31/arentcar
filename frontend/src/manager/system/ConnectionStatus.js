@@ -6,7 +6,7 @@ const ConnectionStatus = () => {
   const [isConnected, setIsConnected] = useState(false); 
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080/ws/visitor");
+    const socket = new WebSocket(process.env.REACT_APP_WS_URL);
 
     socket.onopen = () => {
       setIsConnected(true); 
@@ -29,7 +29,7 @@ const ConnectionStatus = () => {
     };
 
     socket.onclose = () => {
-      // console.log("WebSocket 연결 종료");
+      console.log("WebSocket 연결 종료");
       setIsConnected(false); // WebSocket 연결 상태 업데이트
     };
 
