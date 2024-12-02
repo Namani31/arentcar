@@ -7,11 +7,14 @@
 
     <!-- 모든 조회 -->
     <select id="getAllManagePayment"
+            parameterType="com.apple.arentcar.dto.ManagePaymentRequestDTO"
             resultType="com.apple.arentcar.dto.ManagePaymentDTO">
         SELECT
             r.reservation_code AS reservationCode,
             u.user_name AS userName,
-            b.branch_name AS branchName,
+            rl.branch_name AS branchName,
+            r.rental_date AS rentalDate,  <!-- 날짜 변환 -->
+            r.return_date AS returnDate,  <!-- 날짜 변환 -->
             ct.car_type_name AS carType,
         CONCAT(
             'Rental Period: ',
@@ -26,165 +29,138 @@
         FROM
             reservations r
         JOIN users u ON r.user_code = u.user_code
-        JOIN branchs b ON r.rental_location = b.branch_code
+        JOIN branchs rl ON r.rental_location = rl.branch_code
         JOIN rental_cars rc ON r.car_code = rc.car_code
         JOIN car_types ct ON rc.car_type_code = ct.car_type_code
+        WHERE 1=1
+        <if test="branchName != null and branchName != ''">
+            AND rl.branch_name = #{branchName}
+        </if>
+        <if test="rentalDate != null and rentalDate != ''">
+            AND r.rental_date = DATE_FORMAT(#{rentalDate}, '%Y%m%d')
+        </if>
+        <if test="userName != null and userName != ''">
+            AND u.user_name = #{userName}
+        </if>
         ORDER BY
-            r.created_at DESC
+            r.rental_date DESC
+        LIMIT #{offset}, #{pageSize}
 
     </select>
 
     <!-- 메뉴 페이징 조회 -->
-    <select id="getManagePaymentWithPaging"
-            resultType="com.apple.arentcar.dto.ManagePaymentDTO">
-    SELECT
-        r.reservation_code AS reservationCode,
-        u.user_name AS userName,
-        b.branch_name AS branchName,
-        ct.car_type_name AS carType,
-        CONCAT(
-        'Rental Period: ',
-        r.rental_date,
-        ' to ',
-        r.return_date,
-        ' (',
-        DATEDIFF(r.return_date, r.rental_date),
-        ' days)'
-        ) AS rentalPeriod,
-        r.payment_amount AS paymentAmount
-    FROM
-        reservations r
-    LEFT JOIN users u ON r.user_code = u.user_code
-    LEFT JOIN branchs b ON r.rental_location = b.branch_code
-    LEFT JOIN rental_cars rc ON r.car_code = rc.car_code
-    LEFT JOIN car_types ct ON rc.car_type_code = ct.car_type_code
-    LIMIT #{pageSize} OFFSET #{offset}
+<!--    <select id="getManagePaymentWithPaging"-->
+<!--            resultType="com.apple.arentcar.dto.ManagePaymentDTO">-->
+<!--    SELECT-->
+<!--        r.reservation_code AS reservationCode,-->
+<!--        u.user_name AS userName,-->
+<!--        b.branch_name AS branchName,-->
+<!--        ct.car_type_name AS carType,-->
+<!--        CONCAT(-->
+<!--        'Rental Period: ',-->
+<!--        r.rental_date,-->
+<!--        ' to ',-->
+<!--        r.return_date,-->
+<!--        ' (',-->
+<!--        DATEDIFF(r.return_date, r.rental_date),-->
+<!--        ' days)'-->
+<!--        ) AS rentalPeriod,-->
+<!--        r.payment_amount AS paymentAmount-->
+<!--    FROM-->
+<!--        reservations r-->
+<!--    LEFT JOIN users u ON r.user_code = u.user_code-->
+<!--    LEFT JOIN branchs b ON r.rental_location = b.branch_code-->
+<!--    LEFT JOIN rental_cars rc ON r.car_code = rc.car_code-->
+<!--    LEFT JOIN car_types ct ON rc.car_type_code = ct.car_type_code-->
+<!--    LIMIT #{pageSize} OFFSET #{offset}-->
 
-    </select>
-
-    <!-- 페이지네이션(검색 기능 포함) -->
-    <select id="getManagePaymentBySearchWithPaging"
-            parameterType="com.apple.arentcar.dto.ManagePaymentRequestDTO"
-            resultType="com.apple.arentcar.dto.ManagePaymentDTO">
-        SELECT
-        r.reservation_code AS reservationCode,
-        u.user_name AS userName,
-        b.branch_name AS branchName,
-        ct.car_type_name AS carType,
-        CONCAT(
-        'Rental Period: ',
-        r.rental_date,
-        ' to ',
-        r.return_date,
-        ' (',
-        DATEDIFF(r.return_date, r.rental_date),
-        ' days)'
-        ) AS rentalPeriod,
-        r.payment_amount AS paymentAmount
-        FROM
-        reservations r
-        LEFT JOIN users u ON r.user_code = u.user_code
-        LEFT JOIN branchs b ON r.rental_location = b.branch_code
-        LEFT JOIN rental_cars rc ON r.car_code = rc.car_code
-        LEFT JOIN car_types ct ON rc.car_type_code = ct.car_type_code
-        WHERE 1=1
-        <if test="userName != null and userName != ''">
-            AND u.user_name LIKE CONCAT('%', #{userName}, '%')
-        </if>
-        <if test="branchName != null and branchName != ''">
-            AND b.branch_name = #{branchName}
-        </if>
-        <if test="rentalDate != null and rentalDate != ''">
-            AND r.rental_date = #{rentalDate}
-        </if>
-        ORDER BY r.created_at DESC
-        LIMIT #{pageSize} OFFSET #{offset}
-    </select>
+<!--    </select>-->
 
     <!-- 메뉴 수 조회 -->
     <select id="countAllManagePayment" resultType="int">
         SELECT COUNT(*)
         FROM reservations r
         LEFT JOIN users u ON r.user_code = u.user_code
-        LEFT JOIN branchs b ON r.rental_location = b.branch_code
+        LEFT JOIN branchs rl ON r.rental_location = rl.branch_code
         LEFT JOIN rental_cars rc ON r.car_code = rc.car_code
         LEFT JOIN car_types ct ON rc.car_type_code = ct.car_type_code
     </select>
 
-    <select id="countBySearchData" resultType="int">
-        SELECT
-        r.reservation_code AS reservationCode,
-        u.user_name AS userName,
-        b.branch_name AS branchName,
-        ct.car_type_name AS carType,
-        CONCAT(
-        'Rental Period: ',
-        r.rental_date,
-        ' to ',
-        r.return_date,
-        ' (',
-        DATEDIFF(r.return_date, r.rental_date),
-        ' days)'
-        ) AS rentalPeriod,
-        r.payment_amount AS paymentAmount
-        FROM
-        reservations r
-        LEFT JOIN users u ON r.user_code = u.user_code
-        LEFT JOIN branchs b ON r.rental_location = b.branch_code
-        LEFT JOIN rental_cars rc ON r.car_code = rc.car_code
-        LEFT JOIN car_types ct ON rc.car_type_code = ct.car_type_code
+    <select id="countBySearchData" resultType="int"
+            parameterType="com.apple.arentcar.dto.ManagePaymentRequestDTO">
+        SELECT COUNT(*)
+        FROM reservations r
+        JOIN users u ON r.user_code = u.user_code
+        JOIN rental_cars rc ON r.car_code = rc.car_code
+        JOIN car_types ct ON rc.car_type_code = ct.car_type_code
+        JOIN branchs rl ON r.rental_location = rl.branch_code
         WHERE 1=1
         <if test="userName != null and userName != ''">
             AND u.user_name LIKE CONCAT('%', #{userName}, '%')
         </if>
         <if test="branchName != null and branchName != ''">
-            AND b.branch_name = #{branchName}
+            AND rl.branch_name = #{branchName}
         </if>
         <if test="rentalDate != null and rentalDate != ''">
-            AND r.rental_date = #{rentalDate}
+            AND r.rental_date = DATE_FORMAT(#{rentalDate}, '%Y%m%d')
         </if>
 
     </select>
 
     <!-- 상세보기 조회  -->
-    <select id="getManagePaymentDetailById" parameterType="Integer"
+    <select id="getManagePaymentDetailById" parameterType="String"
             resultType="com.apple.arentcar.dto.ManagePaymentDetailDTO">
         SELECT
             r.reservation_code AS reservationCode,
             u.user_name AS userName,
+            u.user_birth_date AS userBirthDate,
             u.user_phone_number AS phoneNumber,
+            u.user_email AS userEmail,
             u.driver_license_number AS driverLicense,
+            u.license_issue_date AS driverIssue,  -- 면허 발급일
             u.license_expiry_date AS driverExpiry,
-            b.branch_name AS branchName,
+            rl.branch_name AS branchName,
             ct.car_type_name AS carType,
             rc.car_number AS carNumber,
-            r.rental_date AS rentalDate,
-            r.return_date AS returnDate,
+            cc_insurance.common_name AS insuranceType,
+            DATE_FORMAT(r.rental_date, '%Y-%m-%d') AS rentalDate,
+            TIME_FORMAT(r.rental_time, '%H:%i') AS rentalTime,
+            DATE_FORMAT(r.return_date, '%Y-%m-%d') AS returnDate,
+            TIME_FORMAT(r.return_time, '%H:%i') AS returnTime,
             CONCAT(
             'Rental Period: ',
-            r.rental_date,
+            DATE_FORMAT(r.rental_date, '%Y-%m-%d'),  -- 포맷팅 추가
             ' to ',
-            r.return_date,
+            DATE_FORMAT(r.return_date, '%Y-%m-%d'),  -- 포맷팅 추가
             ' (',
             DATEDIFF(r.return_date, r.rental_date),
             ' days)'
             ) AS rentalPeriod,
-            r.payment_category AS paymentCategory,
-            r.payment_type AS paymentType,
-            r.payment_amount AS paymentAmount,
-            r.created_at AS createdAt,
-            r.updated_at AS updatedAt
+            cc_payment_category.common_name AS paymentCategoryName,
+            cc_payment_type.common_name AS paymentTypeName,
+            r.payment_amount AS paymentAmount
             FROM
-            reservations r
-            LEFT JOIN
-            users u ON r.user_code = u.user_code
-            LEFT JOIN
-            branchs b ON r.rental_location = b.branch_code
-            LEFT JOIN
-            rental_cars rc ON r.car_code = rc.car_code
-            LEFT JOIN
-            car_types ct ON rc.car_type_code = ct.car_type_code
-            WHERE r.reservation_code = #{reservationCode}
+        reservations r
+        JOIN users u ON r.user_code = u.user_code
+        JOIN rental_cars rc ON r.car_code = rc.car_code
+        JOIN car_types ct ON rc.car_type_code = ct.car_type_code
+        JOIN branchs rl ON r.rental_location = rl.branch_code
+        LEFT JOIN common_codes cc_insurance
+        ON r.insurance_type = cc_insurance.common_code
+        AND cc_insurance.common_kind_code = 'insurance_type'
+        LEFT JOIN common_codes cc_payment_category
+        ON r.payment_category = cc_payment_category.common_code
+        AND cc_payment_category.common_kind_code = 'payment_category'
+        LEFT JOIN common_codes cc_payment_type
+        ON r.payment_type = cc_payment_type.common_code
+        AND cc_payment_type.common_kind_code =
+        CASE
+        WHEN r.payment_category = '1' THEN 'payment_type_card'
+        WHEN r.payment_category = '2' THEN 'payment_type_pay'
+        ELSE NULL
+        END
+        WHERE
+        r.reservation_code = #{reservationCode}
     </select>
 
 </mapper>

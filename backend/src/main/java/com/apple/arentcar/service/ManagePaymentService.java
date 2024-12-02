@@ -15,43 +15,19 @@ public class ManagePaymentService {
     @Autowired
     private ManagePaymentMapper managePaymentMapper;
 
-    public List<ManagePaymentDTO> getAllManagePayment() {
-        return managePaymentMapper.getAllManagePayment();
+    public List<ManagePaymentDTO> getAllManagePayment(ManagePaymentRequestDTO requestDTO) {
+        return managePaymentMapper.getAllManagePayment(requestDTO);
     }
 
-    public List<ManagePaymentDTO> getManagePaymentWithPaging(
-            int pageSize, int pageNumber) {
-        int offset = (pageNumber -1) * pageSize;
-        return managePaymentMapper.getManagePaymentWithPaging(pageSize, offset);
-    }
-
-    public List<ManagePaymentDTO> getManagePaymentBySearchWithPaging(
-            String userName,
-            String branchName,
-            String rentalDate,
-            int pageSize,
-            int pageNumber) {
-
-        int offset = (pageNumber -1) * pageSize;
-
-        return managePaymentMapper.getManagePaymentBySearchWithPaging(
-                userName, branchName, rentalDate,pageSize,offset);
+    public int countBySearchData(ManagePaymentRequestDTO searchRequestDTO) {
+        return managePaymentMapper.countBySearchData(searchRequestDTO);
     }
 
     public int countAllManagePayment() {
         return managePaymentMapper.countAllManagePayment();
     }
 
-    public int countBySearchData(
-            String userName,
-            String branchName,
-            String rentalDate) {
-
-        return managePaymentMapper.countBySearchData(
-                userName, branchName, rentalDate);
-    }
-
-    public ManagePaymentDetailDTO getManagePaymentDetailById(Integer reservationCode) {
+    public ManagePaymentDetailDTO getManagePaymentDetailById(String reservationCode) {
         return managePaymentMapper.getManagePaymentDetailById(reservationCode);
     }
 }

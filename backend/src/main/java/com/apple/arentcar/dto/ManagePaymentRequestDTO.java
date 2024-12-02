@@ -10,7 +10,7 @@ public class ManagePaymentRequestDTO {
     private String userName;
     private String branchName;
     private String rentalDate;
-    private int pageNumber;
+    private int offset;
     private int pageSize;
 
 }

@@ -18,46 +18,49 @@ public class ManagePaymentController {
     private ManagePaymentService managePaymentService;
 
     @GetMapping("/manager/rentalrates")
-    public List<ManagePaymentDTO> getAllManagePayment() {
-
-        return managePaymentService.getAllManagePayment();
-    }
-
-    @GetMapping("/manager/rentalrates/paged")
-    public ResponseEntity<List<ManagePaymentDTO>> getManagePaymentWithPaging(
-            @RequestParam int pageSize,
-            @RequestParam int pageNumber,
+    public ResponseEntity<List<ManagePaymentDTO>> getAllManagePayment(
             @RequestParam(required = false) String userName,
             @RequestParam(required = false) String branchName,
-            @RequestParam(required = false) String rentalDate) {
+            @RequestParam(required = false) String rentalDate,
+            @RequestParam(defaultValue = "1") int pageNumber,
+            @RequestParam(defaultValue = "10") int pageSize) {
 
-        List<ManagePaymentDTO> managePayment;
+        pageNumber = Math.max(pageNumber, 1);
+        int offset = (pageNumber -1) * pageSize;
 
-        if ((userName != null && !userName.isEmpty()) ||
-            (branchName != null && !branchName.isEmpty()) ||
-            (rentalDate != null && !rentalDate.isEmpty())) {
+        ManagePaymentRequestDTO requestDTO = new ManagePaymentRequestDTO();
+        requestDTO.setUserName(userName);
+        requestDTO.setBranchName(branchName);
+        requestDTO.setRentalDate(rentalDate);
+        requestDTO.setPageSize(pageSize);
+        requestDTO.setOffset(offset);
 
-            managePayment = managePaymentService.getManagePaymentBySearchWithPaging(
-                    userName, branchName, rentalDate, pageNumber, pageSize);
-        } else {
-            managePayment = managePaymentService.getManagePaymentWithPaging(pageSize, pageNumber);
-        }
-
+        List<ManagePaymentDTO> managePayment = managePaymentService.getAllManagePayment(requestDTO);
+         if (managePayment.isEmpty()) {
+             return ResponseEntity.notFound().build();
+         }
         return ResponseEntity.ok(managePayment);
     }
 
     @GetMapping("/manager/rentalrates/count")
-    public ResponseEntity<Integer> getTotalManagePaymentCount (
+    public  ResponseEntity<Integer> getTotalManagePaymentCount(
             @RequestParam(required = false) String userName,
             @RequestParam(required = false) String branchName,
             @RequestParam(required = false) String rentalDate) {
 
         int count;
+
         if ((userName != null && !userName.isEmpty()) ||
             (branchName != null && !branchName.isEmpty()) ||
             (rentalDate != null && !rentalDate.isEmpty())) {
 
-            count = managePaymentService.countBySearchData(userName, branchName, rentalDate);
+            ManagePaymentRequestDTO searchRequestDTO = new ManagePaymentRequestDTO();
+
+            searchRequestDTO.setUserName(userName);
+            searchRequestDTO.setBranchName(branchName);
+            searchRequestDTO.setRentalDate(rentalDate);
+
+            count = managePaymentService.countBySearchData(searchRequestDTO);
         } else {
             count = managePaymentService.countAllManagePayment();
         }
@@ -65,12 +68,8 @@ public class ManagePaymentController {
     }
 
     @GetMapping("/manager/rentalrates/detail/{reservationCode}")
-    public ResponseEntity<?> getManagePaymentDetailById(@PathVariable("reservationCode") Integer reservationCode) {
-        ManagePaymentDetailDTO detail = managePaymentService.getManagePaymentDetailById(reservationCode);
-        if (detail != null) {
-            return ResponseEntity.ok(detail);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ManagePaymentDetailDTO getManagePaymentDetailById(
+            @PathVariable("reservationCode") String reservationCode) {
+        return managePaymentService.getManagePaymentDetailById(reservationCode);
     }
 }
