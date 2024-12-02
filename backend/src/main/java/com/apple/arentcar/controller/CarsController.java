@@ -41,8 +41,8 @@ public class CarsController {
     // 차종 조회 및 페이지네이션(검색 기능 포함)
     @GetMapping("/manager/cars/paged")
     public ResponseEntity<List<CarTypesDTO>> getCarsWithPaging(
-                                             @RequestParam int pageSize,
-                                             @RequestParam int pageNumber,
+                                             @RequestParam int pageSize, // 10
+                                             @RequestParam int pageNumber, // 기본 페이지 1
                                              @RequestParam(required = false) String carTypeName) {
         List<CarTypesDTO> carTypes;
         if (carTypeName != null && !carTypeName.isEmpty()) {

@@ -459,7 +459,7 @@ const RentalCarInfo = ({ onClick }) => {
   
   const createVehicle = async (token, newVehicle) => {
     const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars`, 
-      newVehicle,
+      newVehicle, // Spring Boot에서 @RequestBody로 받는 객체 데이터
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -543,10 +543,10 @@ const RentalCarInfo = ({ onClick }) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'rentalcars.xlsx'); // 다운로드할 파일 이름 설정
+      link.setAttribute('download', 'rentalcars.xlsx'); // 다운로드할 파일 이름 설정, download속성은 링크로 연결되지 않고 대신 해당 콘텐츠가 다운로드됨을 명시함
       document.body.appendChild(link);
-      link.click();
-      link.remove();
+      link.click(); // 링크를 클릭하여 파일 다운로드를 시작한다
+      link.remove(); // 다운로드 후 <a>태그를 DOM에서 제거한다
 
     } catch (error) {
       console.error('Error downloading the Excel file', error);
@@ -696,8 +696,8 @@ const RentalCarInfo = ({ onClick }) => {
         <div className="car-info-status-display">정비중<div className="car-info-status-content">{maintenanceRentalCarsCount}</div></div>
         <div className="car-info-status-display">
           <div className="car-info-status-excel">
-              <button onClick={handleDownloadExcel}>
-                <img className="car-info-excel-download" src={`${process.env.REACT_APP_IMAGE_URL}/excel-logo.png`} alt="rentalCars excel downlod button" />
+            <button onClick={handleDownloadExcel}>
+              <img className="car-info-excel-download" src={`${process.env.REACT_APP_IMAGE_URL}/excel-logo.png`} alt="rentalCars excel downlod button" />
             </button>
           </div>
         </div>
