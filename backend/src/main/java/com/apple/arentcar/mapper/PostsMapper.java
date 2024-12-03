@@ -41,4 +41,7 @@ public interface PostsMapper {
     void updateResponses(Responses responses);
     void updateInquiryStatus(Responses responses);
     void deleteResponses(Integer responseCode);
+    void createInquiryPosts(Inquirys inquiry);
+    void createInquiry(Inquirys inquiry);
+    void createUserResponses(Responses responses);
 }

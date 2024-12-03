@@ -89,4 +89,10 @@ public class PostsService {
     }
     public void updateResponses(Responses responses) { postsMapper.updateResponses(responses); }
     public void deleteResponses(Integer code) { postsMapper.deleteResponses(code); }
+    public void createInquirys(Inquirys inquirys) {
+        postsMapper.createInquiryPosts(inquirys);
+        System.out.println(inquirys.getPostCode());
+        postsMapper.createInquiry(inquirys);
+    }
+    public void createUserResponses(Responses responses) { postsMapper.createUserResponses(responses); }
 }

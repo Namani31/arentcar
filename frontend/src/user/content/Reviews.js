@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "./Reviews.css"
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -175,8 +175,10 @@ const Reviews = () => {
             </div>
           </div>
         )}
+        <div className="user-customers-list">
+            <Link to={"/customers"} className="user-customers-list-button">리스트</Link>
+        </div>
       </div>
-
     </div>
   )
 }

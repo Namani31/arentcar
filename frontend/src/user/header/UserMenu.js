@@ -10,6 +10,7 @@ import FooterMain from 'user/footer/FooterMain';
 import Customers from 'user/content/Customers';
 import Notices from 'user/content/Notices';
 import Reviews from 'user/content/Reviews';
+import Inquirys from 'user/content/Inquirys';
 
 const UserMenu = () => {
   return (
@@ -29,7 +30,8 @@ const UserMenu = () => {
           <Route path="/customers/NT/:postId" element={<Notices />} ></Route>
           <Route path="/customers/RV" element={<Reviews />} ></Route>
           <Route path="/customers/RV/:postId" element={<Reviews />} ></Route>
-
+          <Route path="/customers/IQ" element={<Inquirys />} ></Route>
+          <Route path="/customers/IQ/:postId" element={<Inquirys />} ></Route>
         </Routes>
       </div>
       <div className='user-menu-footer-wrap'>
