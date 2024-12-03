@@ -17,6 +17,11 @@ public class BranchsController {
     @Autowired
     private BranchsService branchsService;
 
+    @GetMapping("user/branches")
+    public List<Branchs> findAllBranches () {
+        return branchsService.findAllBranches();
+    }
+
     @GetMapping("/manager/branchs")
     public List<Branchs> findBranchsByBranchName(
             @RequestParam(name = "branchname") String branchName) {

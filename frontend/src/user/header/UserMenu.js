@@ -10,6 +10,7 @@ import FooterMain from 'user/footer/FooterMain';
 import ReservationPage from 'user/content/ReservationPage';
 import ReservationDetail from 'user/content/ReservationDetail';
 import RentalRateGuide from 'user/content/RentalRateGuide';
+import Branches from 'user/content/Branches';
 
 const UserMenu = () => {
   return (
@@ -27,6 +28,7 @@ const UserMenu = () => {
           <Route path="/reservation" element={<ReservationPage />} /> 
           <Route path="/reservationdetail" element={<ReservationDetail />} /> 
           <Route path="/rentalrateguide" element={<RentalRateGuide />} /> 
+          <Route path="/branches" element={<Branches />} /> 
         </Routes>
       </div>
       <div className='user-menu-footer-wrap'>

@@ -16,6 +16,10 @@ public class BranchsService {
     @Autowired
     private BranchsMapper branchsMapper;
 
+    public List<Branchs> findAllBranches() {
+        return branchsMapper.findAllBranches();
+    }
+
     public List<Branchs> findBranchsByBranchName(String branchName) {
         return branchsMapper.findBranchsByBranchName(branchName);
     }
