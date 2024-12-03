@@ -224,8 +224,28 @@ public class PostsController {
 
 
     @GetMapping("/manager/post/inquirys")
-    public ResponseEntity<List<Inquirys>> getAllInquirys(){
-        return ResponseEntity.ok(postsService.getAllInquirys());
+    public ResponseEntity<List<Inquirys>> getAllInquirys(
+            @RequestParam int pageSize,
+            @RequestParam int pageNumber,
+            @RequestParam(required = false) String postName){
+        List<Inquirys> inquirys;
+        if(postName != null && !postName.isEmpty()){
+            inquirys = postsService.getSearchAllInquirys(postName, pageSize, pageNumber);
+        } else {
+            inquirys = postsService.getAllInquirys(pageSize, pageNumber);
+        }
+        return ResponseEntity.ok(inquirys);
+    }
+    @GetMapping("/manager/post/inquirys/count")//manager
+    public ResponseEntity<Integer> getAllCount(
+            @RequestParam(required = false) String postName){
+        int count;
+        if(postName != null && !postName.isEmpty()){
+            count = postsService.countSearchInquirys(postName);
+        } else {
+            count = postsService.countInquirys();
+        }
+        return ResponseEntity.ok(count);
     }
 
     @GetMapping("/manager/post/inquirys/{postCode}")
@@ -242,6 +262,7 @@ public class PostsController {
     public ResponseEntity<Responses> createResponses(
             @RequestBody Responses responses) {
         postsService.createResponses(responses);
+
         return ResponseEntity.ok(responses);
     }
     @PutMapping("/manager/post/responses")

@@ -246,7 +246,29 @@
                    END as 'author' from posts p
                LEFT join admins am on am.admin_code = p.author_code
                LEFT join users us on us.user_code = p.author_code
-        join inquirys iq on iq.post_code = p.post_code;
+        join inquirys iq on iq.post_code = p.post_code
+        LIMIT #{pageSize} OFFSET #{pageNumber};
+    </select>
+
+    <select id="countInquirys" resultType="int">
+        SELECT count(*) from posts p where p.post_type = 'IQ';
+    </select>
+
+    <select id="getSearchAllInquirys" resultType="com.apple.arentcar.model.Inquirys">
+        SELECT p.*, iq.inquiry_status,
+               CASE
+                   when p.author_type = 'US' THEN us.user_name
+                   when p.author_type = 'AM' THEN am.admin_name
+                   END as 'author' from posts p
+               LEFT join admins am on am.admin_code = p.author_code
+               LEFT join users us on us.user_code = p.author_code
+        join inquirys iq on iq.post_code = p.post_code
+        where p.post_title LIKE CONCAT('%', #{keyword}, '%')
+        LIMIT #{pageSize} OFFSET #{pageNumber};
+    </select>
+
+    <select id="countSearchInquirys" resultType="int">
+        SELECT count(*) from posts p where p.post_type = 'IQ' and p.post_title LIKE CONCAT('%', #{keyword}, '%');
     </select>
 
     <select id="getInquirys" resultType="com.apple.arentcar.model.Inquirys">
@@ -282,6 +304,10 @@
             response_content = #{responseContent},
             updated_at = NOW()
         WHERE post_code = #{postCode} AND response_code = #{responseCode};
+    </update>
+
+    <update id="updateInquiryStatus" parameterType="com.apple.arentcar.model.Responses">
+        UPDATE inquirys SET inquiry_status = 'RS' WHERE post_code = #{postCode};
     </update>
 
     <delete id="deleteResponses">

@@ -12,7 +12,11 @@ const PostInquirys = ({ onClick }) => {
   const [inquirys, setInquirys] = useState([])
   //팝업창
   const [isPopUp, setIsPopUp] = useState(false);
-  const [popupType, setPopupType] = useState()
+  //검색/페이징
+  const [searchName, setSearchName] = useState("");
+  const [pageNumber, setPageNumber] = useState(0);
+  const pageSize = 10;
+  const [totalInquirys,setTotalInquirys] = useState();
   //컬럼
   const [columnInquirys] = useState([
     { columnName: '코드', field: 'post_code', width: 100, align: 'center'},
@@ -55,9 +59,18 @@ const PostInquirys = ({ onClick }) => {
     }
   }
   const getInquirys = async (token)=>{
-    
+    const params = {
+      pageSize,
+      pageNumber,
+    };
+
+    if(searchName && searchName.trim() !== "") {
+      params.postName = searchName;
+    }
+
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/inquirys`,
       {
+        params,
         headers: {
           Authorization: `Bearer ${token}`
         },
@@ -66,6 +79,41 @@ const PostInquirys = ({ onClick }) => {
     );
     if(response.data) {
       setInquirys(response.data);
+    }
+  }
+
+  const postGetCount = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      await getCount(token);
+    } catch (error) {
+      if(error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getCount(newToken);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the movies!', error);
+      }
+    }
+  }
+  const getCount = async (token) => {
+    const params = searchName && searchName.trim() !== "" ? { postName: searchName } : {}
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/inquirys/count`,
+      {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+    if(typeof response.data === "number") {
+      setTotalInquirys(response.data);
+    } else {
+      console.error('Unexpected response:', response.data);
     }
   }
 
@@ -254,9 +302,16 @@ const PostInquirys = ({ onClick }) => {
   //manager/post/responses/{postCode}
   
   useEffect(()=>{
+    postGetCount();
     postGetInquirys();
     handleAdminCode();
-  },[])
+  },[pageNumber, totalInquirys])
+
+  const handleSearchClick = async () => {
+    postGetInquirys();
+    postGetCount();
+    setPageNumber(0);
+  }
 
   const handleAdminCode = async () => {
     setAuthorCode(store.getState().adminState.adminCode);
@@ -277,23 +332,28 @@ const PostInquirys = ({ onClick }) => {
     setIsPopUp(true);
   }
 
-  const handleUpdate = () => {
-    postUpdateResponses();
+  const handleUpdateResponses = () => {
+    if(window.confirm('수정하시겠습니까?')) {
+      postUpdateResponses();
+    }
   }
 
-  const handleDelete = (code) => {
-    postDeleteResponses(code).then(function (value) {
-      //성공했을 때 실행
-      postGetResponses(postCode);
-    }, function (reason) {
-      //실패했을 때 실행
-      alert("삭제에 실패했습니다.")
-    });
+  const handleDeleteResponses = (code) => {
+    if(window.confirm('삭제하시겠습니까?')) {
+      postDeleteResponses(code).then(function (value) {
+        //성공했을 때 실행
+        postGetResponses(postCode);
+      }, function (reason) {
+        //실패했을 때 실행
+        alert("삭제에 실패했습니다.")
+      });
+    }
   }
 
   const handleCreate = () => {
     postCreateResponses().then(function (value) {
       //성공했을 때 실행
+      postGetInquirys();
       postGetResponses(postCode);
     }, function (reason) {
       //실패했을 때 실행
@@ -327,6 +387,9 @@ const PostInquirys = ({ onClick }) => {
       }
     }
   }
+  let totalPages = Math.ceil(totalInquirys / pageSize);
+  if (totalPages < 1) { totalPages = 1; }
+  if (totalInquirys === 0) { totalPages = 0; }
 
   return(
     <div className='manager-post-inquirys-wrap'>
@@ -340,9 +403,12 @@ const PostInquirys = ({ onClick }) => {
         <div className='manager-post-inquirys-table-head'>
           <div className='flex-align-center'>
             <label className='manager-label' htmlFor="manager-post-serch">제목</label>
-            <input id='manager-post-serch' className='width200' type="text"></input>
-            <button className='manager-button manager-button-search' onClick={()=>{}}> 검색 </button>
-            <span> [ 검색건수 : {1}건 ] </span>
+            <input id='manager-post-serch' className='width200' type="text"
+              value={searchName}
+              onChange={(e)=>(setSearchName(e.target.value))} 
+              onKeyDown={(e)=>{if(e.key === "Enter") {handleSearchClick()} }}></input>
+            <button className='manager-button manager-button-search' onClick={()=>handleSearchClick()}> 검색 </button>
+            <span> [ 검색건수 : {totalInquirys}건 ] </span>
           </div>
 
           <div>
@@ -390,7 +456,7 @@ const PostInquirys = ({ onClick }) => {
               <div className='manager-post-inquirys-popup-header'>
                 <div className='manager-post-inquirys-popup-title'> <h6 className='manager-post-inquirys-h6'> 문의사항 </h6> </div>
                 <div className='manager-post-inquirys-popup-buttons'>
-                  <button className='manager-button manager-post-inquirys-popup-save' onClick={()=>handleUpdate()}> 수정 </button>
+                  <button className='manager-button manager-post-inquirys-popup-save' onClick={()=>handleUpdateResponses()}> 수정 </button>
                   <button className='manager-button manager-post-inquirys-popup-close' onClick={()=>{setIsPopUp(!isPopUp)}}> 닫기 </button>
                 </div>
               </div>
@@ -422,7 +488,7 @@ const PostInquirys = ({ onClick }) => {
                       {response.author_type === "AM" && (
                         <>
                           &nbsp;
-                          <button onClick={()=>handleDelete(response.response_code)} style={{backgroundColor:'#ee0a0a',color:"#ededf0", padding:"0px 4px"}}> 삭제 </button>
+                          <button onClick={()=>handleDeleteResponses(response.response_code)} style={{backgroundColor:'#ee0a0a',color:"#ededf0", padding:"0px 4px"}}> 삭제 </button>
                         </> 
                       )}
                     </div>
@@ -451,6 +517,17 @@ const PostInquirys = ({ onClick }) => {
             </div>
           </div>
         )}
+        <div className='manager-post-notice-table-paging flex-align-center'>
+          <button className='manager-button' onClick={()=>setPageNumber(pageNumber - 1)}
+            style={{color: pageNumber === 0 ? '#aaa' : '#26319b'}}
+            disabled={pageNumber === 0}
+          >이전</button>
+          <div className='manager-post-notice-table-paging-page'>{(pageNumber+1)} / {totalPages}</div>
+          <button className='manager-button' onClick={()=>setPageNumber(pageNumber + 1)}
+            style={{color: (pageNumber + 1) >= totalPages ? '#aaa' : '#26319b'}}
+            disabled={ (pageNumber + 1) >= totalPages }
+          >다음 </button>
+        </div>
       </div>
       {loading && (
         <Loading />
