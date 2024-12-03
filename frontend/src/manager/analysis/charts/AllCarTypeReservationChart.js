@@ -11,61 +11,78 @@ import axios from 'axios';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import { subDays } from 'date-fns';
 import { format } from 'date-fns';
+import { refreshAccessToken, handleLogout } from 'common/Common';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const AllCarTypeReservationChart = () => {
-    const [startDate, setStartDate] = useState(subDays(new Date(), 7));
-    const [endDate, setEndDate] = useState(new Date());
-    const [chartData, setChartData] = useState([]); // 차트에 넘겨질 데이터
-    const [filter, setFilter] = useState('daily'); // 일별, 월별 필터
-    const filterText = filter === 'daily' ? '일별 차종 예약 통계' : '월별 차종 예약 통계';
+    // 캘린더 시작 날짜와 종료 날짜
+    const [startDate, setStartDate] = useState(subDays(new Date(), 7)); // 오늘 기준 일주일 전
+    const [endDate, setEndDate] = useState(new Date()); // 오늘 날짜
+    const [chartData, setChartData] = useState([]);
+    // 선택된 일별 & 월별 필터 상태
+    const [filter, setFilter] = useState('daily');
 
-    // 일별, 월별 클릭 시 호출
+    // 일별, 월별 텍스트 필터
+    const filterText = filter === 'daily' ? '일별 차종 예약 현황' : '월별 차종 예약 현황';
+
+    // 일별, 월별 선택용 핸들러
     const handleFilterChange = (event) => {
-        setFilter(event.target.value);
-        setStartDate(null);
+        setFilter(event.target.value); // 선택된 값을 차트 이름에 반영
+        setStartDate(null); //필터 변경 시 기존 날짜 초기화
         setEndDate(null);
     };
 
-    const fetchChartData = () => {
-        if (startDate && endDate) {
-            let formattedStartDate, formattedEndDate;
+    const fetchBranchReservations = async (token) => {
+        if (!startDate || !endDate) return;
 
-            if (filter === 'daily') {
-                formattedStartDate = startDate.toISOString().slice(0, 10).replace(/-/g, '');
-                formattedEndDate = endDate.toISOString().slice(0, 10).replace(/-/g, '');
-            } else if (filter === 'monthly') {
-                const montlyStart = startOfMonth(startDate);
-                const montlyEnd = endOfMonth(endDate);
-                formattedStartDate = format(montlyStart, 'yyyyMMdd');
-                formattedEndDate = format(montlyEnd, 'yyyyMMdd');
+        let formattedStartDate, formattedEndDate;
+
+        if (filter === 'daily') {
+            formattedStartDate = startDate.toISOString().slice(0, 10).replace(/-/g, '');
+            formattedEndDate = endDate.toISOString().slice(0, 10).replace(/-/g, '');
+        } else if (filter === 'monthly') {
+            formattedStartDate = format(startOfMonth(startDate), 'yyyyMMdd');
+            formattedEndDate = format(endOfMonth(endDate), 'yyyyMMdd');
+        }
+
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/reservation`, {
+            params: { startDate: formattedStartDate, endDate: formattedEndDate },
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
+        });
+
+        setChartData(response.data);
+    };
+
+    const getBranchReservations = async () => {
+        try {
+            const token = localStorage.getItem('accessToken');
+            await fetchBranchReservations(token);
+        } catch (error) {
+            if (error.response && error.response.status === 403) {
+                try {
+                    const newToken = await refreshAccessToken();
+                    await fetchBranchReservations(newToken);
+                } catch (refreshError) {
+                    alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+                    handleLogout();
+                }
+            } else {
+                console.error('There was an error fetching the branch reservations!', error);
             }
-
-            axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars`, {
-                params: {
-                    startDate: formattedStartDate,
-                    endDate: formattedEndDate,
-                },
-            }).then(response => {
-                console.log("API Response Data:", response.data);
-                setChartData(response.data);
-            }).catch(error => {
-                console.error("Error fetching chart data:", error);
-            });
         }
     };
 
     useEffect(() => {
-        fetchChartData();
+        getBranchReservations();
     }, [startDate, endDate, filter]);
 
     const data = {
-        labels: chartData.map(carsType => carsType.car_type_name),  // 차종 이름
+        labels: chartData?.map(branch => branch.branch_name) || [],
         datasets: [
             {
-                // reservation_code 가 null, undefined,숫자가 아니면 0
-                data: chartData.map(reservations => Number(reservations.reservation_code) || 0),  // 예약 건수
+                data: chartData?.map(branch => Number(branch.reservation_code) || 0) || [],
                 backgroundColor: ['red', 'green', 'blue', 'yellow', 'purple'],
             },
         ],

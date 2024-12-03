@@ -11,14 +11,12 @@ import axios from 'axios';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import { subDays } from 'date-fns';
 import { format } from 'date-fns';
-
-
+import { refreshAccessToken, handleLogout } from 'common/Common';
 
 // 차트 라이브러리의 필요한 요소를 등록
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
 
 const AllBranchesReservationChart = () => {
-
     // 캘린더 시작 날짜와 종료 날짜
     const [startDate, setStartDate] = useState(subDays(new Date(), 7)); // 오늘 기준 일주일 전
     const [endDate, setEndDate] = useState(new Date()); // 오늘 날짜
@@ -27,7 +25,7 @@ const AllBranchesReservationChart = () => {
     const [filter, setFilter] = useState('daily');
 
     // 일별, 월별 텍스트 필터
-    const filterText = filter === 'daily' ? '일별 전체 지점 예약' : '월별 전체 지점 예약';
+    const filterText = filter === 'daily' ? '일별 전체 지점 예약 현황' : '월별 전체 지점 예약 현황';
 
     // 일별, 월별 선택용 핸들러
     const handleFilterChange = (event) => {
@@ -36,51 +34,56 @@ const AllBranchesReservationChart = () => {
         setEndDate(null);
     };
 
-    // 일별 & 월별 클릭 시
-    useEffect(() => {
-        // 날짜가 선택된 경우에만 호출
-        if (startDate && endDate) {
-            let formattedStartDate, formattedEndDate;
+    const fetchBranchReservations = async (token) => {
+        if (!startDate || !endDate) return;
 
-            // 사용자가 '일별'을 클릭했다면
-            if (filter === 'daily') {
-                // 일별: yyyyMMdd 형식
-                // / 포맷팅 안 하면 2024-11-04T15:00:00.000Z 식으로 옴 (T는 날짜와 시간, Z는 UTC)
-                // yyyy-MM-dd 형식으로 추출 후 /-/g 를 통해 전체 문자열에서 하이픈 제거
-                formattedStartDate = startDate.toISOString().slice(0, 10).replace(/-/g, '');
-                formattedEndDate = endDate.toISOString().slice(0, 10).replace(/-/g, '');
+        let formattedStartDate, formattedEndDate;
 
-                // 사용자가 '월별'을 클릭했다면
-            } else if (filter === 'monthly') {
-                const montlyStart = startOfMonth(startDate); // 시작된 선택일의 해당 월 첫날
-                const montlyEnd = endOfMonth(endDate); // 시작된 선택일의 해당 월 마지막날
-                formattedStartDate = format(montlyStart, 'yyyyMMdd');
-                formattedEndDate = format(montlyEnd, 'yyyyMMdd');
-                console.log(formattedStartDate, formattedEndDate);
-            }
-
-            // axios를 통해 json 형식으로 데이터를 가져옴
-            axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/reservation`, {
-                params: {
-                    startDate: formattedStartDate,
-                    endDate: formattedEndDate
-                }
-            }).then(response => {
-                console.log("API Response Data:", response.data);
-                setChartData(response.data);
-            }).catch(error => {
-                console.error("Error fetching chart data:", error);
-            });
+        if (filter === 'daily') {
+            formattedStartDate = startDate.toISOString().slice(0, 10).replace(/-/g, '');
+            formattedEndDate = endDate.toISOString().slice(0, 10).replace(/-/g, '');
+        } else if (filter === 'monthly') {
+            formattedStartDate = format(startOfMonth(startDate), 'yyyyMMdd');
+            formattedEndDate = format(endOfMonth(endDate), 'yyyyMMdd');
         }
-    }, [startDate, endDate, filter]); // startDate, endDate가 변경될 때 호출
 
-    // 데이터를 차트에 넘기기
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/reservation`, {
+            params: { startDate: formattedStartDate, endDate: formattedEndDate },
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
+        });
+
+        setChartData(response.data);
+    };
+
+    const getBranchReservations = async () => {
+        try {
+            const token = localStorage.getItem('accessToken');
+            await fetchBranchReservations(token);
+        } catch (error) {
+            if (error.response && error.response.status === 403) {
+                try {
+                    const newToken = await refreshAccessToken();
+                    await fetchBranchReservations(newToken);
+                } catch (refreshError) {
+                    alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+                    handleLogout();
+                }
+            } else {
+                console.error('There was an error fetching the branch reservations!', error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        getBranchReservations();
+    }, [startDate, endDate, filter]);
+
     const data = {
-        labels: chartData.map(branchsName => branchsName.branch_name),  // 지점 이름
+        labels: chartData?.map(branch => branch.branch_name) || [],
         datasets: [
             {
-                // reservation_code 가 null, undefined,숫자가 아니면 0
-                data: chartData.map(reservations => Number(reservations.reservation_code) || 0),  // 예약 건수
+                data: chartData?.map(branch => Number(branch.reservation_code) || 0) || [],
                 backgroundColor: ['red', 'green', 'blue', 'yellow', 'purple'],
             },
         ],
