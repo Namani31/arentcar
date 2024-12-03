@@ -22,7 +22,7 @@ public class RentalCarsController {
     @Autowired
     private RentalCarsService rentalCarsService;
 
-    @GetMapping("/manager/rentalcars")
+    @GetMapping("/manager/rentalcars/all")
     public List<RentalCars> getAllRentalCars() { return rentalCarsService.getAllRentalCars(); }
 
     @GetMapping("/manager/rentalcars/{carCode}")
