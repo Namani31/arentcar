@@ -96,9 +96,11 @@ public class CarController {
             @RequestParam (name = "insuranceType") String insuranceType,
             @RequestParam (name = "paymentCategory") String paymentCategory,
             @RequestParam (name = "paymentType") String paymentType,
-            @RequestParam (name = "paymentAmount") Integer paymentAmount
+            @RequestParam (name = "paymentAmount") Integer paymentAmount,
+            @RequestParam (name = "reservationDate") String reservationDate,
+            @RequestParam (name = "paymentDate") String paymentDate
     ) {
-        UserReservationDTO userReservationDTO = new UserReservationDTO(userCode,carCode,rentalLocation,rentalDate,rentalTime,returnLocation,returnDate,returnTime,insuranceType,paymentCategory,paymentType,paymentAmount);
+        UserReservationDTO userReservationDTO = new UserReservationDTO(userCode,carCode,rentalLocation,rentalDate,rentalTime,returnLocation,returnDate,returnTime,insuranceType,paymentCategory,paymentType,paymentAmount,reservationDate,paymentDate);
         carService.InsertUserReservation(userReservationDTO);
         return ResponseEntity.ok(null);
     }
