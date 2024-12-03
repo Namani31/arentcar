@@ -33,7 +33,7 @@ const AllCarTypeReservationChart = () => {
         setEndDate(null);
     };
 
-    const fetchBranchReservations = async (token) => {
+    const fetchCarTypesReservations = async (token) => {
         if (!startDate || !endDate) return;
 
         let formattedStartDate, formattedEndDate;
@@ -46,24 +46,25 @@ const AllCarTypeReservationChart = () => {
             formattedEndDate = format(endOfMonth(endDate), 'yyyyMMdd');
         }
 
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/reservation`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars`, {
             params: { startDate: formattedStartDate, endDate: formattedEndDate },
             headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,
         });
 
         setChartData(response.data);
+        console.log(response.data);
     };
 
-    const getBranchReservations = async () => {
+    const getCarTypesReservations = async () => {
         try {
             const token = localStorage.getItem('accessToken');
-            await fetchBranchReservations(token);
+            await fetchCarTypesReservations(token);
         } catch (error) {
             if (error.response && error.response.status === 403) {
                 try {
                     const newToken = await refreshAccessToken();
-                    await fetchBranchReservations(newToken);
+                    await fetchCarTypesReservations(newToken);
                 } catch (refreshError) {
                     alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
                     handleLogout();
@@ -75,14 +76,14 @@ const AllCarTypeReservationChart = () => {
     };
 
     useEffect(() => {
-        getBranchReservations();
+        getCarTypesReservations();
     }, [startDate, endDate, filter]);
 
     const data = {
-        labels: chartData?.map(branch => branch.branch_name) || [],
+        labels: chartData.map(carsType => carsType.car_type_name) || [],  // 차종 이름
         datasets: [
             {
-                data: chartData?.map(branch => Number(branch.reservation_code) || 0) || [],
+                data: chartData?.map(reservations => Number(reservations.reservation_code) || 0),
                 backgroundColor: ['red', 'green', 'blue', 'yellow', 'purple'],
             },
         ],
