@@ -11,6 +11,7 @@ import CarInfo from 'manager/carinfo/CarInfo';
 import RegisterAdmin from 'manager/system/RegisterAdmin';
 import ManagerUser from 'manager/system/ManagerUser';
 import ConnectionStatus from 'manager/system/ConnectionStatus';
+import VisitorCount from 'manager/system/VisitorCount';
 import PostReviews from 'manager/system/PostReviews';
 import ManagerReservation from 'manager/reservation/ManagerReservation';
 import RentalRates from 'manager/managepayment/RentalRates';
@@ -43,6 +44,7 @@ const ManagerMenu = () => {
     managerCar: <CarInfo onClick={handleCloseClick} />,
     ManagerUser: <ManagerUser onClick={handleCloseClick} />,
     ConnectionStatus: <ConnectionStatus onClick={handleCloseClick} />,
+    VisitorCount: <VisitorCount onClick={handleCloseClick} />,
     ManagerReservation: <ManagerReservation onClick={handleCloseClick} />,
     RentalRates: <RentalRates onClick={handleCloseClick} />,
     // 관리자 게시판
@@ -186,6 +188,9 @@ const ManagerMenu = () => {
         <div className='manager-menu-content-left'>
           <div className='manager-menu-content-homepage' onClick={handleHomePageClick}>
             홈페이지
+          </div>
+          <div>
+            <VisitorCount />
           </div>
           <div>
             <ConnectionStatus />

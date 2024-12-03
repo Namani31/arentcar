@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "manager/reservation/ManagerReservation.css";
-import "index.css";
 import { refreshAccessToken, handleLogout, formatDate, formatTime, formatPhone } from "common/Common";
 
 const ManagerReservation = () => {
