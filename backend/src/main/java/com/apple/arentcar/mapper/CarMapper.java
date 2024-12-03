@@ -2,7 +2,6 @@ package com.apple.arentcar.mapper;
 
 import com.apple.arentcar.dto.*;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public interface CarMapper {
 
     List<ModelYearDTO> getModelYear();
 
-    List<BranchsDTO> getAllBranchs();
+    List<BranchsDTO> getAllBranchs(String region);
 
     List<CarTypeCategoryDTO> getCarTypeCategory();
 

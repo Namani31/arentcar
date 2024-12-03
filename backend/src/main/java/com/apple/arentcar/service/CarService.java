@@ -3,7 +3,6 @@ package com.apple.arentcar.service;
 import com.apple.arentcar.dto.*;
 import com.apple.arentcar.mapper.CarMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,8 +39,8 @@ public class CarService {
         return CarMapper.getModelYear();
     }
 
-    public List<BranchsDTO> getAllBranchs() {
-        return CarMapper.getAllBranchs();
+    public List<BranchsDTO> getAllBranchs(String region) {
+        return CarMapper.getAllBranchs(region);
     }
 
     public List<CarTypeCategoryDTO> getCarTypeCategory() {

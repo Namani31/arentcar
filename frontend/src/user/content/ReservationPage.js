@@ -9,7 +9,10 @@ import SelectBranch from './SelectBranch';
 const RentalCarsPage = ({onClick}) => {
   const [filtersState, setFiltersState] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
+  const [branchs, setBranch] = useState([]);
   const [isSelectBranch, setIsSelectBranch] = useState(false);
+  const [isSelectRegion, setIsSelectRegion] = useState(false);
+  const [selectRegion, setSelectRegion] = useState('');
   const [selectBranch, setSelectBranch] = useState('');
   const [isSelectPeriod, setIsSelectPeriod] = useState(true);
   const [isSelected, setIsSelected] = useState(false);
@@ -90,6 +93,10 @@ const RentalCarsPage = ({onClick}) => {
       ['returnDate']:  rentalPeriod[1].getFullYear().toString()+(rentalPeriod[1].getMonth()+1).toString()+rentalPeriod[1].getDate().toString(),
     });
   }
+  const hendelSelectRegion = (region) => {
+    setSelectRegion(region);
+    setIsSelectRegion(true);
+  }
 
   const hendelSelectBranch = (branchName) => {
     setSelectBranch(branchName);
@@ -102,6 +109,7 @@ const RentalCarsPage = ({onClick}) => {
     setIsSelectBranch(false);
     setIsSelectPeriod(true);
     setIsSelected(false);
+    setIsSelectRegion(false);
   }
   const hendelSelectPeriod = () => {
     if(selectBranch !== '' && rentalPeriod.length !== 0){
@@ -119,8 +127,25 @@ const RentalCarsPage = ({onClick}) => {
     
   }
   useEffect(()=>{
-    console.log(selectedFilters);
-  },[selectedFilters]);
+    const fetchBranchs = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/user/cars/branchs`, {
+          params: { region: selectRegion }, 
+        });
+        if (response.data) {
+          setBranch(response.data);
+        }
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log('Request canceled:', error.message);
+        } else {
+          console.error('There was an error fetching the cars!', error);
+        }
+      }
+    };
+
+    fetchBranchs();
+  },[selectRegion]);
 
   const onRentalPeriod= (rentalDate,returnDate) => {
     setRentalPeriod([rentalDate,returnDate]);
@@ -135,7 +160,7 @@ const RentalCarsPage = ({onClick}) => {
           <div className='rental-cars-page-select-branch-title'>대여 장소를<br/>선택해 주세요</div>
           <div className='rental-cars-page-select-branch-regions-wrap'>
           {(filtersState.regions || []).map((region) => (
-              <div key={region.region_name} className='rental-cars-page-select-branch-regions-item' onClick={() => hendelSelectBranch(region.region_name)}>
+              <div key={region.region_name} className='rental-cars-page-select-branch-regions-item' onClick={() => hendelSelectRegion(region.region_name)}>
                 {region.region_name}
               </div>
             ))}
@@ -151,7 +176,7 @@ const RentalCarsPage = ({onClick}) => {
             <div className='rental-cars-page-select-branch-regions-item'>경기</div> */}
           </div>
           <div className='rental-cars-page-select-branch-item'>
-            {(filtersState.branchName || []).map((branch) => (
+            {isSelectRegion && (branchs || []).map((branch) => (
               <div key={branch.branch_name} className='rental-cars-page-select-branch-name' onClick={() => hendelSelectBranch(branch.branch_name)}>
                 {branch.branch_name}
               </div>
