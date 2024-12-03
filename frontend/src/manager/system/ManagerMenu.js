@@ -21,6 +21,11 @@ import ConnectionStatus from 'manager/system/ConnectionStatus';
 import PostNotices from './PostNotices';
 import PostReviews from './PostReviews';
 import PostInquirys from './PostInquirys';
+import RegisterUser from 'manager/system/RegisterUser';
+import ReservationStatistics from 'manager/analysis/ReservationStatistics';
+import AllBranchesReservationChart from 'manager/analysis/charts/AllBranchesReservationChart';
+import BranchesReservationChart from 'manager/analysis/charts/BranchesReservationChart';
+import AllCarTypeReservationChart from 'manager/analysis/charts/AllCarTypeReservationChart';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -56,6 +61,11 @@ const ManagerMenu = () => {
     RegisterAdmin: <RegisterAdmin onClick={handleCloseClick} />,
     ManagerUser: <ManagerUser onClick={handleCloseClick} />,
     ConnectionStatus: <ConnectionStatus onClick={handleCloseClick} />,
+    RegisterUser: <RegisterUser onClick={handleCloseClick} />,
+    ReservationStatistics: <ReservationStatistics onClick={handleCloseClick} />,
+    AllBranchesReservationChart: <AllBranchesReservationChart onClick={handleCloseClick} />,
+    BranchesReservationChart: <BranchesReservationChart onClick={handleCloseClick} />,
+    AllCarTypeReservationChart: <AllCarTypeReservationChart onClick={handleCloseClick} />,
   };
 
   useEffect(() => {

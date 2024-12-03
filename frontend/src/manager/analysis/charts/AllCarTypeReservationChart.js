@@ -1,23 +1,25 @@
-// 지점별 예약 건수
+// 차종별 예약 건수
 import React, { useEffect, useState } from 'react';
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import DatePicker from 'react-datepicker';
-import { ko } from 'date-fns/locale';
+import DatePicker from 'react-datepicker'; // 달력 라이브러리
+import { ko } from 'date-fns/locale'; // 달력을 한글로 바꾸기
 import 'react-datepicker/dist/react-datepicker.css';
-import './Charts.css';
+import './AllBranchesReservationChart.css';
 import 'index.css';
 import axios from 'axios';
-import { endOfMonth, startOfMonth, subDays, format } from 'date-fns';
+import { endOfMonth, startOfMonth } from 'date-fns';
+import { subDays } from 'date-fns';
+import { format } from 'date-fns';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const BranchesReservationChart = () => {
+const AllCarTypeReservationChart = () => {
     const [startDate, setStartDate] = useState(subDays(new Date(), 7));
     const [endDate, setEndDate] = useState(new Date());
     const [chartData, setChartData] = useState([]); // 차트에 넘겨질 데이터
     const [filter, setFilter] = useState('daily'); // 일별, 월별 필터
-    const filterText = filter === 'daily' ? '일별 지점 예약' : '월별 지점 예약';
+    const filterText = filter === 'daily' ? '일별 차종 예약 통계' : '월별 차종 예약 통계';
 
     // 일별, 월별 클릭 시 호출
     const handleFilterChange = (event) => {
@@ -40,7 +42,7 @@ const BranchesReservationChart = () => {
                 formattedEndDate = format(montlyEnd, 'yyyyMMdd');
             }
 
-            axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/reservation`, {
+            axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars`, {
                 params: {
                     startDate: formattedStartDate,
                     endDate: formattedEndDate,
@@ -59,7 +61,7 @@ const BranchesReservationChart = () => {
     }, [startDate, endDate, filter]);
 
     const data = {
-        labels: chartData.map(branchsName => branchsName.branch_name),  // 지점 이름
+        labels: chartData.map(carsType => carsType.car_type_name),  // 차종 이름
         datasets: [
             {
                 // reservation_code 가 null, undefined,숫자가 아니면 0
@@ -96,7 +98,7 @@ const BranchesReservationChart = () => {
     return (
         <div className="reservation-statistics-list">
             <div className="daily-and-monthly-filter-head">
-                <div>● 지점별 예약 통계 </div>
+                <div>● 차종별 예약 통계 </div>
             </div>
 
             {/* 일별, 월별 필터 */}
@@ -146,5 +148,4 @@ const BranchesReservationChart = () => {
         </div>
     );
 };
-
-export default BranchesReservationChart;
+export default AllCarTypeReservationChart
