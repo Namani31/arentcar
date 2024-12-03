@@ -58,15 +58,18 @@ public class RentalCarsController {
         return ResponseEntity.noContent().build();
     }
 
-    // 차량 조회 및 페이지네이션(검색 기능 포함)
+    // 차량 조회 및 페이지네이션(검색 기능 포함, 정비중인 차량 조회)
     @GetMapping("/manager/rentalcars/paged")
     public ResponseEntity<List<RentalCarsDTO>>  getRentalCarsWithPaging(
                                                 @RequestParam int pageSize,
                                                 @RequestParam int pageNumber,
-                                                @RequestParam(required = false) String carNumber) {
+                                                @RequestParam(required = false) String carNumber,
+                                                @RequestParam(required = false) String carStatus) {
         List<RentalCarsDTO> rentalCars;
         if (carNumber != null && !carNumber.isEmpty()) {
             rentalCars = rentalCarsService.getRentalCarsByNumWithPaging(carNumber, pageSize, pageNumber);
+        } else if (carStatus != null && !carStatus.isEmpty()) {
+            rentalCars = rentalCarsService.getRentalCarsByStatusWithPaging(carStatus, pageSize, pageNumber);
         } else {
             rentalCars = rentalCarsService.getRentalCarsWithPaging(pageSize, pageNumber);
         }
@@ -75,11 +78,14 @@ public class RentalCarsController {
 
     // 전체 차량 수 조회(검색 기능 포함)
     @GetMapping("/manager/rentalcars/count")
-    public ResponseEntity<Integer> getTotalRentalCarsCount(@RequestParam(required = false) String carNumber) {
+    public ResponseEntity<Integer> getTotalRentalCarsCount(@RequestParam(required = false) String carNumber,
+                                                           @RequestParam(required = false) String carStatus) {
 
         int count;
         if (carNumber != null && !carNumber.isEmpty()) {
             count = rentalCarsService.countRentalCarsByNum(carNumber);
+        } else if (carStatus != null && !carStatus.isEmpty()) {
+            count = rentalCarsService.countMaintenanceRentalCarsByStatus(carStatus);
         } else {
             count = rentalCarsService.countAllRentalCars();
         }
@@ -114,5 +120,12 @@ public class RentalCarsController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=rentalcars.xlsx")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(excelContent); // 엑셀 파일을 응답으로 반환
+    }
+
+    // 정비중인 차량 정비완료(렌탈가능)로 수정
+    @PutMapping("manager/rentalcars/status/{carCode}")
+    public ResponseEntity<Void> updateRentalCarsStatusToAvailableById(@PathVariable Integer carCode) {
+        rentalCarsService.updateRentalCarsStatusToAvailableById(carCode);
+        return ResponseEntity.noContent().build();
     }
 }

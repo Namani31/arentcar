@@ -53,11 +53,24 @@ public class RentalCarsService {
         return rentalCarsMapper.getRentalCarsByNumWithPaging(carNumber, pageSize, offset);
     }
 
+    // 차량 조회 및 페이지네이션(정비중인 차량)
+    public List<RentalCarsDTO> getRentalCarsByStatusWithPaging(String carStatus,
+                                                           int pageSize,
+                                                           int pageNumber) {
+        int offset = (pageNumber - 1) * pageSize;
+        return rentalCarsMapper.getRentalCarsByStatusWithPaging(carStatus, pageSize, offset);
+    }
+
     // 전체 차량 수 조회
     public int countAllRentalCars() { return rentalCarsMapper.countAllRentalCars(); }
 
     // 전체 차량 수 조회(검색 기능 포함)
     public int countRentalCarsByNum(String carNumber) { return rentalCarsMapper.countRentalCarsByNum(carNumber); }
+
+    // 전체 차량 수 조회(정비중인 차량)
+    public int countMaintenanceRentalCarsByStatus(String carStatus) {
+        return rentalCarsMapper.countMaintenanceRentalCarsByStatus(carStatus);
+    }
 
     // 렌탈가능/렌탈중/정비중 전체 차량 수 조회
     public int countAvailableRentalCars(String carStatus) { return rentalCarsMapper.countAvailableRentalCars(carStatus); }
@@ -122,6 +135,11 @@ public class RentalCarsService {
             workbook.write(out);
             return out.toByteArray(); // 엑셀 파일을 바이트 배열로 반환
         }
+    }
+
+    // 정비중인 차량 정비완료(렌탈가능)로 수정
+    public void updateRentalCarsStatusToAvailableById(Integer carCode) {
+        rentalCarsMapper.updateRentalCarsStatusToAvailableById(carCode);
     }
 
 }

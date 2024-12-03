@@ -223,9 +223,9 @@ const CarInfo = ({ onClick }) => {
   };
 
   const handleSearchClick = async () => {
-   pageingVehicles();
-   getTotalCount();
-   setPageNumber(1);
+    pageingVehicles();
+    getTotalCount();
+    setPageNumber(1);
   };
 
   const handleDetailSearchClick = async () => {

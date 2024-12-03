@@ -28,10 +28,16 @@ public interface RentalCarsMapper {
     List<RentalCarsDTO> getRentalCarsByNumWithPaging(@Param("carNumber") String carNumber,
                                                   @Param("pageSize") int pageSize,
                                                   @Param("offset") int offset);
+    // 차량 조회 및 페이지네이션(정비중인 차량)
+    List<RentalCarsDTO> getRentalCarsByStatusWithPaging(@Param("carStatus") String carStatus,
+                                                        @Param("pageSize") int pageSize,
+                                                        @Param("offset") int offset);
     // 전체 차량 수 조회
     int countAllRentalCars();
     // 전체 차량 수 조회(검색 기능 포함)
     int countRentalCarsByNum(@Param("carNumber") String carNumber);
+    // 전체 차량 수 조회(정비중인 차량)
+    int countMaintenanceRentalCarsByStatus(@Param("carStatus") String carStatus);
     // 렌탈가능/렌탈중/정비중 전체 차량 수 조회
     int countAvailableRentalCars(@Param("carStatus") String carStatus);
     // <select>의 <option>값으로 차량코드/명 동적으로 불러오기
@@ -40,4 +46,6 @@ public interface RentalCarsMapper {
     List<RentalCarsBranchOptionAttrDTO> getRentalCarsBranchCodeName();
     // 엑셀 파일 다운로드용 차량 조회
     List<RentalCarsDTO> getRentalCarsForExcel();
+    // 정비중인 차량 정비완료(렌탈가능)로 수정
+    void updateRentalCarsStatusToAvailableById(Integer carCode);
 }

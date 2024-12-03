@@ -18,6 +18,8 @@ const RentalCarInfo = ({ onClick }) => {
   const [availableRentalCarsCount, setAvailableRentalCarsCount] = useState(0);
   const [rentedRentalCarsCount, setRentedRentalCarsCount] = useState(0);
   const [maintenanceRentalCarsCount, setMaintenanceRentalCarsCount] = useState(0);
+  const maintenanceRentalCarsStatus = "03"
+  const [isMaintenanceRentalCarsSearchClicked, setIsMaintenanceRentalCarsSearchClicked] = useState(false); 
   
   const [columnDefs] = useState([
     { headerName: '코드', field: 'car_code', width: 75, align: 'center' },
@@ -41,37 +43,21 @@ const RentalCarInfo = ({ onClick }) => {
   const [branchCode, setBranchCode] = useState("");
   const [carStatus, setCarStatus] = useState("");
 
-  const optionsMenuBranchCode = [
-    { value: 1, label: '수원 본점' },
-    { value: 2, label: '용인점' },
-    { value: 3, label: '오산점' },
-    { value: 4, label: '화성점' },
-    { value: 5, label: '평택점' },
-    { value: 6, label: '광명점' },
-    { value: 7, label: '제주점' },
-    { value: 8, label: '대구 본점' },
-    { value: 9, label: '부산점' },
-    { value: 10, label: '대전점' },
-    { value: 11, label: '전주점' },
-    { value: 12, label: '순창점' },
-    { value: 13, label: '춘천점' },
-  ];
-
   const optionsMenuCarStatus = [
     { value: '01', label: '렌탈가능' },
     { value: '02', label: '렌탈중' },
     { value: '03', label: '정비중' },
   ];
 
-  const pageingVehicles = async () => {
+  const pageingVehicles = async (carStatus) => {
     try {
       const token = localStorage.getItem('accessToken');
-      await getVehicles(token);
+      await getVehicles(token, carStatus);
     } catch (error) {
       if (error.response && error.response.status === 403) {
         try {
           const newToken = await refreshAccessToken();
-          await getVehicles(newToken);
+          await getVehicles(newToken, carStatus);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
           handleAdminLogout();
@@ -82,13 +68,18 @@ const RentalCarInfo = ({ onClick }) => {
     }
   };
 
-  const getVehicles = async (token) => {
+  const getVehicles = async (token, carStatus) => {
     const params = {
       pageSize,
       pageNumber,
     };
 
-    if (searchName && searchName.trim() !== '') {
+    if (carStatus && carStatus.trim() !== "") {
+      // carStatus가 설정된 경우
+      params.carStatus = carStatus;
+      setSearchName("");
+    } else if (searchName && searchName.trim() !== "") {
+      // searchName이 설정된 경우
       params.carNumber = searchName;
     }
 
@@ -107,15 +98,15 @@ const RentalCarInfo = ({ onClick }) => {
     }
   };
 
-  const getTotalCount = async () => {
+  const getTotalCount = async (carStatus) => {
     try {
       const token = localStorage.getItem('accessToken');
-      await getCount(token);
+      await getCount(token, carStatus);
     } catch (error) {
       if (error.response && error.response.status === 403) {
         try {
           const newToken = await refreshAccessToken();
-          await getCount(newToken);
+          await getCount(newToken, carStatus);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
           handleAdminLogout();
@@ -126,8 +117,8 @@ const RentalCarInfo = ({ onClick }) => {
     }
   };
 
-  const getCount = async (token) => {
-    const params = searchName ? { carNumber: searchName } : {};
+  const getCount = async (token, carStatus) => {
+    const params = searchName ? { carNumber: searchName } : carStatus ? {carStatus: carStatus} : {};
 
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/count`,
       {
@@ -248,12 +239,19 @@ const RentalCarInfo = ({ onClick }) => {
   };
 
   useEffect(() => {
-    pageingVehicles();
-    getTotalCount();
+    if (isMaintenanceRentalCarsSearchClicked) {
+      // 클릭되었을 때만 실행
+      pageingVehicles("03");
+      getTotalCount("03");
+    } else {
+      // 일반적인 초기 로드 및 페이지 변경 시
+      pageingVehicles();
+      getTotalCount();
+    }
     getAvailabelRentalCarsCount("01");
     getRentedRentalCarsCount("02");
     getMaintenanceRentalCarsCount("03");
-  }, [pageNumber]);
+  }, [pageNumber, isMaintenanceRentalCarsSearchClicked]);
 
   useEffect(() => {
     const fetchCarMenus = async () => {
@@ -335,14 +333,17 @@ const RentalCarInfo = ({ onClick }) => {
   };
 
   const handleSearchClick = async () => {
+    setIsMaintenanceRentalCarsSearchClicked(false)
     pageingVehicles();
     getTotalCount();
     setPageNumber(1);
   };
 
-  const handleDetailSearchClick = async () => {
-    pageingVehicles();
-    getTotalCount();
+  const handleMaintenanceRentalCarsSearchClick = async (carStatus) => {
+    setIsMaintenanceRentalCarsSearchClicked(true)
+    pageingVehicles(carStatus);
+    getTotalCount(carStatus);
+    setPageNumber(1);
    };
 
   const handleInsertClick = (workMode) => {
@@ -382,6 +383,38 @@ const RentalCarInfo = ({ onClick }) => {
     setVehicles((prevVehicle) => prevVehicle.filter(vehicle => vehicle.car_code !== carCode));
     alert("차량이 삭제되었습니다.");
   };
+
+  const handleFinishMaintenanceRentalCarsClick = async (carCode) => {
+    if (window.confirm('차량 정비를 완료했습니까?')) {
+      try {
+        const token = localStorage.getItem('accessToken');
+        await updateRentalCarsStatus(token, carCode);
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          try {
+            const newToken = await refreshAccessToken();
+            await updateRentalCarsStatus(newToken, carCode);
+          } catch (error) {
+            alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+            handleAdminLogout();
+          }
+        } else {
+          alert("차량 정비 중 오류가 발생했습니다." + error);
+        }
+      }
+    }
+  };
+
+  const updateRentalCarsStatus = async (token, carCode) => {
+    await axios.put(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/status/${carCode}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      withCredentials: true,
+    });
+    setVehicles((prevVehicle) => prevVehicle);
+    alert("차량 정비를 완료했습니다.");
+  }
 
   const handleDataSaveClick = async () => {
     if (!validateCheck()) {
@@ -572,7 +605,7 @@ const RentalCarInfo = ({ onClick }) => {
             <label className='manager-label' htmlFor="">차량번호</label>
             <input className='width200' type="text" value={searchName} onChange={(e) => (setSearchName(e.target.value))}/>
             <button className='manager-button manager-button-search' onClick={() => handleSearchClick()}>검색</button>
-            <button className='manager-button manager-button-search' onClick={() => handleDetailSearchClick()}>상세검색</button>
+            <button className='manager-button manager-button-search' onClick={() => handleMaintenanceRentalCarsSearchClick(maintenanceRentalCarsStatus)}>반납차량</button>
             <span>[검색건수 : {totalCount}건]</span>
           </div>
           <div>
@@ -607,6 +640,7 @@ const RentalCarInfo = ({ onClick }) => {
                     <>
                       <button className='manager-button manager-button-update' onClick={() => handleUpdateClick(row, "수정")}>수정</button>
                       <button className='manager-button manager-button-delete' onClick={() => handleDeleteClick(row.car_code)}>삭제</button>
+                      <button className='manager-button' onClick={() => handleFinishMaintenanceRentalCarsClick(row.car_code)}>정비완료</button>
                     </>
                   ) : (
                       row[title.field]
