@@ -4,6 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.apple.arentcar.mapper.BranchsMapper">
+    <select id="findAllBranches" resultType="com.apple.arentcar.model.Branchs">
+        SELECT * FROM branchs
+    </select>
+
     <select id="findBranchsByBranchName" resultType="com.apple.arentcar.model.Branchs">
         SELECT * FROM branchs
         WHERE branch_name LIKE CONCAT('%', #{branchname}, '%')

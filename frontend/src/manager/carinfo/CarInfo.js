@@ -143,6 +143,7 @@ const CarInfo = ({ onClick }) => {
 
     if (response.data) {
       setVehicles(response.data);
+      console.log(vehicles);
     }
   };
 

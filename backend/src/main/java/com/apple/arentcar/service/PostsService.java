@@ -1,9 +1,7 @@
-package com.apple.arentcar.service.post;
+package com.apple.arentcar.service;
 
-import com.apple.arentcar.mapper.post.PostsMapper;
-import com.apple.arentcar.model.post.Inquirys;
-import com.apple.arentcar.model.post.Notices;
-import com.apple.arentcar.model.post.Reviews;
+import com.apple.arentcar.mapper.PostsMapper;
+import com.apple.arentcar.model.*;
 import com.apple.arentcar.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,12 +44,37 @@ public class PostsService {
         int offset = pageNumber * pageSize;
         return postsMapper.getSearchAllReviews(keyword, pageSize, offset);
     }
+    public int countReviews() { return postsMapper.countReviews(); }
+    public int countSearchReviews(String keyword) { return postsMapper.countSearchReviews(keyword); }
     public Reviews getReview(Integer postCode) { return postsMapper.getReview(postCode); }
-
-
-
-
+    public void createReview(Reviews reviews) {
+        postsMapper.createReviewPosts(reviews);
+        System.out.println(reviews.getPostCode());
+        postsMapper.createReview(reviews);
+    }
+    public void deleteReview(Integer postCode) {
+        System.out.println(postCode);
+        postsMapper.deleteReview(postCode);
+        postsMapper.deletePostsRV(postCode);
+    }
+    public List<ChartsCount> dayChartsCount() {
+        return postsMapper.dayChartsCount();
+    }
+    public List<ChartsAvg> dayChartsAvg() {
+        return postsMapper.dayChartsAvg();
+    }
+    public List<ChartsCount> ageChartsCount() {
+        return postsMapper.ageChartsCount();
+    }
+    public List<ChartsAvg> ageChartsAvg() {
+        return postsMapper.ageChartsAvg();
+    }
 
 
     public List<Inquirys> getAllInquirys() { return postsMapper.getAllInquirys(); }
+    public Inquirys getInquirys(Integer postCode) { return postsMapper.getInquirys(postCode); }
+    public List<Responses> getResponses(Integer pageCode) { return postsMapper.getResponses(pageCode); }
+    public void createResponses(Responses responses) { postsMapper.createResponses(responses); }
+    public void updateResponses(Responses responses) { postsMapper.updateResponses(responses); }
+    public void deleteResponses(Integer code) { postsMapper.deleteResponses(code); }
 }

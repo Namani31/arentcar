@@ -591,7 +591,8 @@ const RentalCarInfo = ({ onClick }) => {
         <div className="car-info-content-row-wrap">
           {vehicles.map((row, index) => (
             <div key={index} className='register-menu-content-row'>
-              {columnDefs.map((title, index) => (
+              {columnDefs.map((title, index) => ( // vehicles.map 안에 columnDefs.map이 있는 이유는 각 차량(row)의 정보를 열(title)에 맞춰 표시하기 위함
+                                                  // 즉, 각 차량(row)에 대해 모든 열을(title) 반복하여 해당 차량의 각 필드 값(titile.field)을 표시함
                 <div
                   key={index} className='manager-row-column'
                   style={{

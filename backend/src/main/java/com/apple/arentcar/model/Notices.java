@@ -1,4 +1,4 @@
-package com.apple.arentcar.model.post;
+package com.apple.arentcar.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
