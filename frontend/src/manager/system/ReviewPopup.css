@@ -14,7 +14,7 @@
     background-color: #fafafa;
     margin: 100px auto;
     padding: 20px;
-    min-height: 300px;
+    min-height: 200px;
     max-width: 600px;
 }
 
@@ -22,8 +22,21 @@
     text-align: center;
     margin: 10px 0px;
 }
-
-
+.user-review-popup-wrap h6{
+    font-weight: bold;
+}
+.user-review-popup-score{
+    font-size: 22px;
+}
+.user-review-popup-content{
+    resize: none;
+    overflow:hidden;
+    padding: 5px;
+    display: inline-block;
+}
+.user-review-popup-content:focus {
+    outline: none;
+}
 
 
 

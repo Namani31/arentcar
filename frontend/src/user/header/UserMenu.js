@@ -12,6 +12,9 @@ import ReservationDetail from 'user/content/ReservationDetail';
 import RentalRateGuide from 'user/content/RentalRateGuide';
 import Branches from 'user/content/Branches';
 import PaymentPage from 'user/content/PaymentPage';
+import Customers from 'user/content/Customers';
+import Notices from 'user/content/Notices';
+import Reviews from 'user/content/Reviews';
 
 const UserMenu = () => {
   return (
@@ -31,6 +34,12 @@ const UserMenu = () => {
           <Route path="/rentalrateguide" element={<RentalRateGuide />} /> 
           <Route path="/branches" element={<Branches />} /> 
           <Route path="/paymentpage" element={<PaymentPage />} /> 
+          {/* 고객지원 */}
+          <Route path="/customers" element={<Customers />} ></Route>
+          <Route path="/customers/NT/:postId" element={<Notices />} ></Route>
+          <Route path="/customers/RV" element={<Reviews />} ></Route>
+          <Route path="/customers/RV/:postId" element={<Reviews />} ></Route>
+
         </Routes>
       </div>
       <div className='user-menu-footer-wrap'>

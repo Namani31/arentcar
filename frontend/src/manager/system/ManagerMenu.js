@@ -15,6 +15,12 @@ import PostNotices from './posts/PostNotices';
 import PostReviews from './posts/PostReviews';
 import ManagerReservation from 'manager/reservation/ManagerReservation';
 import RentalRates from 'manager/managepayment/RentalRates';
+import RegisterAdmin from 'manager/system/RegisterAdmin';
+import ManagerUser from 'manager/system/ManagerUser';
+import ConnectionStatus from 'manager/system/ConnectionStatus';
+import PostNotices from './PostNotices';
+import PostReviews from './PostReviews';
+import PostInquirys from './PostInquirys';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -43,6 +49,13 @@ const ManagerMenu = () => {
     managementCustomer: <PostReviews onClick={handleCloseClick}/>,//임시링크
     ManagerReservation: <ManagerReservation onClick={handleCloseClick} />,
     RentalRates: <RentalRates onClick={handleCloseClick} />,
+    // 관리자 게시판
+    manageNotices: <PostNotices onClick={handleCloseClick} />,
+    manageReviews: <PostReviews onClick={handleCloseClick}/>,
+    managementCustomer: <PostInquirys onClick={handleCloseClick}/>,
+    RegisterAdmin: <RegisterAdmin onClick={handleCloseClick} />,
+    ManagerUser: <ManagerUser onClick={handleCloseClick} />,
+    ConnectionStatus: <ConnectionStatus onClick={handleCloseClick} />,
   };
 
   useEffect(() => {

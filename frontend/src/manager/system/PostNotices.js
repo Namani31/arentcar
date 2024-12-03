@@ -1,12 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { refreshAccessToken, handleLogout } from 'common/Common';
-import 'manager/system/posts/PostNotices.css';
-import { store } from '../../../redux/store';
+import 'manager/system/PostNotices.css';
+import { store } from '../../redux/store';
 // import { store } from 'redux/store'; 왜 안될까?
+import Loading from 'common/Loading';
 
 
 const PostNotices = ({ onClick }) => {
+  const [loading, setLoading] = useState(false);
   //공지사항
   const [notices, setNotices] = useState([]);
   const [totalNotices, setTotalNotices] = useState(0);
@@ -151,7 +153,8 @@ const PostNotices = ({ onClick }) => {
   
   //어드민 code 가져오기
   const handleAdminCode = async () => {
-    setAuthorCode(store.getState().adminState.adminCode)
+    setAuthorCode(store.getState().adminState.adminCode);
+    setAuthorName(store.getState().adminState.adminName);
   }
 
   //공지사항 생성/수정 기능 제어
@@ -187,6 +190,7 @@ const PostNotices = ({ onClick }) => {
   //공지사항 생성
   const postCreateNotice = async (newPost) => {
     try {
+      setLoading(true);
       const token = localStorage.getItem('accessToken');
       await createNotice(token, newPost);
     } catch (error) {
@@ -201,6 +205,8 @@ const PostNotices = ({ onClick }) => {
       } else {
         console.error('There was an error fetching the menus pageing!', error);
       }
+    }  finally {
+      setLoading(false);
     }
   } 
   const createNotice = async (token, newPost) => {
@@ -221,7 +227,9 @@ const PostNotices = ({ onClick }) => {
 
   //공지사항 수정
   const postUpdateNotices = async (newPost,code) => {
+    
     try {
+      setLoading(true);
       const token = localStorage.getItem('accessToken');
       await updateNotices(token, newPost, code);
       
@@ -237,6 +245,8 @@ const PostNotices = ({ onClick }) => {
       } else {
         console.error('There was an error fetching the menus pageing!', error);
       }
+    } finally {
+      setLoading(false);
     }
 
   }
@@ -257,7 +267,9 @@ const PostNotices = ({ onClick }) => {
   
   //공지사항 삭제
   const postDeleteNotices = async (code) => {
+    
     try {
+      setLoading(true);
       const token = localStorage.getItem('accessToken');
       await deleteNotices(token, code)
     } catch (error) {
@@ -267,7 +279,10 @@ const PostNotices = ({ onClick }) => {
       } else {
         console.error('There was an error fetching the movies!', error);
       }
+    } finally {
+      setLoading(false);
     }
+
   }
   const deleteNotices = async (token, code) => {
     const response = await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/notices/${code}`,
@@ -309,14 +324,14 @@ const PostNotices = ({ onClick }) => {
   }
   //생성 팝업창
   const handleCreateClick = (e) => {
-    setIsPopUp(true);
+    handleAdminCode(); //setAuthorCode() / +getName
     setPopupType(e);
     setPostType("NT");
     setAuthorType("AM");
     setPostCode();
     setPostTitle("");
     setPostContent("");
-    handleAdminCode(); //setAuthorCode()
+    setIsPopUp(true);
   }
   //수정 팝업창
   const handleUpdateClick = (e,i) => {
@@ -339,7 +354,7 @@ const PostNotices = ({ onClick }) => {
       postDeleteNotices(e)
     }
   }
-  //텍스트박스 크기조절
+  //페이징
   let totalPages = Math.ceil(totalNotices / pageSize);
   if (totalPages < 1) { totalPages = 1; }
   if (totalNotices === 0) { totalPages = 0; }
@@ -349,7 +364,7 @@ const PostNotices = ({ onClick }) => {
       onClick();
     }
   };
-
+  //텍스트박스 크기조절
   const textarea = useRef();
   const handleResizeHeight = (e) => {
     setPostContent(e.target.value);
@@ -361,9 +376,7 @@ const PostNotices = ({ onClick }) => {
     <div className='manager-post-notice-wrap'>
       <div className='manager-post-notice-header-wrap'>
         <div className='manager-post-notice-header-title'>
-          <hr/>
-            <h5 className='manager-post-notice-header-h5'> 공지사항 게시판 </h5>
-          <hr/>
+          <h5 className='manager-post-notice-header-h5'> 공지사항 게시판 </h5>
         </div>
       </div>
 
@@ -372,6 +385,7 @@ const PostNotices = ({ onClick }) => {
           <div className='flex-align-center'>
             <label className='manager-label' htmlFor="manager-post-serch">제목</label>
             <input id='manager-post-serch' className='width200' type="text" 
+              value={searchName}
               onChange={(e)=>(setSearchName(e.target.value))} 
               onKeyDown={(e)=>{if(e.key === "Enter") {handleSearchClick()} }}></input>
             <button className='manager-button manager-button-search' onClick={()=>handleSearchClick()}> 검색 </button>
@@ -419,7 +433,7 @@ const PostNotices = ({ onClick }) => {
         </table>
         {isPopUp && (
           <div className='manager-post-notice-popup'>
-            {(popupType == "추가" || popupType == "수정") && (
+            {(popupType === "추가" || popupType === "수정") && (
               <div className='manager-post-notice-popup-wrap'>
                 <div className='manager-post-notice-popup-header'>
                   <div className='manager-post-notice-popup-title'> <h6 className='manager-post-notice-h6'>공지사항 {popupType}</h6> </div>
@@ -458,7 +472,7 @@ const PostNotices = ({ onClick }) => {
             )}
 
             {/* 사용자 페이지랑 비슷하게 */}
-            {popupType == "보기" && (
+            {popupType === "보기" && (
               <div className='manager-post-notice-popup-wrap manager-post-notice-popup-read'>
                 <div className='manager-post-notice-popup-header'>
                   <div className='manager-post-notice-popup-title'> <h6 className='manager-post-notice-h6'> {postTitle}</h6> </div>
@@ -489,7 +503,9 @@ const PostNotices = ({ onClick }) => {
         </div>
         
       </div>
-
+      {loading && (
+        <Loading />
+      )}
     </div>
   );
 }
