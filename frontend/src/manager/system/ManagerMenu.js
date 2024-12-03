@@ -6,10 +6,9 @@ import { refreshAccessToken, handleLogout } from 'common/Common';
 import 'manager/system/ManagerMenu.css';
 import RegisterMenu from 'manager/system/RegisterMenu';
 import RegisterUser from 'manager/system/RegisterUser';
-import ReservationStatistics from 'manager/analysis/ReservationStatistics';
-import AllBranchesReservationChart from 'manager/analysis/charts/AllBranchesReservationChart';
-import BranchesReservationChart from 'manager/analysis/charts/BranchesReservationChart';
-import AllCarTypeReservationChart from 'manager/analysis/charts/AllCarTypeReservationChart';
+import AllBranchesReservationChart from 'manager/analysis/AllBranchesReservationChart';
+import BranchesReservationChart from 'manager/analysis/BranchesReservationChart';
+import AllCarTypeReservationChart from 'manager/analysis/AllCarTypeReservationChart';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -29,7 +28,6 @@ const ManagerMenu = () => {
   const componentMap = {
     RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
     RegisterUser: <RegisterUser onClick={handleCloseClick} />,
-    ReservationStatistics: <ReservationStatistics onClick={handleCloseClick} />,
     AllBranchesReservationChart: <AllBranchesReservationChart onClick={handleCloseClick} />,
     BranchesReservationChart: <BranchesReservationChart onClick={handleCloseClick} />,
     AllCarTypeReservationChart: <AllCarTypeReservationChart onClick={handleCloseClick} />,
