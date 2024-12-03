@@ -17,7 +17,7 @@ const Branches = () => {
   useEffect(() => {
     const fetchBranches = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/user/branches`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/user/branchs`);
         if (response.data) {
           setBranches(response.data);
         }

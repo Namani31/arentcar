@@ -405,17 +405,6 @@ const RentalCarInfo = ({ onClick }) => {
     }
   };
 
-  // const updateRentalCarsStatus = async (token, carCode) => {
-  //   await axios.put(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/status/${carCode}`, {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`
-  //     },
-  //     withCredentials: true,
-  //   });
-  //   setVehicles((prevVehicle) => prevVehicle);
-  //   alert("차량 정비를 완료했습니다.");
-  // }
-
   const updateRentalCarsStatus = async (token, carCode) => {
     try {
       const response = await axios.put(
@@ -749,9 +738,9 @@ const RentalCarInfo = ({ onClick }) => {
         <div className="car-info-status-display">대여가능<div className="car-info-status-content">{availableRentalCarsCount}</div></div>
         <div className="car-info-status-display">대여중<div className="car-info-status-content">{rentedRentalCarsCount}</div></div>
         <div className="car-info-status-display">정비중<div className="car-info-status-content">{maintenanceRentalCarsCount}</div></div>
-        <div className="car-info-status-display">
-          <div className="car-info-status-excel">
-            <button onClick={handleDownloadExcel}>
+        <div className="car-info-status-display car-info-status-button-wrap">
+          <div className="car-info-status-excel-wrap">
+            <button className="car-info-status-button" onClick={handleDownloadExcel}>
               <img className="car-info-excel-download" src={`${process.env.REACT_APP_IMAGE_URL}/excel-logo.png`} alt="rentalCars excel downlod button" />
             </button>
           </div>

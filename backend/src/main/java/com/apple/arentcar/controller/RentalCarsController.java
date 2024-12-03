@@ -45,7 +45,7 @@ public class RentalCarsController {
     // 차량 삭제
     @DeleteMapping("/manager/rentalcars/{carCode}")
     public ResponseEntity<Void> deleteRentalCars(@PathVariable Integer carCode) {
-        rentalCarsService.deleteRentalCarsById((carCode));
+        rentalCarsService.deleteRentalCarsById(carCode);
         return ResponseEntity.noContent().build();
     }
 

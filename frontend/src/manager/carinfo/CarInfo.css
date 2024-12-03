@@ -96,7 +96,22 @@
   color: #28a745;
 }
 
+.car-info-status-button-wrap {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.car-info-status-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
 .car-info-excel-download {
-  width: 4.5rem;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
