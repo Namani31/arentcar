@@ -34,7 +34,7 @@ const ManagerMenu = () => {
     // 관리자 게시판
     manageNotices: <PostNotices onClick={handleCloseClick} />,
     manageReviews: <PostReviews onClick={handleCloseClick}/>,
-    managementCustomer: <PostInquirys onClick={handleCloseClick}/>,
+    manageInquirys: <PostInquirys onClick={handleCloseClick}/>,
     RegisterAdmin: <RegisterAdmin onClick={handleCloseClick} />,
     ManagerUser: <ManagerUser onClick={handleCloseClick} />,
     ConnectionStatus: <ConnectionStatus onClick={handleCloseClick} />,
