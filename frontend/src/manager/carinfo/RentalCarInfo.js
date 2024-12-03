@@ -405,16 +405,36 @@ const RentalCarInfo = ({ onClick }) => {
     }
   };
 
+  // const updateRentalCarsStatus = async (token, carCode) => {
+  //   await axios.put(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/status/${carCode}`, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`
+  //     },
+  //     withCredentials: true,
+  //   });
+  //   setVehicles((prevVehicle) => prevVehicle);
+  //   alert("차량 정비를 완료했습니다.");
+  // }
+
   const updateRentalCarsStatus = async (token, carCode) => {
-    await axios.put(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/status/${carCode}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      withCredentials: true,
-    });
-    setVehicles((prevVehicle) => prevVehicle);
-    alert("차량 정비를 완료했습니다.");
-  }
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/status/${carCode}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      setVehicles((prevVehicle) => prevVehicle); // 차량 상태 갱신
+      alert("차량 정비를 완료했습니다.");
+      return response.data;
+    } catch (error) {
+      throw new Error("차량 상태 갱신 중 오류 발생: " + error.message);
+    }
+  };
 
   const handleDataSaveClick = async () => {
     if (!validateCheck()) {
