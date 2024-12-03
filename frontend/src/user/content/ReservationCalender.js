@@ -59,16 +59,17 @@ const ReservationCalender = ({ onRentalPeriod }) => {
       if (currentDate.getTime() > new Date(year, month, day + 1).getTime()) {
         alert("이전날짜는 선택 하실 수 없습니다.");
       } else {
-
-        if (firstSelectedDay == null) {
+        if (firstSelectedDay == null || (firstSelectedDay != null && secondSelectedDay != null)) {
           setFirstSelectedDay(new Date(year, month, day));
+          setSecondSelectedDay(null);
         } else {
           setSecondSelectedDay(new Date(year, month, day));
         }
       }
     } else {
-      if (firstSelectedDay == null) {
+      if (firstSelectedDay == null  || (firstSelectedDay != null && secondSelectedDay != null)) {
         setFirstSelectedDay(new Date(nextMonthYear, nextMonth, day));
+        setSecondSelectedDay(null);
       } else {
         setSecondSelectedDay(new Date(nextMonthYear, nextMonth, day));
       }
