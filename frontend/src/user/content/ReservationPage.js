@@ -17,6 +17,12 @@ const RentalCarsPage = ({onClick}) => {
 
   const filters = [
     {
+      id: "regions",
+      label: "지역",
+      api: `${process.env.REACT_APP_API_URL}/arentcar/user/cars/regions`,
+      displayKey: "region_name",
+    },
+    {
       id: "branchName",
       label: "지점",
       api: `${process.env.REACT_APP_API_URL}/arentcar/user/cars/branchs`,
@@ -127,7 +133,24 @@ const RentalCarsPage = ({onClick}) => {
       {!isSelectBranch &&
         <div className='rental-cars-page-select-branch-wrap'>
           <div className='rental-cars-page-select-branch-title'>대여 장소를<br/>선택해 주세요</div>
-          <div className='rental-cars-page-select-branch'>
+          <div className='rental-cars-page-select-branch-regions-wrap'>
+          {(filtersState.regions || []).map((region) => (
+              <div key={region.region_name} className='rental-cars-page-select-branch-regions-item' onClick={() => hendelSelectBranch(region.region_name)}>
+                {region.region_name}
+              </div>
+            ))}
+            {/* <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div> */}
+          </div>
+          <div className='rental-cars-page-select-branch-item'>
             {(filtersState.branchName || []).map((branch) => (
               <div key={branch.branch_name} className='rental-cars-page-select-branch-name' onClick={() => hendelSelectBranch(branch.branch_name)}>
                 {branch.branch_name}

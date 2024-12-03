@@ -30,4 +30,6 @@ public interface CarMapper {
     List<InsuranceDTO> getInsurance();
 
     int InsertUserReservation(UserReservationDTO userReservationDTO);
+
+    List<RegionsDTO> getAllRegions();
 }

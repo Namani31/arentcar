@@ -140,6 +140,10 @@
         WHERE common_kind_code = 'insurance_type'
     </select>
 
+    <select id="getAllRegions" resultType="com.apple.arentcar.dto.RegionsDTO">
+        SELECT region_name FROM regions ORDER BY region_name ASC
+    </select>
+
     <insert id="InsertUserReservation" parameterType="com.apple.arentcar.dto.UserReservationDTO">
         INSERT INTO reservations (
         user_code,

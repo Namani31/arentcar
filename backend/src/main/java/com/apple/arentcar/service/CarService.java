@@ -59,4 +59,8 @@ public class CarService {
             throw new IllegalStateException("Reservation could not be inserted");
         }
     }
+
+    public List<RegionsDTO> getAllRegions() {
+        return CarMapper.getAllRegions();
+    }
 }

@@ -22,9 +22,6 @@ const UserLogin = () => {
   const [isPasswordFind, setIsPasswordFind] = useState(false);
   const [idSaveChk, setIdSaveChk] = useState(false);
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  //로케이션
-  // const carInfoLocation = useLocation();
-  // const carInfo = carInfoLocation.state;
 
   useEffect(() => {
     setUserEmail(localStorage.getItem('saveUserEmail'));
@@ -32,8 +29,7 @@ const UserLogin = () => {
     if (idSaveChkValue) {
       setIdSaveChk(idSaveChkValue);
     }
-    //오는지 확인
-    // console.log(carInfo);
+
   }, []);
 
   const handleIdSaveChkChange = (e) => {
@@ -74,7 +70,7 @@ const UserLogin = () => {
         usageStatus: userData.usage_status,
         loginState: true,
       }));
-      // 
+
       navigate("/");
     } catch (error) {
       if (error.response.status === 401 || error.response.status === 404) {
