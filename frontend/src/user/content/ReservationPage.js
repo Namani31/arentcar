@@ -17,6 +17,12 @@ const RentalCarsPage = ({onClick}) => {
 
   const filters = [
     {
+      id: "regions",
+      label: "지역",
+      api: `${process.env.REACT_APP_API_URL}/arentcar/user/cars/regions`,
+      displayKey: "region_name",
+    },
+    {
       id: "branchName",
       label: "지점",
       api: `${process.env.REACT_APP_API_URL}/arentcar/user/cars/branchs`,
@@ -78,7 +84,11 @@ const RentalCarsPage = ({onClick}) => {
   };
 
   const handleResetFilter = () => {
-    setSelectedFilters({});
+    setSelectedFilters({
+      ['branchName']: selectBranch,
+      ['rentalDate']: rentalPeriod[0].getFullYear().toString()+(rentalPeriod[0].getMonth()+1).toString()+rentalPeriod[0].getDate().toString(),
+      ['returnDate']:  rentalPeriod[1].getFullYear().toString()+(rentalPeriod[1].getMonth()+1).toString()+rentalPeriod[1].getDate().toString(),
+    });
   }
 
   const hendelSelectBranch = (branchName) => {
@@ -94,10 +104,23 @@ const RentalCarsPage = ({onClick}) => {
     setIsSelected(false);
   }
   const hendelSelectPeriod = () => {
-    setIsSelectBranch(true);
-    setIsSelectPeriod(true);
-    setIsSelected(true);
+    if(selectBranch !== '' && rentalPeriod.length !== 0){
+      setIsSelectBranch(true);
+      setIsSelectPeriod(true);
+      setIsSelected(true);
+        setSelectedFilters({
+          ['branchName']: selectBranch,
+          ['rentalDate']: rentalPeriod[0].getFullYear().toString()+(rentalPeriod[0].getMonth()+1).toString().padStart(2, '0')+rentalPeriod[0].getDate().toString().padStart(2, '0'),
+          ['returnDate']:  rentalPeriod[1].getFullYear().toString()+(rentalPeriod[1].getMonth()+1).toString().padStart(2, '0')+rentalPeriod[1].getDate().toString().padStart(2, '0'),
+        });
+    }else{
+      alert('대여 장소와 기간을 선택해 주세요.');
+    }
+    
   }
+  useEffect(()=>{
+    console.log(selectedFilters);
+  },[selectedFilters]);
 
   const onRentalPeriod= (rentalDate,returnDate) => {
     setRentalPeriod([rentalDate,returnDate]);
@@ -110,7 +133,24 @@ const RentalCarsPage = ({onClick}) => {
       {!isSelectBranch &&
         <div className='rental-cars-page-select-branch-wrap'>
           <div className='rental-cars-page-select-branch-title'>대여 장소를<br/>선택해 주세요</div>
-          <div className='rental-cars-page-select-branch'>
+          <div className='rental-cars-page-select-branch-regions-wrap'>
+          {(filtersState.regions || []).map((region) => (
+              <div key={region.region_name} className='rental-cars-page-select-branch-regions-item' onClick={() => hendelSelectBranch(region.region_name)}>
+                {region.region_name}
+              </div>
+            ))}
+            {/* <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
+            <div className='rental-cars-page-select-branch-regions-item'>경기</div> */}
+          </div>
+          <div className='rental-cars-page-select-branch-item'>
             {(filtersState.branchName || []).map((branch) => (
               <div key={branch.branch_name} className='rental-cars-page-select-branch-name' onClick={() => hendelSelectBranch(branch.branch_name)}>
                 {branch.branch_name}

@@ -2,14 +2,15 @@ package com.apple.arentcar.mapper;
 
 import com.apple.arentcar.dto.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 @Mapper
 public interface CarMapper {
-    List<CarCardDTO> getAllCars(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity);
+    List<CarCardDTO> getAllCars(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity,String rentalDate,String returnDate);
 
-    Integer getFilterCarsCount(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity);
+    Integer getFilterCarsCount(String branchName, String fuelType, String carTypeCategory, String carManufacturer, String seatingCapacity,String rentalDate,String returnDate);
 
 
     List<CarTypeDTO> getCarType();
@@ -25,4 +26,10 @@ public interface CarMapper {
     List<BranchsDTO> getAllBranchs();
 
     List<CarTypeCategoryDTO> getCarTypeCategory();
+
+    List<InsuranceDTO> getInsurance();
+
+    int InsertUserReservation(UserReservationDTO userReservationDTO);
+
+    List<RegionsDTO> getAllRegions();
 }
