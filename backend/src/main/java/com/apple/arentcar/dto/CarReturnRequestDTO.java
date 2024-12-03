@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReservationRequestDTO {
-    private String userName;
-    private String rentalLocationName;
-    private String rentalDate;
+public class CarReturnRequestDTO {
+    private String carNumber; // 차량 번호
+    private String carStatus; // 차량 상태
 }
