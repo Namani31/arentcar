@@ -102,12 +102,27 @@ const Branches = () => {
         <div className="branches-guide-map-wrap" ref={mapElement}>지점을 선택해주세요.</div>
         {branchName && (
       <div className="branches-guide-info-wrap">
-        <div><strong>지점명 :</strong> {branchName}</div>
-        <div><strong>주소 :</strong> {branchAddress}</div>
-        <div><strong>우편번호 :</strong> {branchPostCode}</div>
-        <div><strong>전화번호 :</strong> {branchPhone}</div>
-        <div><strong>이용시간 :</strong> {branchPickup} ~ {branchReturn}</div>
+        <div className="info-row">
+          <strong>지점이름 : </strong>
+          <span>{branchName}</span>
+        </div>
+        <div className="info-row">
+          <strong>주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;소 : </strong>
+          <span>{branchAddress}</span>
+        </div>
+        <div className="info-row">
+          <strong>우편번호 : </strong>
+          <span>{branchPostCode}</span>
+        </div>
+        <div className="info-row">
+          <strong>전화번호 : </strong>
+          <span>{branchPhone}</span>
+        </div>
+        <div className="info-row">
+          <strong>이용시간 : </strong>
+          <span>{branchPickup} ~ {branchReturn}</span>
       </div>
+    </div>
   )}
       </div>
     </div>
