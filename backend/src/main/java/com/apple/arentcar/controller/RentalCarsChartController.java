@@ -1,8 +1,7 @@
 package com.apple.arentcar.controller;
 
 import com.apple.arentcar.dto.RentalCarRankingDataDTO;
-import com.apple.arentcar.model.RentalCars;
-import com.apple.arentcar.service.RentalCarsService;
+import com.apple.arentcar.service.RentalCarsChartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,14 +13,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/arentcar")
-public class RentalCarsController {
+public class RentalCarsChartController {
 
     @Autowired
-    private RentalCarsService rentalCarsService;
+    private RentalCarsChartService rentalCarsChartService;
 
     @GetMapping("/manager/rentalcars")
     public ResponseEntity<List<RentalCarRankingDataDTO>> getTop5ReservedCars(@RequestParam String startDate, @RequestParam String endDate) {
-        List<RentalCarRankingDataDTO> rentalCarRankingDataDto = rentalCarsService.getTop5ReservedCars(startDate, endDate);
+        List<RentalCarRankingDataDTO> rentalCarRankingDataDto = rentalCarsChartService.getTop5ReservedCars(startDate, endDate);
         return ResponseEntity.ok(rentalCarRankingDataDto);
     }
 
