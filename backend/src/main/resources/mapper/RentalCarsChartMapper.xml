@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.apple.arentcar.mapper.RentalCarsMapper">
+<mapper namespace="com.apple.arentcar.mapper.RentalCarsChartMapper">
     <select id="getTop5ReservedCars" resultType="com.apple.arentcar.dto.RentalCarRankingDataDTO">
         SELECT
             ct.car_type_code AS carTypeCode,
