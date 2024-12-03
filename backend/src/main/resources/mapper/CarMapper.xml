@@ -162,7 +162,9 @@
         insurance_type,
         payment_category,
         payment_type,
-        payment_amount
+        payment_amount,
+        reservation_date,
+        payment_date
         ) VALUES (
         #{userCode},
         #{carCode},
@@ -179,7 +181,9 @@
         #{insuranceType},
         #{paymentCategory},
         #{paymentType},
-        #{paymentAmount}
+        #{paymentAmount},
+        #{reservationDate},
+        #{paymentDate}
         );
     </insert>
 

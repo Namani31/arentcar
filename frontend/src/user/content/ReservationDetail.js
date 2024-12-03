@@ -19,6 +19,7 @@ const ReservationDetail = () => {
     const [discountFee, setDiscountFee] = useState(0);
     const [estimatedRentalFee, setEstimatedRentalFee] = useState(0);
     const [totalRentalFee, setTotalRentalFee] = useState(0);
+    const [rentalperiod, setRentalperiod] = useState(0);
     const [carInfo, setCarInfo] = useState({});
     const isLoginState = useSelector((state) => state.userState.loginState);
     const userCode = useSelector((state) => state.userState.userCode);
@@ -42,12 +43,23 @@ const ReservationDetail = () => {
           };
     
           fetchInsurance();
-        //   console.log(car);
+          console.log(car);
+          //밀리초단위로 계산해라
+          setRentalperiod(Number(car.return_date.substring (0,4))-Number(car.rental_date.substring (0,4))+
+          (Number(car.return_date.substring (4,6))-Number(car.rental_date.substring (4,6)))+
+          (Number(car.return_date.substring (6))-Number(car.rental_date.substring (6))));
+          
         //   setCarInfo({...car,user_code : userCode,payment_amount : totalRentalFee});
     },[])
+    
+    useEffect(()=>{
+        console.log(Number(car.return_date.substring (0,4)));
+        console.log(Number(car.rental_date.substring (0,4)));
+        console.log(rentalperiod);
+    },[rentalperiod])
 
     useEffect(()=>{
-        setCarInfo({...car,user_code : userCode,payment_amount : totalRentalFee,insurance_type : insuranceTypeCode});
+        setCarInfo({...car,discount_fee : discountFee,user_code : userCode,payment_amount : totalRentalFee,insurance_type : insuranceTypeCode});
     },[userCode,totalRentalFee,insuranceTypeCode])
 
     useEffect(() => {
@@ -57,7 +69,7 @@ const ReservationDetail = () => {
 
     useEffect(() => {
         setEstimatedRentalFee(rentalRate - discountFee+Number( insurance[0].insurance_fee));
-        setTotalRentalFee(rentalRate - discountFee+Number( insurance[0].insurance_fee));
+        setTotalRentalFee((rentalRate - discountFee+Number( insurance[0].insurance_fee)));
     }, [insurance]);
 
     useEffect(() => {
@@ -66,14 +78,14 @@ const ReservationDetail = () => {
 
     useEffect(() => {
         if (driverRangeFee === 'everyone' && insuranceType === '일반 자차') {
-            setTotalRentalFee(Number(estimatedRentalFee) + 20000);
+            setTotalRentalFee((Number(estimatedRentalFee)*rentalperiod + 20000));
         }
         else if(driverRangeFee === 'everyone' && insuranceType === '완전 자차'){
-            setTotalRentalFee(Number(estimatedRentalFee) + 20000 +Number( insurance[1].insurance_fee)-Number( insurance[0].insurance_fee));
+            setTotalRentalFee(Number(estimatedRentalFee) + 20000 +(Number( insurance[1].insurance_fee)-Number( insurance[0].insurance_fee)));
         }else if(driverRangeFee === 'standard' && insuranceType === '일반 자차'){
             setTotalRentalFee(Number(estimatedRentalFee));
         }else{
-            setTotalRentalFee(Number(estimatedRentalFee) +Number( insurance[1].insurance_fee)-Number( insurance[0].insurance_fee));
+            setTotalRentalFee((Number(estimatedRentalFee) +Number( insurance[1].insurance_fee)-Number( insurance[0].insurance_fee)));
         }
     }, [driverRangeFee,insuranceType]);
 
@@ -148,7 +160,7 @@ const ReservationDetail = () => {
                                 </li>
                                 <li>
                                     <span>계약기간</span>
-                                    <span>1개월</span>
+                                    <span>{rentalperiod}일</span>
                                 </li>
                             </ul>
                         </div>

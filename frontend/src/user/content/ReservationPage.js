@@ -164,16 +164,6 @@ const RentalCarsPage = ({onClick}) => {
                 {region.region_name}
               </div>
             ))}
-            {/* <div className='rental-cars-page-select-branch-regions-item'>경기</div>
-            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
-            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
-            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
-            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
-            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
-            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
-            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
-            <div className='rental-cars-page-select-branch-regions-item'>경기</div>
-            <div className='rental-cars-page-select-branch-regions-item'>경기</div> */}
           </div>
           <div className='rental-cars-page-select-branch-item'>
             {isSelectRegion && (branchs || []).map((branch) => (
