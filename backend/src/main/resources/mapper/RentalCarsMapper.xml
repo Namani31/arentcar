@@ -2,16 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.apple.arentcar.mapper.RentalCarsMapper">
-    <!-- 모든 차량 조회 -->
-    <select id="getAllRentalCars" resultType="com.apple.arentcar.model.RentalCars">
-        SELECT * FROM rental_cars
-    </select>
-
-    <!-- PK로 단건 차량 조회 -->
-    <select id="getRentalCarsById" resultType="com.apple.arentcar.model.RentalCars">
-        SELECT * FROM rental_cars where car_code = #{carCode}
-    </select>
-
     <!-- 차량 입력 -->
     <insert id="createRentalCars" parameterType="com.apple.arentcar.model.RentalCars"
             useGeneratedKeys="true" keyProperty="carCode">
@@ -20,11 +10,6 @@
         VALUES
         (#{carCode}, #{carTypeCode}, #{carNumber}, #{modelYear}, #{branchCode}, #{carStatus}, NOW(), NOW())
     </insert>
-
-    <!-- 차량 삭제 -->
-    <delete id="deleteRentalCarsById">
-        DELETE FROM rental_cars where car_code = #{carCode}
-    </delete>
 
     <!-- 차량 수정 -->
     <update id="updateRentalCarsById" parameterType="com.apple.arentcar.model.RentalCars">
@@ -131,37 +116,6 @@
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
-    <!-- 전체 차량 수 조회 -->
-    <select id="countAllRentalCars" resultType="int">
-        SELECT COUNT(*) FROM rental_cars
-    </select>
-
-    <!-- 전체 차량 수 조회(검색 기능 포함) -->
-    <select id="countRentalCarsByNum" resultType="int">
-        SELECT COUNT(*) FROM rental_cars
-        WHERE car_number LIKE CONCAT('%', #{carNumber}, '%')
-    </select>
-
-    <!-- 전체 차량 수 조회(검색 기능 포함) -->
-    <select id="countMaintenanceRentalCarsByStatus" resultType="int">
-        SELECT COUNT(*) FROM rental_cars WHERE car_status = #{carStatus}
-    </select>
-
-    <!-- 렌탈가능/렌탈중/정비중 전체 차량 수 조회 -->
-    <select id="countAvailableRentalCars" resultType="int">
-        SELECT COUNT(*) FROM rental_cars WHERE car_status = #{carStatus}
-    </select>
-
-    <!-- <select>의 <option>값으로 차량코드/명 동적으로 불러오기 -->
-    <select id="getRentalCarsCodeName" resultType="com.apple.arentcar.dto.RentalCarsCarOptionAttrDTO">
-        SELECT car_type_code, car_type_name FROM car_types
-    </select>
-
-    <!-- <select>의 <option>값으로 지점코드/명 동적으로 불러오기 -->
-    <select id="getRentalCarsBranchCodeName" resultType="com.apple.arentcar.dto.RentalCarsBranchOptionAttrDTO">
-        SELECT branch_code, branch_name FROM branchs
-    </select>
-
     <!-- 엑셀 파일 다운로드용 차량 조회 -->
     <select id="getRentalCarsForExcel" resultType="com.apple.arentcar.dto.RentalCarsDTO">
         SELECT
@@ -190,9 +144,4 @@
         JOIN common_codes cc6 ON cc6.common_code = ct.car_manufacturer AND cc6.common_kind_code = 'car_manufacturer'
         ORDER BY car_code
     </select>
-
-    <!-- 정비중인 차량 정비완료(렌탈가능)로 수정 -->
-    <update id="updateRentalCarsStatusToAvailableById">
-        UPDATE rental_cars SET car_status = "01" WHERE car_code = #{carCode}
-    </update>
 </mapper>

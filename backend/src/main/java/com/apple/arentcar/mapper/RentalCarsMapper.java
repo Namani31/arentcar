@@ -4,21 +4,17 @@ import com.apple.arentcar.dto.RentalCarsBranchOptionAttrDTO;
 import com.apple.arentcar.dto.RentalCarsCarOptionAttrDTO;
 import com.apple.arentcar.dto.RentalCarsDTO;
 import com.apple.arentcar.model.RentalCars;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
 public interface RentalCarsMapper {
 
-    List<RentalCars> getAllRentalCars();
-
-    RentalCars getRentalCarsById(Integer carCode);
-
     // 차량 등록
     void createRentalCars(RentalCars rentalCars);
     // 차량 삭제
+    @Delete("DELETE FROM rental_cars where car_code = #{carCode}")
     void deleteRentalCarsById(@Param("carCode") Integer carCode);
     // 차량 수정
     void updateRentalCarsById(RentalCars rentalCars);
@@ -33,19 +29,26 @@ public interface RentalCarsMapper {
                                                         @Param("pageSize") int pageSize,
                                                         @Param("offset") int offset);
     // 전체 차량 수 조회
+    @Select("SELECT COUNT(*) FROM rental_cars")
     int countAllRentalCars();
     // 전체 차량 수 조회(검색 기능 포함)
+    @Select("SELECT COUNT(*) FROM rental_cars WHERE car_number LIKE CONCAT('%', #{carNumber}, '%')")
     int countRentalCarsByNum(@Param("carNumber") String carNumber);
     // 전체 차량 수 조회(정비중인 차량)
+    @Select("SELECT COUNT(*) FROM rental_cars WHERE car_status = #{carStatus}")
     int countMaintenanceRentalCarsByStatus(@Param("carStatus") String carStatus);
     // 렌탈가능/렌탈중/정비중 전체 차량 수 조회
+    @Select("SELECT COUNT(*) FROM rental_cars WHERE car_status = #{carStatus}")
     int countAvailableRentalCars(@Param("carStatus") String carStatus);
     // <select>의 <option>값으로 차량코드/명 동적으로 불러오기
+    @Select("SELECT car_type_code, car_type_name FROM car_types")
     List<RentalCarsCarOptionAttrDTO> getRentalCarsCodeName();
     // <select>의 <option>값으로 지점코드/명 동적으로 불러오기
+    @Select("SELECT branch_code, branch_name FROM branchs")
     List<RentalCarsBranchOptionAttrDTO> getRentalCarsBranchCodeName();
     // 엑셀 파일 다운로드용 차량 조회
     List<RentalCarsDTO> getRentalCarsForExcel();
     // 정비중인 차량 정비완료(렌탈가능)로 수정
+    @Update("UPDATE rental_cars SET car_status = \"01\" WHERE car_code = #{carCode}")
     void updateRentalCarsStatusToAvailableById(Integer carCode);
 }

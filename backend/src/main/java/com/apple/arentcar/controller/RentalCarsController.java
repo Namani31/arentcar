@@ -22,19 +22,6 @@ public class RentalCarsController {
     @Autowired
     private RentalCarsService rentalCarsService;
 
-    @GetMapping("/manager/rentalcars")
-    public List<RentalCars> getAllRentalCars() { return rentalCarsService.getAllRentalCars(); }
-
-    @GetMapping("/manager/rentalcars/{carCode}")
-    public ResponseEntity<RentalCars> getRentalCarsById(@PathVariable Integer carCode) {
-        RentalCars rentalCars = rentalCarsService.getRentalCarsById(carCode);
-        if (rentalCars != null) {
-            return ResponseEntity.ok(rentalCars);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     // 차량 등록
     @PostMapping("/manager/rentalcars")
     public ResponseEntity<RentalCars> createRentalCars(@RequestBody RentalCars rentalCars) {

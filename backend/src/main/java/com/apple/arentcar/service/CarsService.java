@@ -14,12 +14,6 @@ public class CarsService {
     @Autowired
     private CarsMapper carsMapper;
 
-    public List<CarTypes> getAllCars() { return carsMapper.getAllCars(); }
-
-    public CarTypes getCarsById(Integer carTypeCode)  {
-        return carsMapper.getCarsById(carTypeCode);
-    }
-
     // 차종 조회 및 페이지네이션
     public List<CarTypesDTO> getCarsWithPaging(int pageSize, int pageNumber) {
         int offset = (pageNumber - 1) * pageSize; // offset 계산 식

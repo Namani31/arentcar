@@ -13,6 +13,7 @@ import java.util.List;
 @Mapper
 public interface BranchsMapper {
 
+    @Select("SELECT * FROM branchs")
     List<Branchs> findAllBranches();
 
     List<Branchs> findBranchsByBranchName(@Param("branchname") String branchName);
