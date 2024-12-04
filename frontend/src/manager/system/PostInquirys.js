@@ -439,7 +439,7 @@ const PostInquirys = ({ onClick }) => {
                     {column.field === '' ? (<>
                       {/* <button className='manager-button post-btn3' > 보기 </button>  */}
                       <button className='manager-button post-btn2' onClick={()=>handleAnswer(inquiry["post_code"])}> 답변 </button> 
-                      <button className='manager-button post-btn1' onClick={()=>console.log(inquiry["post_code"])}> 삭제 </button> 
+                      {/* <button className='manager-button post-btn1' onClick={()=>console.log(inquiry["post_code"])}> 삭제 </button>  */}
                     </>) : (
                       inquiry[column.field]
                     )}

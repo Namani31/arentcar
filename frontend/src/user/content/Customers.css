@@ -113,6 +113,15 @@
     font-size: 18px;
     color: #ff7916;
 }
+.user-customers-wrap-post-paging>span{
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    line-height: 30px;
+    vertical-align: top;
+    border: 1px solid #ff7916;
+    border-radius: 10px;
+}
 .user-customers-wrap-post-paging>span.on{
     font-weight: bold;
 }
