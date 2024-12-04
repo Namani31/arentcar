@@ -29,32 +29,24 @@ const PaymentPage = () => {
     paymentDate: currentDate.getFullYear().toString()+(currentDate.getMonth()+1).toString().padStart(2,"0")+currentDate.getDate().toString().padStart(2,"0")
   }
 
-  const requestPayment = () => {
-    PortOne.requestPayment(
+   const  requestPayment = async () => {
+    const response = await PortOne.requestPayment(
       {
-        storeId: "store-56b88bd8-5068-4c9b-a6d7-7144ba4155ce", // Store ID
+        storeId: "스토어 ID", // Store ID
         paymentId: `payment-${crypto.randomUUID()}`, // 고유 결제 ID
         orderName: reservationInfo.car_type_name, // 결제 상품명
         totalAmount: 100, // 결제 금액
         currency: "KRW", // 올바른 통화 코드
-        channelKey: "channel-key-9ca9285e-034c-4f1f-9d38-73fe6d28833f", // 채널 키
+        channelKey: "채널 ID", // 채널 키
         payMethod: "CARD", // 결제 방식
-      },
-      {
-        successCallback: (response) => {
-          console.log("결제 성공 데이터:", response);
+      });
+      if (response.code !== undefined) {
+        return alert(response.message);
+      }else{
+        console.log("결제 성공 데이터:", response);
           InsertUserReservation();
           alert("결제가 성공적으로 완료되었습니다!");
-  
-          // 결제 데이터를 서버로 전송하여 저장 및 검증
-          // savePaymentData(response);
-        },
-        errorCallback: (error) => {
-          console.error("결제 실패 데이터:", error);
-          alert("결제가 실패하였습니다. 다시 시도해주세요.");
-        },
       }
-    );
   };
   
 
