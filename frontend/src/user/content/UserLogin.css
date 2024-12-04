@@ -1,0 +1,290 @@
+.user-login-wrap {
+  width: 100%;
+  height: calc(100vh - 285px);
+  padding-top: 100px;
+  background-color: #F5F5F5;
+}
+
+.user-login-box-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0;
+  width: 100%;
+  gap: 50px;
+}
+
+.user-login-title-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F5F5F5;
+  padding-top: 20px;
+}
+
+.user-login-title-img {
+  width: 150px;
+  height: 75px;
+}
+
+.user-login-title-name {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.user-login-area {
+  position: relative;
+  width: 500px;
+}
+
+.user-login-area input {
+  display: block;
+  width: 75%;
+  height: 45px;
+  margin: 10px 0px;
+}
+
+.user-login-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 110px;
+  height: 100px;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 4px;
+  background-color: rgba(251, 115, 37);
+}
+
+.user-login-bot-wrap {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 70px;
+}
+
+.user-login-bot-left {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 5px;
+}
+
+.user-login-bot-right {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  gap: 70px;
+}
+
+.user-login-bot-right div {
+  cursor: pointer;
+}
+
+.user-login-new-password-wrap {
+  width: 500px;
+  margin: 230px auto;
+  padding: 20px 20px;
+  background-color: #fff;
+  border-radius: 6px;
+}
+
+.user-login-new-password-title {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.user-login-new-password-line {
+  display: flex;
+  align-items: center;
+  margin: 10px 0px;
+}
+
+.user-login-new-password-line.align-right {
+  justify-content: end;
+}
+
+.user-login-easy-wrap {
+  margin: 40px auto;
+}
+
+.user-login-easy-title {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.user-login-easy-title::before {
+  display: inline-block;
+  content: '';
+  width: 240px;
+  height: 1px;
+  background: #d4d7dc;
+  vertical-align: middle;
+  margin-right: 20px;
+}  
+
+.user-login-easy-title::after {
+  display: inline-block;
+  content: '';
+  width: 240px;
+  height: 1px;
+  background: #d4d7dc;
+  vertical-align: middle;
+  margin-left: 20px;
+}  
+
+.user-login-easy-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 30px;
+}
+.user-login-easy-item img {
+  width: 54px;
+  height: 54px;
+}
+
+.user-login-membership-popup_wrap {
+  width: 400px;
+  margin: 250px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.user-login-membership-popup-title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.user-login-membership-popup-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.user-login-popup-button {
+  width: 360px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.user-login-easy-popup {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0px;
+}
+
+.user-login-easy-popup::before {
+  display: inline-block;
+  content: '';
+  width: 110px;
+  height: 1px;
+  background: #d4d7dc;
+  vertical-align: middle;
+  margin-right: 20px;
+}  
+
+.user-login-easy-popup::after {
+  display: inline-block;
+  content: '';
+  width: 110px;
+  height: 1px;
+  background: #d4d7dc;
+  vertical-align: middle;
+  margin-left: 20px;
+}  
+
+.user-login-membership {
+  color: white;
+  background-color: rgba(251, 115, 37);
+}
+
+.user-login-kakao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  color: black;
+  background-color: rgba(254, 229, 0);
+}
+
+.user-login-naver {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  color: white;
+  background-color: rgba(45, 180, 0);
+}
+
+.user-login-popup-button img {
+  width: 45px;
+  height: 45px;
+}
+
+.user-login-popup-password-find-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 400px;
+  margin: 250px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.user-login-popup-password-find-email {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.user-login-popup-password-find-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.user-login-new-password-wrap {
+  width: 500px;
+  margin: 230px auto;
+  padding: 20px 20px;
+  background-color: #fff;
+  border-radius: 6px;
+}
+
+.user-login-new-password-title {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.user-login-new-password-line {
+  display: flex;
+  align-items: center;
+  margin: 10px 0px;
+}
+
+.user-login-new-password-line.align-right {
+  justify-content: end;
+}
