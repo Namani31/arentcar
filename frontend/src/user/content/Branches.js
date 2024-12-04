@@ -14,7 +14,9 @@ const Branches = () => {
   const [branchReturn, setBranchReturn] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const mapElement = useRef(null);
+  const mapElement = useRef(null); // DOM 요소나 변수처럼 컴포넌트가 재렌더링되더라도 유지되어야 하는 값을 관리할 때 사용함
+                                   // useRef가 반환하는 객체는 {current: null}로 초기화 -> 컴포넌트가 렌더링되고 나서 DOM 요소가 연결(ref)되면, current가 그 요소를 참조함
+                                   // ref={mapElement}를 통해 해당 DOM 요소(<div></div>)가 mapElement.current에 저장된다, useRef로 생성된 객체에는 current라는 속성이 있어 이를 통해 값을 저장하거나 참조할 수 있다
 
   useEffect(() => {
     const fetchBranches = async () => {
@@ -57,6 +59,8 @@ const Branches = () => {
   };
   
   const loadNaverMapScript = (clientId) => {
+    // Promise는 비동기 작업이 성공하거나 실패할 때 특정 동작을 정의하는 객체임
+    // resolve - Promise를 성공 상태로 변경하고 결과값을 전달, reject - Promise를 실패 상태로 변경하고 오류 메시지를 전달
     return new Promise((resolve, reject) => {
       if (window.naver && window.naver.maps) {
         resolve(); // 이미 로드된 경우 바로 resolve
@@ -104,28 +108,28 @@ const Branches = () => {
         ))}
       </div>
       <div className="branches-guide-content-wrap">
-        <div className="branches-guide-map-wrap" ref={mapElement}>지점을 선택해주세요.</div>
+        <div className="branches-guide-map-wrap" ref={mapElement}>지점을 선택해주세요.</div> {/* ref={mapElement}를 통해 해당 DOM 요소(<div></div>)가 mapElement.current에 저장된다 */} 
         {branchName && (
-      <div className="branches-guide-info-wrap">
-        <div className="info-row">
+        <div className="branches-guide-info-wrap">
+         <div className="info-row">
           <strong>지점이름 : </strong>
           <span>{branchName}</span>
-        </div>
-        <div className="info-row">
-          <strong>주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;소 : </strong>
-          <span>{branchAddress}</span>
-        </div>
-        <div className="info-row">
-          <strong>우편번호 : </strong>
-          <span>{branchPostCode}</span>
-        </div>
-        <div className="info-row">
-          <strong>전화번호 : </strong>
-          <span>{branchPhone}</span>
-        </div>
-        <div className="info-row">
-          <strong>이용시간 : </strong>
-          <span>{branchPickup} ~ {branchReturn}</span>
+         </div>
+         <div className="info-row">
+           <strong>주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;소 : </strong>
+           <span>{branchAddress}</span>
+         </div>
+         <div className="info-row">
+           <strong>우편번호 : </strong>
+           <span>{branchPostCode}</span>
+         </div>
+         <div className="info-row">
+           <strong>전화번호 : </strong>
+           <span>{branchPhone}</span>
+         </div>
+         <div className="info-row">
+           <strong>이용시간 : </strong>
+           <span>{branchPickup} ~ {branchReturn}</span>
         </div>
       </div>
         )}
