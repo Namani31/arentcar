@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef} from "react";
 import axios from "axios";
+import Loading from 'common/Loading';
 import "user/content/Branches.css";
 
 
@@ -11,6 +12,7 @@ const Branches = () => {
   const [branchPhone, setBranchPhone] = useState("");
   const [branchPickup, setBranchPickup] = useState("");
   const [branchReturn, setBranchReturn] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const mapElement = useRef(null);
 
@@ -44,10 +46,13 @@ const Branches = () => {
     }
   
     try {
+      setLoading(true);
       await loadNaverMapScript(clientId); // 스크립트 로드 완료 대기
       await initializeMap(branch.branch_longitude, branch.branch_latitude); // 지도 초기화
     } catch (error) {
       console.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -121,10 +126,13 @@ const Branches = () => {
         <div className="info-row">
           <strong>이용시간 : </strong>
           <span>{branchPickup} ~ {branchReturn}</span>
+        </div>
       </div>
-    </div>
-  )}
+        )}
       </div>
+
+      {loading && (<Loading />)}
+
     </div>
   );
 };

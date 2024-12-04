@@ -6,13 +6,16 @@ import "manager/carinfo/CarInfo.css";
 
 const CarInfo = ({ onClick }) => {
   const [vehicles, setVehicles] = useState([]) // DB에서 읽어온 차종 데이터를 배열로 담기
+  const [vehiclesTrigger, setVehiclesTrigger] = useState(false);
+
   const [isPopUp, setIsPopUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [workMode, setWorkMode] = useState("");
   const [searchName, setSearchName] = useState(""); 
+
+  const pageSize = 15;
   const [pageNumber, setPageNumber] = useState(1); // 현재 페이지 번호(기본 1페이지)가 변경 될때마다 pageingVehicles(), getTotalCount() 함수 호출,
                                                    // pageingVehicles() 함수는 pageNumber(기본 1페이지, -1 또는 +1씩 가감)와 pageSize를 서버로 보내고 LIMIT와 OFFSET으로 적절한 데이터를 불러온다
-  const pageSize = 10;
   const [totalCount, setTotalCount] = useState(0); // 전체 차종 수(검색건수 표시, 페이지네이션)
 
   const [columnDefs] = useState([
@@ -188,7 +191,7 @@ const CarInfo = ({ onClick }) => {
   useEffect(() => {
     pageingVehicles();
     getTotalCount();
-  }, [pageNumber]); // pageNumber가 변경될때면 pageingVehicles(), getTotalCount() 함수 호출
+  }, [pageNumber, vehiclesTrigger]); // pageNumber가 변경될때면 pageingVehicles(), getTotalCount() 함수 호출
 
   const handleUpdateClick = (updateData, workMode) => {
     setIsPopUp(true);
@@ -228,11 +231,6 @@ const CarInfo = ({ onClick }) => {
     setPageNumber(1);
   };
 
-  const handleDetailSearchClick = async () => {
-    pageingVehicles();
-    getTotalCount();
-   };
-
   const handleInsertClick = (workMode) => {
     setIsPopUp(true);
     setWorkMode(workMode);
@@ -268,6 +266,7 @@ const CarInfo = ({ onClick }) => {
       withCredentials: true,
     });
     setVehicles((prevVehicle) => prevVehicle.filter(vehicle => vehicle.car_type_code !== carTypeCode));
+    setVehiclesTrigger((prev) => !prev);
     alert("차종이 삭제되었습니다.");
   };
 
@@ -372,6 +371,7 @@ const CarInfo = ({ onClick }) => {
         }
       );
       setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.car_type_code === carTypeCode ? newVehicle : vehicle));
+      setVehiclesTrigger((prev) => !prev);
       alert("차종이 수정되었습니다.");
     } catch(error) {
       console.error("Error updating vehicle:", error);
@@ -418,6 +418,7 @@ const CarInfo = ({ onClick }) => {
         newVehicle.car_type_code = response.data.car_type_code;
         newVehicle.car_type_password = response.data.car_type_password;
         setVehicles((prevVehicle) => [...prevVehicle, savedVehicle]);
+        setVehiclesTrigger((prev) => !prev);
         alert("차종이 등록되었습니다.");
     } catch (error) {
       console.error("Error creating vehicle:", error);
@@ -500,7 +501,6 @@ const CarInfo = ({ onClick }) => {
             <label className='manager-label' htmlFor="">차종명</label>
             <input className='width200' type="text" value={searchName} onChange={(e) => (setSearchName(e.target.value))}/>
             <button className='manager-button manager-button-search' onClick={() => handleSearchClick()}>검색</button>
-            <button className='manager-button manager-button-search' onClick={() => handleDetailSearchClick()}>상세검색</button>
             <span>[검색건수 : {totalCount}건]</span>
           </div>
           <div>
@@ -634,7 +634,7 @@ const CarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="modelYear">년식</label>
-                <input className='width100  word-center' id='modelYear' type="text" placeholder="2020년식" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
+                <input className='width100  word-center' id='modelYear' type="text" placeholder="2020년식" maxLength={20} value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="carImage">차량이미지</label>
@@ -649,9 +649,10 @@ const CarInfo = ({ onClick }) => {
       </div>
 
       <div className='car-info-pageing-wrap flex-align-center'>
+        <button className="manager-button" onClick={() => handlePageChange(1)}>처음</button>
         <button 
           className='manager-button'
-          style={{color: pageNumber === 1 ?  '#aaa' : 'rgb(38, 49, 155)'}} 
+          style={{color: pageNumber === 1 ?  '#aaa' : 'rgb(38, 49, 155)'}}
           onClick={() => handlePageChange(pageNumber - 1)} 
           disabled={pageNumber === 1}
         >이전</button>
@@ -662,6 +663,7 @@ const CarInfo = ({ onClick }) => {
           onClick={() => handlePageChange(pageNumber + 1)} 
           disabled={pageNumber === totalPages}
         >다음</button>
+        <button className="manager-button" onClick={() => handlePageChange(totalPages)}>마지막</button>
       </div>
 
       {loading && (<Loading />)}

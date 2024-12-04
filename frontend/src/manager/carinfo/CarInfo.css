@@ -26,7 +26,6 @@
 
 .car-info-content-popup-wrap {
   width: 500px;
-  /* margin: 250px auto; */
   margin: 80px auto;
   padding: 20px 20px;
   background-color: #fff;
@@ -63,13 +62,13 @@
 }
 
 .car-info-status-wrap {
-  margin-top: 50px;
   margin-right: 200px;
+  margin: 0 200px 0 30px;
 }
 
 .car-info-status-display {
-  margin: 0px 30px;
-  font-size: 25px;
+  margin: 0px 10px;
+  font-size: 12px;
   font-weight: 600;
   text-align: center;
   border-radius: 8px;
@@ -78,21 +77,21 @@
 }
 
 .car-info-status-display-main {
-  font-size: 30px;
+  font-size: 15px;
   font-weight: 900;
-  margin-right: 100px;
+  margin-right: 50px;
   color: rgb(38, 49, 155);
 }
 
 .car-info-status-content {
   margin: 0px 10px;
-  font-size: 50px;
+  font-size: 20px;
   font-weight: bold;
   color: #343a40;
 }
 
 .car-info-status-content-main {
-  font-size: 55px;
+  font-size: 23px;
   color: #28a745;
 }
 

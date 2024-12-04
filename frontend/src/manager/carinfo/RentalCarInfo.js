@@ -6,18 +6,24 @@ import "manager/carinfo/CarInfo.css";
 
 const RentalCarInfo = ({ onClick }) => {
   const [vehicles, setVehicles] = useState([])
+  const [vehiclesTrigger, setVehiclesTrigger] = useState(false);
+
   const [isPopUp, setIsPopUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [workMode, setWorkMode] = useState("");
   const [searchName, setSearchName] = useState("");
+
+  const pageSize = 15;
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+
   const [carMenuOptions, setCarMenuOptions] = useState([]);
   const [branchMenuOptions, setBranchMenuOptions] = useState([]);
-  const [pageNumber, setPageNumber] = useState(1);
-  const pageSize = 15;
-  const [totalCount, setTotalCount] = useState(0);
+
   const [availableRentalCarsCount, setAvailableRentalCarsCount] = useState(0);
   const [rentedRentalCarsCount, setRentedRentalCarsCount] = useState(0);
   const [maintenanceRentalCarsCount, setMaintenanceRentalCarsCount] = useState(0);
+
   const maintenanceRentalCarsStatus = "03"
   const [isMaintenanceRentalCarsSearchClicked, setIsMaintenanceRentalCarsSearchClicked] = useState(false); 
   
@@ -251,7 +257,7 @@ const RentalCarInfo = ({ onClick }) => {
     getAvailabelRentalCarsCount("01");
     getRentedRentalCarsCount("02");
     getMaintenanceRentalCarsCount("03");
-  }, [pageNumber, isMaintenanceRentalCarsSearchClicked]);
+  }, [pageNumber, isMaintenanceRentalCarsSearchClicked, vehiclesTrigger]);
 
   useEffect(() => {
     const fetchCarMenus = async () => {
@@ -381,25 +387,30 @@ const RentalCarInfo = ({ onClick }) => {
       withCredentials: true,
     });
     setVehicles((prevVehicle) => prevVehicle.filter(vehicle => vehicle.car_code !== carCode));
+    setVehiclesTrigger((prev) => !prev);
     alert("차량이 삭제되었습니다.");
   };
 
-  const handleFinishMaintenanceRentalCarsClick = async (carCode) => {
-    if (window.confirm('차량 정비를 완료했습니까?')) {
-      try {
-        const token = localStorage.getItem('accessToken');
-        await updateRentalCarsStatus(token, carCode);
-      } catch (error) {
-        if (error.response && error.response.status === 403) {
-          try {
-            const newToken = await refreshAccessToken();
-            await updateRentalCarsStatus(newToken, carCode);
-          } catch (error) {
-            alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-            handleAdminLogout();
+  const handleFinishMaintenanceRentalCarsClick = async (carCode, carStatus) => {
+    if (carStatus == "렌탈가능" || carStatus == "렌탈중") {
+      alert("반납된/정비중인 차량이 아닙니다");
+    } else {
+      if (window.confirm('차량 정비를 완료했습니까?')) {
+        try {
+          const token = localStorage.getItem('accessToken');
+          await updateRentalCarsStatus(token, carCode);
+        } catch (error) {
+          if (error.response && error.response.status === 403) {
+            try {
+              const newToken = await refreshAccessToken();
+              await updateRentalCarsStatus(newToken, carCode);
+            } catch (error) {
+              alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+              handleAdminLogout();
+            }
+          } else {
+            alert("차량 정비 중 오류가 발생했습니다." + error);
           }
-        } else {
-          alert("차량 정비 중 오류가 발생했습니다." + error);
         }
       }
     }
@@ -418,6 +429,7 @@ const RentalCarInfo = ({ onClick }) => {
         }
       );
       setVehicles((prevVehicle) => prevVehicle); // 차량 상태 갱신
+      setVehiclesTrigger((prev) => !prev);
       alert("차량 정비를 완료했습니다.");
       return response.data;
     } catch (error) {
@@ -496,6 +508,7 @@ const RentalCarInfo = ({ onClick }) => {
       }
     );
     setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.car_code === carCode ? newVehicle : vehicle));
+    setVehiclesTrigger((prev) => !prev);
     alert("차량이 수정되었습니다.");
   };
   
@@ -513,6 +526,7 @@ const RentalCarInfo = ({ onClick }) => {
     newVehicle.car_code = response.data.car_code;
     newVehicle.car_password = response.data.car_password;
     setVehicles((prevVehicle) => [...prevVehicle, savedVehicle]);
+    setVehiclesTrigger((prev) => !prev);
     alert("차량이 등록되었습니다.");
   };
 
@@ -603,8 +617,21 @@ const RentalCarInfo = ({ onClick }) => {
   return (
     <div className="car-info-wrap">
       <div className="car-info-header-wrap">
-        <div className="car-info-title-wrap">
+        <div className="car-info-title-wrap flex-align-center">
           <div className="manager-title">● 차량관리</div>
+          <div className="car-info-status-wrap flex-align-center">
+            <div className="car-info-status-display car-info-status-display-main">전체차량<div className="car-info-status-content car-info-status-content-main">{totalCount}</div></div>
+            <div className="car-info-status-display">대여가능<div className="car-info-status-content">{availableRentalCarsCount}</div></div>
+            <div className="car-info-status-display">대여중<div className="car-info-status-content">{rentedRentalCarsCount}</div></div>
+            <div className="car-info-status-display">정비중<div className="car-info-status-content">{maintenanceRentalCarsCount}</div></div>
+            <div className="car-info-status-display car-info-status-button-wrap">
+              <div className="car-info-status-excel-wrap">
+                <button className="car-info-status-button" onClick={handleDownloadExcel}>
+                 <img className="car-info-excel-download" src={`${process.env.REACT_APP_IMAGE_URL}/excel-logo.png`} alt="rentalCars excel downlod button" />
+               </button>
+              </div>
+            </div>
+          </div> 
         </div>
         <div
           className='car-info-button-wrap'
@@ -649,7 +676,7 @@ const RentalCarInfo = ({ onClick }) => {
                     <>
                       <button className='manager-button manager-button-update' onClick={() => handleUpdateClick(row, "수정")}>수정</button>
                       <button className='manager-button manager-button-delete' onClick={() => handleDeleteClick(row.car_code)}>삭제</button>
-                      <button className='manager-button' onClick={() => handleFinishMaintenanceRentalCarsClick(row.car_code)}>정비완료</button>
+                      <button className='manager-button' onClick={() => handleFinishMaintenanceRentalCarsClick(row.car_code, row.car_status)}>정비완료</button>
                     </>
                   ) : (
                       row[title.field]
@@ -690,7 +717,7 @@ const RentalCarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="modelYear">년식</label>
-                <input className='width100  word-center' id="modelYear" type="text" placeholder="2024" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
+                <input className='width100  word-center' id="modelYear" type="text" placeholder="2024" maxLength={4} value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="branchCode">지점명</label>
@@ -718,6 +745,7 @@ const RentalCarInfo = ({ onClick }) => {
       </div>
 
       <div className='car-info-pageing-wrap flex-align-center'>
+        <button className="manager-button" onClick={() => handlePageChange(1)}>처음</button>
         <button 
           className='manager-button'
           style={{color: pageNumber === 1 ?  '#aaa' : 'rgb(38, 49, 155)'}} 
@@ -731,24 +759,12 @@ const RentalCarInfo = ({ onClick }) => {
           onClick={() => handlePageChange(pageNumber + 1)} 
           disabled={pageNumber === totalPages}
         >다음</button>
-      </div>
-
-      <div className="car-info-status-wrap flex-align-center">
-        <div className="car-info-status-display car-info-status-display-main">전체차량<div className="car-info-status-content car-info-status-content-main">{totalCount}</div></div>
-        <div className="car-info-status-display">대여가능<div className="car-info-status-content">{availableRentalCarsCount}</div></div>
-        <div className="car-info-status-display">대여중<div className="car-info-status-content">{rentedRentalCarsCount}</div></div>
-        <div className="car-info-status-display">정비중<div className="car-info-status-content">{maintenanceRentalCarsCount}</div></div>
-        <div className="car-info-status-display car-info-status-button-wrap">
-          <div className="car-info-status-excel-wrap">
-            <button className="car-info-status-button" onClick={handleDownloadExcel}>
-              <img className="car-info-excel-download" src={`${process.env.REACT_APP_IMAGE_URL}/excel-logo.png`} alt="rentalCars excel downlod button" />
-            </button>
-          </div>
-        </div>
+        <button className="manager-button" onClick={() => handlePageChange(totalPages)}>마지막</button>
       </div>
 
       {loading && (<Loading />)}
-      </div>
+
+    </div>
   );
 };
 
