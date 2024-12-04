@@ -7,8 +7,6 @@ import "manager/managebranchs/ManageBranchs.css";
 const ManageBranchs = ({ onClick }) => {
     const [branchs, setBranchs] = useState([]);
     const [isPopUp, setIsPopUp] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [workMode, setWorkMode] = useState("");
     const [searchName, setSearchName] = useState("");
     const [totalCount, setTotalCount] = useState(0);
     const [pageNumber, setPageNumber] = useState(1);
@@ -95,7 +93,7 @@ const ManageBranchs = ({ onClick }) => {
     };
 
     const getCount = async (token) => {
-        const params = searchName ? { branchCode: searchName } : {};
+        const params = searchName ? { branchName: searchName } : {};
 
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/count`,
             {
@@ -107,7 +105,6 @@ const ManageBranchs = ({ onClick }) => {
             });
 
         if (typeof response.data === 'number') {
-            console.log(response.data);
             setTotalCount(response.data);
         } else {
             console.error('Unexpected response:', response.data);
@@ -180,7 +177,7 @@ const ManageBranchs = ({ onClick }) => {
                 <div className='manager-popup'>
                     <div className='register-branch-content-popup-wrap'>
                         <div className='register-branch-content-popup-close'>
-                            <div className='manager-branch-title'>● 관리자{workMode}</div>
+                            <div className='manager-branch-title'>● 관리자</div>
                             <div className='register-branch-content-popup-button'>
                                 <button className='manager-button manager-button-close' onClick={handlePopupClodeClick}>닫기</button>
                             </div>
@@ -252,10 +249,6 @@ const ManageBranchs = ({ onClick }) => {
                     disabled={pageNumber === totalPages}
                 >다음</button>
             </div>
-
-            {loading && (
-                <Loading />
-            )}
         </div>
     );
 }
