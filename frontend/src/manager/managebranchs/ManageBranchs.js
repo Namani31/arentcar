@@ -104,6 +104,7 @@ const ManageBranchs = ({ onClick }) => {
                 withCredentials: true,
             });
 
+            console.log('Branch count response:', response.data);
         if (typeof response.data === 'number') {
             setTotalCount(response.data);
         } else {

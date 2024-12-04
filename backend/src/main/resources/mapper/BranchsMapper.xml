@@ -28,6 +28,11 @@
         SELECT COUNT(*) FROM branchs;
     </select>
 
+    <!-- 검색조건에 맞게 전체 지점 수 조회 -->
+    <select id="countBranchByName" resultType="int">
+        SELECT COUNT(*) FROM branchs
+        WHERE branch_name LIKE CONCAT('%', #{branchName}, '%')
+    </select>
 
     <!-- 지점 조회 및 페이지네이션 -->
     <select id="getBranchsWithPaging" resultType="com.apple.arentcar.dto.BranchsSearchDTO">
