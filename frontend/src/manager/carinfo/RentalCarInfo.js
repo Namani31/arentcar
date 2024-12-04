@@ -567,6 +567,7 @@ const RentalCarInfo = ({ onClick }) => {
 
   const handleDownloadExcel = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem('accessToken');
       await getRentalCarsExcel(token);
     } catch (error) {
@@ -581,6 +582,8 @@ const RentalCarInfo = ({ onClick }) => {
       } else {
         console.error('There was an error fetching the rental cars excel!', error);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -603,7 +606,7 @@ const RentalCarInfo = ({ onClick }) => {
       document.body.appendChild(link);
       link.click(); // 링크를 클릭하여 파일 다운로드를 시작한다
       link.remove(); // 다운로드 후 <a>태그를 DOM에서 제거한다
-
+      alert("엑셀파일 다운로드를 완료했습니다")  
     } catch (error) {
       console.error('Error downloading the Excel file', error);
     }
