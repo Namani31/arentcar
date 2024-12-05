@@ -5,6 +5,7 @@ import com.apple.arentcar.dto.ChartDataDTO;
 import com.apple.arentcar.model.Branchs;
 import com.apple.arentcar.service.BranchsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,5 +63,38 @@ public class BranchsController {
             count = branchsService.countAllBranchs();
         }
         return ResponseEntity.ok(count);
+    }
+
+    // 지점 상세보기
+    @GetMapping("/manager/banchs/detail/{branchCode}")
+    public Branchs getManageBranchsDetailById(
+            @PathVariable("branchCode") String branchCode) {
+        return branchsService.getManageBranchsDetailById(branchCode);
+    }
+
+    // 지점 등록
+    @PostMapping("/manager/branchs")
+    public ResponseEntity<Branchs> createBranchs(@RequestBody Branchs branchs) {
+        Branchs savedBranchs = branchsService.createBranchs(branchs);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedBranchs);
+    }
+
+    // 지점 수정
+    @PutMapping("/manager/branchs/{branchCode}")
+    public ResponseEntity<Void> updateBranchsById(
+            @PathVariable Integer branchCode,
+            @RequestBody Branchs branchs) {
+        branchs.setBranchCode(branchCode);
+
+        branchsService.updateBranchsById(branchs);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 지점 삭제
+    @DeleteMapping("/manager/branchs/{branchCode}")
+    public ResponseEntity<Void> deleteBranchsById(
+            @PathVariable Integer branchCode) {
+        branchsService.deleteBranchsById(branchCode);
+        return ResponseEntity.noContent().build();
     }
 }

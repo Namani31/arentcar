@@ -17,6 +17,7 @@ public class BranchsSearchDTO {
     private int regionCode;
     private String regionName;
     private String postCode;
+    private String branchBasicAddress;
     private String branchDetailedAddress;
     private String branchPhoneNumber;
     private String availablePickupTime;

@@ -43,7 +43,6 @@
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
-
     <!-- 지점 조회 및 페이지네이션(검색 기능 포함) -->
     <select id="getBranchsNameWithPaging" resultType="com.apple.arentcar.dto.BranchsSearchDTO">
         SELECT *
@@ -54,6 +53,45 @@
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
+    <!-- 지점 추가 -->
+    <insert id="createBranchs" parameterType="com.apple.arentcar.model.Branchs"
+            useGeneratedKeys="true" keyProperty="branchCode">
+        INSERT INTO branchs
+        (branch_code, branch_name, branch_longitude, branch_latitude,
+         region_code, post_code, branch_basic_address, branch_detailed_address,
+         branch_phone_number, available_pickup_time, available_return_time,
+         created_at, updated_at)
+        VALUES
+            (#{branchCode}, #{branchName}, #{branchLongitude}, #{branchLatitude}, #{regionCode},
+             #{postCode}, #{branchBasicAddress}, #{branchDetailedAddress}, #{branchPhoneNumber},
+             #{availablePickupTime},#{availableReturnTime}, NOW(), NOW())
+    </insert>
+
+
+    <!--  지점 수정-->
+<!--    <update id="updateBranchsById" parameterType="com.apple.arentcar.model.Branchs">-->
+<!--        UPDATE branchs-->
+<!--        SET-->
+<!--            branch_name = #{branchName},-->
+<!--            branch_longitude= #{branchLongitude},-->
+<!--            branch_latitude= #{branchLatitude},-->
+<!--            region_code= #{regionCode},-->
+<!--            region_name= #{regionName},-->
+<!--            post_code= #{postCode},-->
+<!--            post_code= #{branchBasicAddress},-->
+<!--            post_code= #{branchDetailedAddress},-->
+<!--            post_code= #{branchPhoneNumber},-->
+<!--            post_code= #{availablePickupTime},-->
+<!--            post_code= #{availableReturnTime},-->
+<!--            updated_at = NOW()-->
+<!--        WHERE branch_code = #{branchCode}-->
+<!--    </update>-->
+
+    <!-- 지점 삭제-->
+    <delete id="deleteBranchsById">
+        DELETE FROM branchs
+        WHERE branch_code = #{branchCode}
+    </delete>
 
 
 </mapper>
