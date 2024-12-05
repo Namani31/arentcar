@@ -25,7 +25,7 @@ const RentalCarInfo = ({ onClick }) => {
   const [rentedRentalCarsCount, setRentedRentalCarsCount] = useState(0);
   const [maintenanceRentalCarsCount, setMaintenanceRentalCarsCount] = useState(0);
 
-  const [ishandleDetailRentalCarsSearchClick, setIshandleDetailRentalCarsSearchClick] = useState(false);
+  const [isHandleDetailRentalCarsSearchClick, setIsHandleDetailRentalCarsSearchClick] = useState(false); // 상세검색 페이지네이션 관리
   const [isSearchClicked, setIsSearchClicked] = useState(false); // 플래그 상태 추가
   
   const [columnDefs] = useState([
@@ -162,7 +162,7 @@ const RentalCarInfo = ({ onClick }) => {
   const getTotalCount = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      if (ishandleDetailRentalCarsSearchClick) {
+      if (isHandleDetailRentalCarsSearchClick) {
         await getSearchCount(token)
       } else {
         await getCount(token);
@@ -171,7 +171,7 @@ const RentalCarInfo = ({ onClick }) => {
       if (error.response && error.response.status === 403) {
         try {
           const newToken = await refreshAccessToken();
-          if (ishandleDetailRentalCarsSearchClick) {
+          if (isHandleDetailRentalCarsSearchClick) {
             await getSearchCount(newToken);
           } else {
             await getCount(newToken);
@@ -202,25 +202,6 @@ const RentalCarInfo = ({ onClick }) => {
       setTotalCount(response.data);
     } else {
       console.error('Unexpected response:', response.data);
-    }
-  };
-
-  const getDetailRentalCarsCount = async () => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      await getSearchCount(token)
-    } catch (error) {
-      if (error.response && error.response.status === 403) {
-        try {
-          const newToken = await refreshAccessToken();
-          await getSearchCount(newToken);
-        } catch (error) {
-          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleAdminLogout();
-        }
-      } else {
-        console.error('There was an error fetching the vehicles count!', error);
-      }
     }
   };
 
@@ -363,10 +344,10 @@ const RentalCarInfo = ({ onClick }) => {
   };
 
   useEffect(() => {
-    if (ishandleDetailRentalCarsSearchClick) {
+    if (isHandleDetailRentalCarsSearchClick) {
       // 클릭되었을 때만 실행
-      handleDetailRentalCarsSearchClick();
-      getDetailRentalCarsCount();
+      handleDetailRentalCarsSearchClick(); // 상세검색 페이지네이션 기능도 포함 
+      getTotalCount();
     } else {
       // 일반적인 초기 로드 및 페이지 변경 시
       pageingVehicles();
@@ -376,7 +357,7 @@ const RentalCarInfo = ({ onClick }) => {
     getAvailabelRentalCarsCount("01");
     getRentedRentalCarsCount("02");
     getMaintenanceRentalCarsCount("03");
-  }, [pageNumber, ishandleDetailRentalCarsSearchClick, vehiclesTrigger]);
+  }, [pageNumber, vehiclesTrigger]);
 
   useEffect(() => {
     const fetchCarMenus = async () => {
@@ -470,26 +451,33 @@ const RentalCarInfo = ({ onClick }) => {
   }
 
   const handleSearchClick = async () => {
-    setIshandleDetailRentalCarsSearchClick(false)
-    pageingVehicles();
-    getTotalCount();
-    setPageNumber(1);
+    setIsHandleDetailRentalCarsSearchClick(false) // 상세검색 페이지네이션 상태 fasle로 변경(일반 페이지네이션 작동)
+    if (pageNumber === 1) {
+      setVehiclesTrigger((prev) => !prev);
+    } else {
+      setPageNumber(1);
+    }
   };
 
    const handleDetailSearchClick = async (workMode) => {
     setIsDetailPopUp(true);
     setWorkMode(workMode);
     viewDetailDataInit();
-    setIsSearchClicked(false);
+    setIsSearchClicked(false); // 상세검색 버튼 클릭시 플래그 상태 false로 초기화(시작은 무조건 false, 상세검색 다시 이용 시 1페이지로 이동하는 기능작동)
    }
 
    const handleDetailRentalCarsSearchClick = async () => {
     try {
         const token = localStorage.getItem('accessToken');
         await getDetailRentalCars(token);
-        if (!isSearchClicked) {
-          setPageNumber(1); // 한 번만 실행
-          setIsSearchClicked(true); // 플래그 상태 변경
+        if (!isSearchClicked) { // 검색 클릭시 플래그 상태가 fasle면 1페이지로 이동
+          if (pageNumber === 1) {
+            setVehiclesTrigger((prev) => !prev);
+          } else {
+            setPageNumber(1);
+          }
+          setIsSearchClicked(true); // 1페이지로 이동 후 플래그 상태 true로 변경(페이지 변경 시 계속 1페이지에 머무는 현상 방지)
+          setIsDetailPopUp(false);
         }
     } catch (error) {
       if (error.reponse && error.reponse.status == 403) {
@@ -504,7 +492,7 @@ const RentalCarInfo = ({ onClick }) => {
         alert("차량 상세검색 중 오류가 발생했습니다." + error);
       }
     }
-    setIshandleDetailRentalCarsSearchClick(true)
+    setIsHandleDetailRentalCarsSearchClick(true) // 상세검색 페이지네이션 상태 true로 변경(상세검색 페이지네이션 작동)
    };
 
    const getDetailRentalCars = async (token) => {
@@ -545,7 +533,7 @@ const RentalCarInfo = ({ onClick }) => {
     if (response.data) {
       setVehicles(response.data);
     }
-   }
+   };
 
   const handleInsertClick = (workMode) => {
     setIsPopUp(true);
