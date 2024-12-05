@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
@@ -34,6 +34,7 @@ const ManagerMenu = () => {
   const isAdminName = useSelector((state) => state.adminState.adminName);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const submenuTimer = useRef(null); 
 
   const handleCloseClick = () => {
     setSelectedComponent("");
@@ -48,10 +49,9 @@ const ManagerMenu = () => {
     VisitorCount: <VisitorCount onClick={handleCloseClick} />,
     ManagerReservation: <ManagerReservation onClick={handleCloseClick} />,
     RentalRates: <RentalRates onClick={handleCloseClick} />,
-    // 관리자 게시판
     manageNotices: <PostNotices onClick={handleCloseClick} />,
-    manageReviews: <PostReviews onClick={handleCloseClick}/>,
-    managementCustomer: <PostInquirys onClick={handleCloseClick}/>,
+    manageReviews: <PostReviews onClick={handleCloseClick} />,
+    managementCustomer: <PostInquirys onClick={handleCloseClick} />,
     RegisterAdmin: <RegisterAdmin onClick={handleCloseClick} />,
     ReservationStatistics: <ReservationStatistics onClick={handleCloseClick} />,
     AllBranchesReservationChart: <AllBranchesReservationChart onClick={handleCloseClick} />,
@@ -91,33 +91,37 @@ const ManagerMenu = () => {
     setMenus(response.data);
   };
 
-
   const handleMainMouseEnter = (menuMain, event) => {
     const rect = event.target.getBoundingClientRect();
     setMainPosition({
       left: rect.left,
       top: rect.bottom,
     });
+    clearTimeout(submenuTimer.current); 
     setSubMenuState(true);
     setSubMenuMoveState(false);
     setSelectedMenuMain(menuMain);
   };
 
   const handleMainMouseLeave = () => {
-    if (!subMenuMoveState) {
-      setSubMenuState(false);
-      setSubMenuMoveState(false);
-    }
+    submenuTimer.current = setTimeout(() => {
+      if (!subMenuMoveState) {
+        setSubMenuState(false);
+      }
+    }, 300);
   };
 
   const handleSubMenuMouseEnter = () => {
+    clearTimeout(submenuTimer.current);
     setSubMenuState(true);
     setSubMenuMoveState(true);
   };
 
   const handleSubMenuMouseLeave = () => {
-    setSubMenuState(false);
-    setSelectedMenuMain("");
+    submenuTimer.current = setTimeout(() => {
+      setSubMenuState(false);
+      setSelectedMenuMain("");
+    }, 300);
   };
 
   const handleMainClick = (componentName) => {
@@ -127,18 +131,18 @@ const ManagerMenu = () => {
       return;
     }
     setSelectedComponent(component);
-  }
+  };
 
   const handleMenuCloseClick = () => {
     dispatch(setAdminState({
       loginState: false
     }));
     handleAdminLogout()
-  }
+  };
 
   const handleHomePageClick = () => {
     navigate('/');
-  }
+  };
 
   return (
     <div className='manager-menu-wrap'>
