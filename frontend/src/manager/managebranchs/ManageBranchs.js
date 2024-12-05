@@ -211,7 +211,7 @@ const ManageBranchs = ({ onClick }) => {
                     console.log(branchCode);
                     alert("예약된 건이 있어 지점 삭제를 할 수 없습니다. \n" + error);
                 } else {
-                    alert("삭제 중 오류가 발생했습니다." + error);
+                    alert("삭제 중 오류가 발생했습니다. \n" + error);
                 }
             }
         }
@@ -259,6 +259,8 @@ const ManageBranchs = ({ onClick }) => {
         setbranchBasicAddress(findCode.branch_basic_address);
         setbranchDetailedAddress(findCode.branch_detailed_address);
         setbranchPhoneNumber(findCode.branch_phone_number);
+        setavailablePickupTime(findCode.available_pickup_time);
+        setavailableReturnTime(findCode.available_return_time);
     };
 
     // 지점 추가 시 데이터 초기화
@@ -270,6 +272,8 @@ const ManageBranchs = ({ onClick }) => {
         setregionCode("");
         setregionName("");
         setpostCode("");
+        setavailablePickupTime("");
+        setavailableReturnTime("");
         setbranchBasicAddress("");
         setbranchDetailedAddress("");
         setbranchPhoneNumber("");
@@ -295,6 +299,8 @@ const ManageBranchs = ({ onClick }) => {
             branch_basic_address: branchBasicAddress,
             branch_detailed_address: branchDetailedAddress,
             branch_phone_number: branchPhoneNumber,
+            available_pickup_time: availablePickupTime,
+            available_return_time: availableReturnTime,
         };
 
         if (workMode === "수정") {
@@ -312,7 +318,7 @@ const ManageBranchs = ({ onClick }) => {
                         handleAdminLogout();
                     }
                 } else {
-                    alert("지점 수정 중 오류가 발생했습니다." + error);
+                    alert("지점 수정 중 오류가 발생했습니다. \n" + error);
                 }
             } finally {
                 setLoading(false);
@@ -331,8 +337,11 @@ const ManageBranchs = ({ onClick }) => {
                         alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
                         handleAdminLogout();
                     }
+                } else if (error.response && error.response.status === 409) {
+                    console.log(branchName);
+                    alert("동일한 지점명이 있어 추가할 수 없습니다. \n" + error); 
                 } else {
-                    alert("지점 추가 중 오류가 발생했습니다." + error);
+                    alert("지점 추가 중 오류가 발생했습니다. \n" + error);
                 }
             } finally {
                 setLoading(false);
@@ -368,6 +377,7 @@ const ManageBranchs = ({ onClick }) => {
                 withCredentials: true,
             });
         newBranch.branch_code = response.data.branch_code;
+        newBranch.branch_name = response.data.branch_name;
         setBranchs((prevBranch) => [...prevBranch, newBranch]);
         alert("지점이 추가 되었습니다.");
     };
