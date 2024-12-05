@@ -6,9 +6,12 @@ import { store } from '../../redux/store';
 import Loading from 'common/Loading';
 
 
+
+
 const PostInquirys = ({ onClick }) => {
   const [loading, setLoading] = useState(false);
-
+  const Type = {"NT":"공지","RV":"후기","IQ":"문의"}
+  const status = {"IQ":"답변대기중","RS":"답변완료"}
   const [inquirys, setInquirys] = useState([])
   //팝업창
   const [isPopUp, setIsPopUp] = useState(false);
@@ -391,6 +394,22 @@ const PostInquirys = ({ onClick }) => {
   if (totalPages < 1) { totalPages = 1; }
   if (totalInquirys === 0) { totalPages = 0; }
 
+  const handleColumn = (value, column) => {
+    if(column.field === '') {
+      return(<>
+        {/* <button className='manager-button post-btn3' > 보기 </button>  */}
+        <button className='manager-button post-btn2' onClick={()=>handleAnswer(value["post_code"])}> 답변 </button> 
+        {/* <button className='manager-button post-btn1' onClick={()=>console.log(inquiry["post_code"])}> 삭제 </button>  */}
+      </>)
+    } else if(column.field === 'post_type') {
+      return( Type[value[column.field]] )
+    } else if(column.field === "inquiry_status") {
+      return( status[value[column.field]] )
+    } else {
+      return( value[column.field] )
+    }
+  }
+
   return(
     <div className='manager-post-inquirys-wrap'>
       <div className='manager-post-inquirys-header-wrap'>
@@ -434,15 +453,9 @@ const PostInquirys = ({ onClick }) => {
               <tr key={index}>
                 {columnInquirys && (columnInquirys.map((column,index)=>(
                   <td key={index} className='manager-post-inquirys-table-row-colmn'
-                    style={{width:`${column.width}`, textAlign:`${column.align}`}}
-                  > 
-                    {column.field === '' ? (<>
-                      {/* <button className='manager-button post-btn3' > 보기 </button>  */}
-                      <button className='manager-button post-btn2' onClick={()=>handleAnswer(inquiry["post_code"])}> 답변 </button> 
-                      {/* <button className='manager-button post-btn1' onClick={()=>console.log(inquiry["post_code"])}> 삭제 </button>  */}
-                    </>) : (
-                      inquiry[column.field]
-                    )}
+                    style={{width:`${column.width}`, textAlign:`${column.align}`}}> 
+
+                    {handleColumn(inquiry,column)}
                   </td>
                 )))}
               </tr>
