@@ -30,16 +30,20 @@ const ManageBranchs = ({ onClick }) => {
     const [availablePickupTime, setavailablePickupTime] = useState("");
     const [availableReturnTime, setavailableReturnTime] = useState("");
 
+    // 지점 데이터 페이징 처리
     const pageingBranchs = async () => {
         try {
             const token = localStorage.getItem('accessToken');
+            // 지점 데이터 가져오는 함수 호출 (토큰 필요)
             await getBranchs(token);
         } catch (error) {
+            // 403 == 토큰 만료
             if (error.response && error.response.status === 403) {
                 try {
                     const newToken = await refreshAccessToken();
                     await getBranchs(newToken);
                 } catch (error) {
+                    // 새 토큰 요청도 실패하면 인증 만료 알림 및 로그아웃 처리
                     alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
                     handleAdminLogout();
                 }
@@ -49,33 +53,41 @@ const ManageBranchs = ({ onClick }) => {
         }
     };
 
+    // 지점 데이터 가져오기
     const getBranchs = async (token) => {
         const params = {
-            pageSize,
-            pageNumber,
+            pageSize, // 페이지 크기
+            pageNumber, // 현재 페이지 번호
         };
 
+        // 검색 조건이 있다면
         if (searchName && searchName.trim() !== '') {
+            // 검색어(지점명)를 params에 추가
             params.branchName = searchName;
         }
 
+        // API 요청: 지점 데이터 가져오기
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/paged`,
             {
-                params,
+                params, // 위에서 정의한 페이징과 검색 조건
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}` // 인증 토큰 헤더에 추가
                 },
-                withCredentials: true,
+                withCredentials: true, // 쿠키 전송 활성화
             });
 
+        // 만약 응답 데이터가 있다면 상태로 업데이트
         if (response.data) {
-            setBranchs(response.data);
+            // 지점 데이터를 상태로 저장
+            setBranchs(response.data); 
         }
     };
 
+    // 전체 지점 수 가져오기
     const getTotalCount = async () => {
         try {
             const token = localStorage.getItem('accessToken');
+            // 총 개수를 가져오는 함수 호출, await를 이용하여 API 요청 끝날때까지 대기 후 코드 실행
             await getCount(token);
         } catch (error) {
             if (error.response && error.response.status === 403) {
@@ -92,9 +104,12 @@ const ManageBranchs = ({ onClick }) => {
         }
     };
 
+    // 총 지점 수 요청
     const getCount = async (token) => {
+        // 검색어(searchName)이 있다면 params에 추가
         const params = searchName ? { branchName: searchName } : {};
 
+        // API 요청: 지점 수 가져오기
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/count`,
             {
                 params,
@@ -105,43 +120,54 @@ const ManageBranchs = ({ onClick }) => {
             });
 
             console.log('Branch count response:', response.data);
-        if (typeof response.data === 'number') {
+        
+        // 응답 데이터가 숫자라면 상태로 저장
+            if (typeof response.data === 'number') {
             setTotalCount(response.data);
         } else {
             console.error('Unexpected response:', response.data);
         }
     };
 
+    // 페이지 번호 / 크기가 바뀔 때 데이터 요청
     useEffect(() => {
-        pageingBranchs();
-        getTotalCount();
-    }, [pageNumber, pageSize]);
+        pageingBranchs(); // 지점 데이터 가져오기
+        getTotalCount(); // 전체 지점 수 가져오기
+    }, [pageNumber, pageSize]); // 페이지 번호, 크기가 변경될 때 실행
 
+
+    // 테이블 컬럼 너비 합산 계산
     const totalWidth = columnDefs.reduce((sum, columnDef) => {
+        // columnDef[]에 컬럼 너비가 명시되어 있으면 더하고, 없으면 기본 값(150)을 더함
         return sum + (columnDef.width ? columnDef.width : 150);
     }, 0);
 
+    // 변경된 현재 페이지 번호(-1씩 또는 +1씩 가감)
     const handlePageChange = (newPageNumber) => {
-        setPageNumber(newPageNumber); // 변경된 현재 페이지 번호(-1씩 또는 +1씩 가감)
+        setPageNumber(newPageNumber); 
     };
 
-    let totalPages = Math.ceil(totalCount / pageSize); // 총 페이지 수 = 올림(전체 차종 수 / 화면에 보여줄 데이터 수(현재 페이지에서는 10개씩 보여줌))
+    // 총 페이지 수 = 올림(전체 차종 수 / 화면에 보여줄 데이터 수(현재 페이지에서는 10개씩 보여줌))
+    let totalPages = Math.ceil(totalCount / pageSize); 
     if (totalPages < 1) {
         totalPages = 1;
     }
 
+    // 검색 버튼 클릭
     const handleSearchClick = async () => {
         pageingBranchs();
         getTotalCount();
     };
 
+    // 닫기 버튼 클릭
     const handleCloseClick = () => {
         if (onClick) {
             onClick();
         }
     };
 
-    const handlePopupClodeClick = () => {
+    // 팝업 닫기 클릭
+    const handlePopupCloseClick = () => {
         setIsPopUp(false);
     };
 
@@ -174,13 +200,15 @@ const ManageBranchs = ({ onClick }) => {
                     ))}
                 </div>
             </div>
+
+            {/* 등록 팝업 */}
             {isPopUp &&
                 <div className='manager-popup'>
                     <div className='register-branch-content-popup-wrap'>
                         <div className='register-branch-content-popup-close'>
                             <div className='manager-branch-title'>● 관리자</div>
                             <div className='register-branch-content-popup-button'>
-                                <button className='manager-button manager-button-close' onClick={handlePopupClodeClick}>닫기</button>
+                                <button className='manager-button manager-button-close' onClick={handlePopupCloseClick}>닫기</button>
                             </div>
                         </div>
                         <div className='register-branch-content-popup-line'>
@@ -214,6 +242,8 @@ const ManageBranchs = ({ onClick }) => {
                     </div>
                 </div>
             }
+
+            {/* map을 이용하여 columDefs 배열에 있는 내용 출력 */}
             <div className='register-branchs-content-row-wrap'>
                 {branchs.map((row, index) => (
                     <div key={index} className='register-branchs-content-row'>
@@ -235,6 +265,7 @@ const ManageBranchs = ({ onClick }) => {
                 ))}
             </div>
 
+            {/* 다음, 이전 버튼 */}
             <div className='branch-info-pageing-wrap flex-align-center'>
                 <button
                     className='manager-button'
