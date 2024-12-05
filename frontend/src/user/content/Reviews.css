@@ -26,6 +26,7 @@
 
 .user-customers-create-reviews{
     margin: 0;
+    padding-bottom: 35px;
 }
 
 .user-customers-create-review-popup-wrap{
@@ -58,12 +59,13 @@
 
 .user-customers-create-review-popup-button{
     width: 70px;
-    height: 30px;
+    height: 35px;
     margin: 0px 5px;
     background-color: #ee0a0a;
     color: #ededf0;
-    font-weight: bold;
-    vertical-align: middle;
+    /* font-weight: bold; */
+    font-size: 14px;
+    /* vertical-align: middle; */
     border-radius: 20px;
 }
 
