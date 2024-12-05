@@ -15,9 +15,13 @@ const ManageBranchs = ({ onClick }) => {
     const [columnDefs] = useState([
         { headerName: '코드', field: 'branch_code', width: 70, align: 'center' },
         { headerName: '지점명', field: 'branch_name', width: 110, align: 'center' },
+        { headerName: '경도', field: 'branch_longitude', width: 90, align: 'center' },
+        { headerName: '위도', field: 'branch_latitude', width: 90, align: 'center' },
+        { headerName: '지역코드', field: 'region_code', width: 80, align: 'center' },
+        { headerName: '지역이름', field: 'region_name', width: 110, align: 'center' },
+        { headerName: '우편번호', field: 'post_code', width: 100, align: 'center' },
         { headerName: '주소', field: 'branch_detailed_address', width: 200, align: 'center' },
-        { headerName: '지역이름', field: 'region_name', width: 130, align: 'center' },
-        { headerName: '우편번호', field: 'post_code', width: 130, align: 'center' },
+        { headerName: '전화번호', field: 'branch_phone_number', width: 200, align: 'center' },
         { headerName: '개점시간', field: 'available_pickup_time', width: 100, align: 'center' },
         { headerName: '폐점시간', field: 'available_return_time', width: 80, align: 'center' },
     ]);
@@ -48,7 +52,7 @@ const ManageBranchs = ({ onClick }) => {
                     handleAdminLogout();
                 }
             } else {
-                console.error('There was an error fetching the admins pageing!', error);
+                console.error('There was an error fetching the branchs pageing!', error);
             }
         }
     };

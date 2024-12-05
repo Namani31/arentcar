@@ -12,10 +12,13 @@ import java.time.LocalDateTime;
 public class BranchsSearchDTO {
     private int branchCode;
     private String branchName;
+    private String branchLongitude;
+    private String branchLatitude;
     private int regionCode;
     private String regionName;
     private String postCode;
     private String branchDetailedAddress;
+    private String branchPhoneNumber;
     private String availablePickupTime;
     private String availableReturnTime;
     private LocalDateTime createdAt;
