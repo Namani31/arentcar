@@ -18,25 +18,30 @@ public interface RentalCarsMapper {
     void deleteRentalCarsById(@Param("carCode") Integer carCode);
     // 차량 수정
     void updateRentalCarsById(RentalCars rentalCars);
-    // 차량 조회 및 페이지네이션
-    List<RentalCarsDTO> getRentalCarsWithPaging(@Param("pageSize") int pageSize, @Param("offset") int offset);
     // 차량 조회 및 페이지네이션(검색 기능 포함)
-    List<RentalCarsDTO> getRentalCarsByNumWithPaging(@Param("carNumber") String carNumber,
-                                                  @Param("pageSize") int pageSize,
-                                                  @Param("offset") int offset);
-    // 차량 조회 및 페이지네이션(정비중인 차량)
-    List<RentalCarsDTO> getRentalCarsByStatusWithPaging(@Param("carStatus") String carStatus,
-                                                        @Param("pageSize") int pageSize,
-                                                        @Param("offset") int offset);
-    // 전체 차량 수 조회
-    @Select("SELECT COUNT(*) FROM rental_cars")
-    int countAllRentalCars();
-    // 전체 차량 수 조회(검색 기능 포함)
-    @Select("SELECT COUNT(*) FROM rental_cars WHERE car_number LIKE CONCAT('%', #{carNumber}, '%')")
-    int countRentalCarsByNum(@Param("carNumber") String carNumber);
-    // 전체 차량 수 조회(정비중인 차량)
-    @Select("SELECT COUNT(*) FROM rental_cars WHERE car_status = #{carStatus}")
-    int countMaintenanceRentalCarsByStatus(@Param("carStatus") String carStatus);
+    List<RentalCarsDTO> getRentalCarsWithPaging(@Param("carNumber") String carNumber,
+                                                @Param("carStatus") String carStatus,
+                                                @Param("carTypeName") String carTypeName,
+                                                @Param("branchName") String branchName,
+                                                @Param("carTypeCategory") String carTypeCategory,
+                                                @Param("originType") String originType,
+                                                @Param("seatingCapacity") String seatingCapacity,
+                                                @Param("fuelType") String fuelType,
+                                                @Param("carManufacturer") String carManufacturer,
+                                                @Param("modelYear") String modelYear,
+                                                @Param("pageSize") int pageSize,
+                                                @Param("offset") int offset);
+    // 조건에 따라 차량 수 조회
+    int countRentalCarsWithConditions(@Param("carNumber") String carNumber,
+                           @Param("carStatus") String carStatus,
+                           @Param("carTypeName") String carTypeName,
+                           @Param("branchName") String branchName,
+                           @Param("carTypeCategory") String carTypeCategory,
+                           @Param("originType") String originType,
+                           @Param("seatingCapacity") String seatingCapacity,
+                           @Param("fuelType") String fuelType,
+                           @Param("carManufacturer") String carManufacturer,
+                           @Param("modelYear") String modelYear);
     // 렌탈가능/렌탈중/정비중 전체 차량 수 조회
     @Select("SELECT COUNT(*) FROM rental_cars WHERE car_status = #{carStatus}")
     int countAvailableRentalCars(@Param("carStatus") String carStatus);

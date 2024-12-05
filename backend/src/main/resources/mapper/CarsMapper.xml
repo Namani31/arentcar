@@ -96,4 +96,13 @@
         updated_at = NOW()
         WHERE car_type_code = #{carTypeCode}
     </update>
+
+    <!-- 조건에 따라 차종 수 조회 -->
+    <select id="countCarsWithConditions" resultType="int">
+        SELECT COUNT(*) FROM car_types
+        WHERE 1=1
+        <if test="carTypeName != null and carTypeName != ''">
+            AND car_type_name LIKE CONCAT('%', #{carTypeName}, '%')
+        </if>
+    </select>
 </mapper>

@@ -45,37 +45,46 @@ public class RentalCarsController {
         return ResponseEntity.noContent().build();
     }
 
-    // 차량 조회 및 페이지네이션(검색 기능 포함, 정비중인 차량 조회)
+    // 차량 조회 및 페이지네이션(검색 기능 포함)
     @GetMapping("/manager/rentalcars/paged")
     public ResponseEntity<List<RentalCarsDTO>>  getRentalCarsWithPaging(
                                                 @RequestParam int pageSize,
                                                 @RequestParam int pageNumber,
                                                 @RequestParam(required = false) String carNumber,
-                                                @RequestParam(required = false) String carStatus) {
-        List<RentalCarsDTO> rentalCars;
-        if (carNumber != null && !carNumber.isEmpty()) {
-            rentalCars = rentalCarsService.getRentalCarsByNumWithPaging(carNumber, pageSize, pageNumber);
-        } else if (carStatus != null && !carStatus.isEmpty()) {
-            rentalCars = rentalCarsService.getRentalCarsByStatusWithPaging(carStatus, pageSize, pageNumber);
-        } else {
-            rentalCars = rentalCarsService.getRentalCarsWithPaging(pageSize, pageNumber);
-        }
+                                                @RequestParam(required = false) String carStatus,
+                                                @RequestParam(required = false) String carTypeName,
+                                                @RequestParam(required = false) String branchName,
+                                                @RequestParam(required = false) String carTypeCategory,
+                                                @RequestParam(required = false) String originType,
+                                                @RequestParam(required = false) String seatingCapacity,
+                                                @RequestParam(required = false) String fuelType,
+                                                @RequestParam(required = false) String carManufacturer,
+                                                @RequestParam(required = false) String modelYear) {
+
+        List<RentalCarsDTO> rentalCars = rentalCarsService.getRentalCarsWithPaging(
+                                         carNumber, carStatus, carTypeName, branchName, carTypeCategory,
+                                         originType, seatingCapacity, fuelType, carManufacturer, modelYear,
+                                         pageSize, pageNumber);
         return ResponseEntity.ok(rentalCars);
     }
 
-    // 전체 차량 수 조회(검색 기능 포함)
+    // 조건에 따라 차량 수 조회
     @GetMapping("/manager/rentalcars/count")
     public ResponseEntity<Integer> getTotalRentalCarsCount(@RequestParam(required = false) String carNumber,
-                                                           @RequestParam(required = false) String carStatus) {
+                                                           @RequestParam(required = false) String carStatus,
+                                                           @RequestParam(required = false) String carTypeName,
+                                                           @RequestParam(required = false) String branchName,
+                                                           @RequestParam(required = false) String carTypeCategory,
+                                                           @RequestParam(required = false) String originType,
+                                                           @RequestParam(required = false) String seatingCapacity,
+                                                           @RequestParam(required = false) String fuelType,
+                                                           @RequestParam(required = false) String carManufacturer,
+                                                           @RequestParam(required = false) String modelYear
+                                                           ) {
 
-        int count;
-        if (carNumber != null && !carNumber.isEmpty()) {
-            count = rentalCarsService.countRentalCarsByNum(carNumber);
-        } else if (carStatus != null && !carStatus.isEmpty()) {
-            count = rentalCarsService.countMaintenanceRentalCarsByStatus(carStatus);
-        } else {
-            count = rentalCarsService.countAllRentalCars();
-        }
+        int count = rentalCarsService.countRentalCarsWithConditions(carNumber, carStatus, carTypeName, branchName, carTypeCategory,
+                                                         originType, seatingCapacity, fuelType, carManufacturer, modelYear);
+
         return ResponseEntity.ok(count);
     }
 

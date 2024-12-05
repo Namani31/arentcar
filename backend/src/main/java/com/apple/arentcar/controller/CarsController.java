@@ -40,15 +40,12 @@ public class CarsController {
         return ResponseEntity.ok(carTypes);
     }
 
-    // 전체 차종 수 조회(검색 기능 포함)
+    // 조건에 따라 차종 수 조회
     @GetMapping("/manager/cars/count")
     public ResponseEntity<Integer> getTotalCarsCount(@RequestParam(required = false) String carTypeName) {
-        int count;
-        if (carTypeName != null && !carTypeName.isEmpty()) {
-            count = carsService.countCarsByName(carTypeName);
-        } else {
-            count = carsService.countAllCars();
-        }
+
+        int count = carsService.countCarsWithConditions(carTypeName);
+
         return ResponseEntity.ok(count);
     }
     

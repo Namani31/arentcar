@@ -34,38 +34,25 @@ public class RentalCarsService {
 
     // 차량 수정
     public void updateRentalCarsById(RentalCars rentalCars) { rentalCarsMapper.updateRentalCarsById(rentalCars); }
-
-    // 차량 조회 및 페이지네이션
-    public List<RentalCarsDTO> getRentalCarsWithPaging(int pageSize, int pageNumber) {
-        int offset = (pageNumber - 1) * pageSize;
-        return rentalCarsMapper.getRentalCarsWithPaging(pageSize, offset);
-    }
-
+    
     // 차량 조회 및 페이지네이션(검색 기능 포함)
-    public List<RentalCarsDTO> getRentalCarsByNumWithPaging(String carNumber,
-                                                         int pageSize,
-                                                         int pageNumber) {
+    public List<RentalCarsDTO> getRentalCarsWithPaging(String carNumber, String carStatus, String carTypeName, String branchName,
+                                                       String carTypeCategory, String originType, String seatingCapacity,
+                                                       String fuelType, String carManufacturer, String modelYear,
+                                                       int pageSize,
+                                                       int pageNumber) {
         int offset = (pageNumber - 1) * pageSize;
-        return rentalCarsMapper.getRentalCarsByNumWithPaging(carNumber, pageSize, offset);
+        return rentalCarsMapper.getRentalCarsWithPaging(carNumber, carStatus, carTypeName, branchName, carTypeCategory,
+                                                        originType, seatingCapacity, fuelType, carManufacturer, modelYear,
+                                                        pageSize, offset);
     }
 
-    // 차량 조회 및 페이지네이션(정비중인 차량)
-    public List<RentalCarsDTO> getRentalCarsByStatusWithPaging(String carStatus,
-                                                           int pageSize,
-                                                           int pageNumber) {
-        int offset = (pageNumber - 1) * pageSize;
-        return rentalCarsMapper.getRentalCarsByStatusWithPaging(carStatus, pageSize, offset);
-    }
-
-    // 전체 차량 수 조회
-    public int countAllRentalCars() { return rentalCarsMapper.countAllRentalCars(); }
-
-    // 전체 차량 수 조회(검색 기능 포함)
-    public int countRentalCarsByNum(String carNumber) { return rentalCarsMapper.countRentalCarsByNum(carNumber); }
-
-    // 전체 차량 수 조회(정비중인 차량)
-    public int countMaintenanceRentalCarsByStatus(String carStatus) {
-        return rentalCarsMapper.countMaintenanceRentalCarsByStatus(carStatus);
+    // 조건에 따라 차량 수 조회
+    public int countRentalCarsWithConditions(String carNumber, String carStatus, String carTypeName, String branchName,
+                                  String carTypeCategory, String originType, String seatingCapacity,
+                                  String fuelType, String carManufacturer, String modelYear) {
+        return rentalCarsMapper.countRentalCarsWithConditions(carNumber, carStatus, carTypeName, branchName, carTypeCategory,
+                                                   originType, seatingCapacity, fuelType, carManufacturer, modelYear);
     }
 
     // 렌탈가능/렌탈중/정비중 전체 차량 수 조회

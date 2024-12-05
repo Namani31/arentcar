@@ -18,12 +18,8 @@ public interface CarsMapper {
     List<CarTypesDTO> getCarsByNameWithPaging(@Param("carTypeName") String carTypeName,
                                            @Param("pageSize") int pageSize,
                                            @Param("offset") int offset);
-    // 전체 차종 수 조회
-    @Select("SELECT COUNT(*) FROM car_types")
-    int countAllCars();
-    // 전체 차종 수 조회(검색 기능 포함)
-    @Select("SELECT COUNT(*) FROM car_types WHERE car_type_name LIKE CONCAT('%', #{carTypeName}, '%')")
-    int countCarsByName(@Param("carTypeName") String carTypeName);
+    // 조건에 따라 차종 수 조회
+    int countCarsWithConditions(@Param("carTypeName") String carTypeName);
     // 차종 추가
     void createCars(CarTypes carTypes);
     // 차종 삭제
