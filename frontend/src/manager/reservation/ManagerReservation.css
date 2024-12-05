@@ -4,16 +4,23 @@
 .manager-reservation-title-wrap{
   margin: 20px 20px;
 }
-
+.manager-reservation-header-wrap{
+  width: 1000px;
+}
 .manager-reservation-controls-wrap{
   margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+ 
+}
+.manager-reservation-controls-search-wrap{
   display: flex;
   align-items: center;
   gap: 5px; /* 요소 간 간격 */
 }
-
 .manager-reservation-content-header-row-wrap {
   display: flex; 
+  align-items: center;
 }
 
 .manager-reservation-content-list-wrap {
@@ -36,6 +43,9 @@
   margin-top: 5px;
 }
 
+.manager-reservation-pagination-info{
+  margin: 0 10px;
+}
 .manager-reservation-content-popup-wrap {
   width: 500px;
   margin: 250px auto;

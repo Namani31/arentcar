@@ -24,8 +24,8 @@ public class ReservationsController {
             @RequestParam(required = false) String userName,
             @RequestParam(required = false) String rentalLocationName,
             @RequestParam(required = false) String rentalDate,
-            @RequestParam(defaultValue = "1") int pageNumber,
-            @RequestParam(defaultValue = "10") int pageSize) {
+            @RequestParam int pageNumber,
+            @RequestParam int pageSize) {
 
         pageNumber = Math.max(pageNumber, 1);
         int offset = (pageNumber - 1) * pageSize;
@@ -87,11 +87,12 @@ public class ReservationsController {
         return ResponseEntity.noContent().build();
     }
     @PutMapping("/manager/reservations/cancel/{reservationCode}")
-    public ResponseEntity<Void> updateReservationStatus(
+    public ResponseEntity<Void> updateReservationAndCarStatus(
             @PathVariable String reservationCode,
             @RequestBody Map<String, Object> reservationStatusRequest) {
-
-        reservationsService.updateReservationStatus(reservationCode, reservationStatusRequest);
+        System.out.println("Reservation Code: " + reservationCode);
+        System.out.println("Request Body: " + reservationStatusRequest);
+        reservationsService.updateReservationAndCarStatus(reservationCode, reservationStatusRequest);
 
         return ResponseEntity.noContent().build();
     }

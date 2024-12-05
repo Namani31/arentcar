@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservationStatusRequestDTO {
-    private String reservationCode;    // 예약 코드
     private String reservationStatus; // 예약 상태
+    private String paymentStatus;     // 결제 상태
+    private String carStatus;         // 차량 상태
 }
