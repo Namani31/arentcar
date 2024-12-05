@@ -17,17 +17,20 @@ public class BranchsController {
     @Autowired
     private BranchsService branchsService;
 
+    // 모든 지점 가져오기 (유저 입장)
     @GetMapping("user/branches")
     public List<Branchs> findAllBranches () {
         return branchsService.findAllBranches();
     }
 
+    // 지점명 찾기
     @GetMapping("/manager/branchs")
     public List<Branchs> findBranchsByBranchName(
             @RequestParam(name = "branchname") String branchName) {
         return branchsService.findBranchsByBranchName(branchName);
     }
 
+    // 차트에 나타낼 지점 데이터 가져오기
     @GetMapping("/manager/branchs/reservation")
     public ResponseEntity<List<ChartDataDTO>> getBranchsChartData(@RequestParam String startDate, @RequestParam String endDate) {
         List<ChartDataDTO> chartDataDto = branchsService.getBranchChartData(startDate, endDate);
