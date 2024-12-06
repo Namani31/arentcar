@@ -7,7 +7,7 @@ import UserMemberShip from 'user/content/UserMemberShip';
 import NaverCallback from 'user/content/NaverCallback';
 import KakaoCallback from 'user/content/KakaoCallback';
 import FooterMain from 'user/footer/FooterMain';
-import ReservationPage from 'user/content/ReservationPage';
+import RantalLocationSelector from 'user/content/RantalLocationSelector';
 import ReservationDetail from 'user/content/ReservationDetail';
 import PaymentPage from 'user/content/PaymentPage';
 
@@ -24,7 +24,7 @@ const UserMenu = () => {
           <Route path="/membership" element={<UserMemberShip />} ></Route>
           <Route path="/naver-callback" element={<NaverCallback />} /> 
           <Route path="/kakao-callback" element={<KakaoCallback />} /> 
-          <Route path="/reservation" element={<ReservationPage />} /> 
+          <Route path="/reservation" element={<RantalLocationSelector />} /> 
           <Route path="/reservationdetail" element={<ReservationDetail />} /> 
           <Route path="/paymentpage" element={<PaymentPage />} /> 
         </Routes>
