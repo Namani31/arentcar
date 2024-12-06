@@ -225,7 +225,12 @@ const ManageBranchs = ({ onClick }) => {
             },
             withCredentials: true,
         });
+        
+        // branchCode가 일치한다면 삭제 (일치하지 않는 지점은 그대로 냅둠), branch.branch_code == branchCode 라고 한다면 삭제하려는 지점만 남겨지고 나머지 모두 삭제 됨
         setBranchs((prevBranch) => prevBranch.filter(branch => branch.branch_code !== branchCode));
+        
+        // 전체 지점 수 감소
+        setTotalCount((prevCount) => prevCount - 1);
         alert("지점이 삭제되었습니다.");
     };
 
@@ -234,12 +239,16 @@ const ManageBranchs = ({ onClick }) => {
             alert("지점명을 입력해주세요.");
             return false;
         };
+        if (!regionCode || regionCode.trim() === '') {
+            alert("지역 코드를 입력해주세요.");
+            return false;
+        };
         if (!branchDetailedAddress || branchDetailedAddress.trim() === '') {
-            alert("지점 상세주소를 입력해주세요.");
+            alert("상세주소를 입력해주세요.");
             return false;
         };
         if (!branchPhoneNumber || branchPhoneNumber.trim() === '') {
-            alert("지점 전화번호를 입력해주세요.");
+            alert("전화번호를 입력해주세요.");
             return false;
         };
         return true;
@@ -281,6 +290,7 @@ const ManageBranchs = ({ onClick }) => {
         setavailableReturnTime("")
     };
 
+    
     // 지점 추가 및 수정
     const handleDataSaveClick = async () => {
         // 유효성 검사에서 통과하지 못한다면 종료
@@ -337,9 +347,6 @@ const ManageBranchs = ({ onClick }) => {
                         alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
                         handleAdminLogout();
                     }
-                } else if (error.response && error.response.status === 409) {
-                    console.log(branchName);
-                    alert("동일한 지점명이 있어 추가할 수 없습니다. \n" + error); 
                 } else {
                     alert("지점 추가 중 오류가 발생했습니다. \n" + error);
                 }
@@ -378,7 +385,12 @@ const ManageBranchs = ({ onClick }) => {
             });
         newBranch.branch_code = response.data.branch_code;
         newBranch.branch_name = response.data.branch_name;
+
+        // 지점 리스트에 새로 추가된 지점 등록
         setBranchs((prevBranch) => [...prevBranch, newBranch]);
+
+         // 전체 지점 수 증가
+        setTotalCount((prevCount) => prevCount + 1);
         alert("지점이 추가 되었습니다.");
     };
 
