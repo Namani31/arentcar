@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "./Notices.css"
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -60,6 +60,9 @@ const Notices = () => {
               {notices.post_content}
             </>)}
           </div>
+        </div>
+        <div className="user-customers-list">
+            <Link to={"/customers"} className="user-customers-list-button">리스트</Link>
         </div>
       </div>
     </div>

@@ -71,10 +71,28 @@ public class PostsService {
     }
 
 
-    public List<Inquirys> getAllInquirys() { return postsMapper.getAllInquirys(); }
+    public List<Inquirys> getAllInquirys(Integer pageSize, Integer pageNumber) {
+        int offset = pageNumber * pageSize;
+        return postsMapper.getAllInquirys(pageSize, offset);
+    }
+    public int countInquirys() { return postsMapper.countInquirys(); }
+    public List<Inquirys> getSearchAllInquirys(String keyword,Integer pageSize, Integer pageNumber) {
+        int offset = pageNumber * pageSize;
+        return postsMapper.getSearchAllInquirys(keyword, pageSize, offset);
+    }
+    public int countSearchInquirys(String keyword) { return postsMapper.countSearchInquirys(keyword); }
     public Inquirys getInquirys(Integer postCode) { return postsMapper.getInquirys(postCode); }
     public List<Responses> getResponses(Integer pageCode) { return postsMapper.getResponses(pageCode); }
-    public void createResponses(Responses responses) { postsMapper.createResponses(responses); }
+    public void createResponses(Responses responses) {
+        postsMapper.updateInquiryStatus(responses);
+        postsMapper.createResponses(responses);
+    }
     public void updateResponses(Responses responses) { postsMapper.updateResponses(responses); }
     public void deleteResponses(Integer code) { postsMapper.deleteResponses(code); }
+    public void createInquirys(Inquirys inquirys) {
+        postsMapper.createInquiryPosts(inquirys);
+        System.out.println(inquirys.getPostCode());
+        postsMapper.createInquiry(inquirys);
+    }
+    public void createUserResponses(Responses responses) { postsMapper.createUserResponses(responses); }
 }

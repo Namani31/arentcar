@@ -9,6 +9,7 @@ import Loading from 'common/Loading';
 
 const PostNotices = ({ onClick }) => {
   const [loading, setLoading] = useState(false);
+  const Type = {"NT":"공지","RV":"후기","IQ":"문의"}
   //공지사항
   const [notices, setNotices] = useState([]);
   const [totalNotices, setTotalNotices] = useState(0);
@@ -372,6 +373,20 @@ const PostNotices = ({ onClick }) => {
     textarea.current.style.height = textarea.current.scrollHeight + "px";
   }
 
+  const handleColumn = (value, column) => {
+    if(column.field === '') {
+      return(<>
+        <button className='manager-button post-btn3' onClick={()=>handlePopupClick([ "보기", value["post_code"] ])}> 보기 </button> 
+        <button className='manager-button post-btn2' onClick={()=>handlePopupClick([ "수정", value["post_code"] ])}> 수정 </button> 
+        <button className='manager-button post-btn1' onClick={()=>handleDeleteClick(value["post_code"])}> 삭제 </button> 
+      </>)
+    } else if(column.field === 'post_type') {
+      return( Type[value[column.field]] )
+    } else {
+      return( value[column.field] )
+    }
+  }
+
   return (
     <div className='manager-post-notice-wrap'>
       <div className='manager-post-notice-header-wrap'>
@@ -415,15 +430,10 @@ const PostNotices = ({ onClick }) => {
               <tr key={index}>
                 {columnNotices && (columnNotices.map((column,index)=>(
                   <td key={index} className='manager-post-notice-table-row-colmn'
-                    style={{width:`${column.width}`, textAlign:`${column.align}`}}
-                  > 
-                    {column.field === '' ? (<>
-                      <button className='manager-button post-btn3' onClick={()=>handlePopupClick([ "보기", notice["post_code"] ])}> 보기 </button> 
-                      <button className='manager-button post-btn2' onClick={()=>handlePopupClick([ "수정", notice["post_code"] ])}> 수정 </button> 
-                      <button className='manager-button post-btn1' onClick={()=>handleDeleteClick(notice["post_code"])}> 삭제 </button> 
-                    </>) : (
-                      notice[column.field]
-                    )}
+                    style={{width:`${column.width}`, textAlign:`${column.align}`}}> 
+
+                    {handleColumn(notice, column)}
+                    
                   </td>
                 )))}
               </tr>

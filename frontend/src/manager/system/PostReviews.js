@@ -9,6 +9,7 @@ import Loading from 'common/Loading';
 
 const PostReviews = ({ onClick }) => {
   const [loading, setLoading] = useState(false);
+  const Type = {"NT":"공지","RV":"후기","IQ":"문의"}
   //고객후기
   const [reviews, setReviews] = useState([]);
   const [totalReviews, setTotalReviews] = useState(0);
@@ -241,9 +242,20 @@ const PostReviews = ({ onClick }) => {
     }
   };
 
-  const handleClosePopup = () => {
-    setPopupType("")
-  };
+  const handleColumn = (value, column) => {
+    if(column.field === '') {
+      return(<>
+        <button className='manager-button post-btn2' onClick={()=> handlePopupClick([ "보기", value["post_code"] ])}> 보기 </button>
+        {/* <button className='manager-button post-btn3' > 수정 </button>  */}
+        <button className='manager-button post-btn1' onClick={()=> handleDeleteClick(value["post_code"]) }> 삭제 </button> 
+      </>)
+    } else if(column.field === 'post_type') {
+      return( Type[value[column.field]] )
+    } else {
+      return( value[column.field] )
+    }
+  }
+
   return (
     <div className='manager-post-reviews-wrap'>
       <div className='manager-post-reviews-header-wrap'>
@@ -287,15 +299,7 @@ const PostReviews = ({ onClick }) => {
                   {columnReviews && (columnReviews.map((column,index)=>(
                     <td key={index} className='manager-post-reviews-table-row-colmn'
                       style={{width:`${column.width}`, textAlign:`${column.align}`}}>
-                      {column.field === '' ? (
-                        <>
-                          <button className='manager-button post-btn2' onClick={()=> handlePopupClick([ "보기", review["post_code"] ])}> 보기 </button>
-                          {/* <button className='manager-button post-btn3' > 수정 </button>  */}
-                          <button className='manager-button post-btn1' onClick={()=> handleDeleteClick(review["post_code"]) }> 삭제 </button> 
-                        </>
-                      ) : (
-                        review[column.field]
-                      )}
+                      {handleColumn(review, column)}
                     </td>
                   )))}
                 </tr>

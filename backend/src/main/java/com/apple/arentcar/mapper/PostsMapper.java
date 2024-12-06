@@ -31,10 +31,17 @@ public interface PostsMapper {
     List<ChartsAvg> ageChartsAvg();
     List<ChartsCount> ageChartsCount();
 
-    List<Inquirys> getAllInquirys();
+    List<Inquirys> getAllInquirys(Integer pageSize, Integer pageNumber);
+    int countInquirys();
+    List<Inquirys> getSearchAllInquirys(String keyword, Integer pageSize, Integer pageNumber);
+    int countSearchInquirys(String keyword);
     Inquirys getInquirys(Integer postCode);
     List<Responses> getResponses(Integer postCode);
     void createResponses(Responses responses);
     void updateResponses(Responses responses);
+    void updateInquiryStatus(Responses responses);
     void deleteResponses(Integer responseCode);
+    void createInquiryPosts(Inquirys inquiry);
+    void createInquiry(Inquirys inquiry);
+    void createUserResponses(Responses responses);
 }
