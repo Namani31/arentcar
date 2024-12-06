@@ -40,8 +40,6 @@
         SELECT COUNT(*)
         FROM reservations r
         JOIN users u ON r.user_code = u.user_code
-        JOIN rental_cars rc ON r.car_code = rc.car_code
-        JOIN car_types ct ON rc.car_type_code = ct.car_type_code
         JOIN branchs rl ON r.rental_location = rl.branch_code
         WHERE 1=1
         <if test="rentalLocationName != null and rentalLocationName != ''">

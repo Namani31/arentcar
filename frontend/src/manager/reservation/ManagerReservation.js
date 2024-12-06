@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "manager/reservation/ManagerReservation.css";
-import { refreshAccessToken, handleLogout, formatDate, formatTime, formatPhone } from "common/Common";
+import { refreshAccessToken, handleAdminLogout, formatDate, formatTime, formatPhone } from "common/Common";
 
 const ManagerReservation = ({ onClick }) => {
   const [branchNames, setBranchNames] = useState([]);
@@ -52,7 +52,7 @@ const ManagerReservation = ({ onClick }) => {
           await getReservations(newToken);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the menus pageing!', error);
@@ -104,7 +104,7 @@ const ManagerReservation = ({ onClick }) => {
           await getCount(newToken);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the Reservations count!', error);
@@ -169,7 +169,7 @@ const ManagerReservation = ({ onClick }) => {
           await getreservationDetails(newToken, reservationCode);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error("There was an error fetching the reservation details!", error);
@@ -193,7 +193,6 @@ const ManagerReservation = ({ onClick }) => {
 
     if (response.data) {
       setReservationDetails(response.data);
-      console.log("예약 상세 데이터:", response.data);
     }
   };
 
@@ -207,7 +206,7 @@ const ManagerReservation = ({ onClick }) => {
 
 
 
-  const handlePopupClodeClick = () => {
+  const handlePopupCloseClick = () => {
     setIsPopUp(false);
     setReservationDetails([]);
   };
@@ -238,8 +237,6 @@ const ManagerReservation = ({ onClick }) => {
         carStatus: "01"          // 차량 상태: '렌탈가능'
     };
 
-      console.log("Reservation Code:", reservationCode); // 예약 코드 확인
-      console.log("Request Body:", requestBody); // 요청 본문 확인
       // 예약 상태 업데이트 API 호출
       await axios.put(
         `${process.env.REACT_APP_API_URL}/arentcar/manager/reservations/cancel/${reservationCode}`,
@@ -265,7 +262,7 @@ const ManagerReservation = ({ onClick }) => {
           await handleReservationCancel(reservationCode);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요."); // 인증 만료 알림
-          handleLogout(); // 로그아웃 처리
+          handleAdminLogout(); // 로그아웃 처리
         }
       } else {
         alert("예약 취소에 실패했습니다."); // 사용자 알림
@@ -310,7 +307,7 @@ const ManagerReservation = ({ onClick }) => {
           await handleCarReturn(carNumber);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요."); // 인증 만료 알림
-          handleLogout(); // 로그아웃 처리
+          handleAdminLogout(); // 로그아웃 처리
         }
       } else {
         alert("차량 상태 업데이트에 실패했습니다."); // 사용자 알림
@@ -469,7 +466,7 @@ const ManagerReservation = ({ onClick }) => {
               <div className="manager-popup-title">● 예약상세</div>
               <button
                 className="manager-button manager-button-close"
-                onClick={handlePopupClodeClick}
+                onClick={handlePopupCloseClick}
               >
                 닫기
               </button>
@@ -561,7 +558,7 @@ const ManagerReservation = ({ onClick }) => {
                 <label>결제금액 : </label>
                 <span>{formatNumberWithCommas(reservationDetails?.payment_amount) || ""}</span>
                 <label>결제일 : </label>
-                <span>{reservationDetails?.payment_date || "결제일 없음"}</span>
+                <span>{formatDate(reservationDetails?.payment_date) || "결제일 없음"}</span>
               </div>
               <div className="manager-reservation-popup-field-row">
                 <label>결제상태 : </label>
