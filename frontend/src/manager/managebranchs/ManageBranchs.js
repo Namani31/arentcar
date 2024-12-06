@@ -477,35 +477,47 @@ const ManageBranchs = ({ onClick }) => {
     // 지역이름 드롭박스 데이터 가져오기
     useEffect(() => {
         const fetchRegionNameMenus = async () => {
-          try {
-            const token = localStorage.getItem('accessToken');
-            await getRegionNameMenuOptions(token);
-          } catch (error) {
-            if (error.response && error.response.status === 403) {
-              try {
-                const newToken = await refreshAccessToken();
-                await getRegionNameMenuOptions(newToken);
-              } catch (refreshError) {
-                alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-                handleAdminLogout();
-              }
-            } else {
-              console.error('There was an error fetching the regionNameMenu!', error);
+            try {
+                const token = localStorage.getItem('accessToken');
+                await getRegionNameMenuOptions(token);
+            } catch (error) {
+                if (error.response && error.response.status === 403) {
+                    try {
+                        const newToken = await refreshAccessToken();
+                        await getRegionNameMenuOptions(newToken);
+                    } catch (refreshError) {
+                        alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+                        handleAdminLogout();
+                    }
+                } else {
+                    console.error('There was an error fetching the regionNameMenu!', error);
+                }
             }
-          }
         };
 
         fetchRegionNameMenus();
-      }, []);
-    
-      const getRegionNameMenuOptions = async (token) => {
+    }, []);
+
+    const getRegionNameMenuOptions = async (token) => {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/option`, {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true, 
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
         });
         console.log(response.data);
         setRegionNameMenuOptions(response.data);
-      };
+    };
+
+
+    // 개점시간 입력 시 HH:mm 식으로 변환
+    const formatPickupTime = (available_pickup_time) => {
+        if (available_pickup_time && available_pickup_time.length === 4) {
+            // '0900' -> '09:00'
+            return `${available_pickup_time.slice(0, 2)}:${time.slice(2, 4)}`; 
+        }
+        // 기본값으로 원래 시간 반환
+        return available_pickup_time; // 
+    };
+
 
     return (
         <div className='register-branch-wrap'>
@@ -554,7 +566,7 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchName">지점명</label>
-                            <input className='width300 word-left' value={branchName} placeholder='지점명을 입력해주세요.' type="text" maxLength={30} onChange={(e) => setbranchName(e.target.value)} autoFocus/>
+                            <input className='width300 word-left' value={branchName} placeholder='지점명을 입력해주세요.' type="text" maxLength={30} onChange={(e) => setbranchName(e.target.value)} autoFocus />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchLongitude">경도</label>
@@ -570,20 +582,20 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="regionName">지역이름</label>
-                            <select className='width100 word-left' id="regionName" value={regionCode} 
-                            onChange={(e) => {
-                                // 지역 이름을 선택했을 때, 선택한 지역코드를 자동으로 설정
-                                const selectedRegionCode = e.target.value;
-                                // 지역코드 업데이트
-                                setregionCode(selectedRegionCode);
-                                // 지역이름 업데이트
-                                setregionName(e.target.options[e.target.selectedIndex].text); 
-                            }}>
-                            {regionNameMenuOptions.map((option) => (
-                                <option key={option.region_code} value={option.region_code}>
-                                    {option.region_name}
-                                </option>
-                             ))}
+                            <select className='width100 word-left' id="regionName" value={regionCode}
+                                onChange={(e) => {
+                                    // 지역 이름을 선택했을 때, 선택한 지역코드를 자동으로 설정
+                                    const selectedRegionCode = e.target.value;
+                                    // 지역코드 업데이트
+                                    setregionCode(selectedRegionCode);
+                                    // 지역이름 업데이트
+                                    setregionName(e.target.options[e.target.selectedIndex].text);
+                                }}>
+                                {regionNameMenuOptions.map((option) => (
+                                    <option key={option.region_code} value={option.region_code}>
+                                        {option.region_name}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                         <div className='register-branch-content-popup-line'>
@@ -604,7 +616,15 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availablePickupTime">개점시간</label>
-                            <input className='width300' type="text" value={availablePickupTime} placeholder='개점시간을 입력해주세요.' maxLength={50} onChange={(e) => setavailablePickupTime(e.target.value)} />
+                            <input className='width300' type="text" value={formatPickupTime(avaliable_pickup_time)} placeholder='개점시간을 입력해주세요.' maxLength={50} 
+                                onChange={(e) => {
+                                    // 사용자가 입력할 때, 'HH:mm' 형식으로 저장하려면
+                                    const formattedTime = e.target.value.replace(":", "");
+                                    if (formattedTime.length === 4) {
+                                        setAvaliablePickupTime(formattedTime); // 0900 형태로 저장
+                                    }
+                                }}
+                            />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availableReturnTime">폐점시간</label>
