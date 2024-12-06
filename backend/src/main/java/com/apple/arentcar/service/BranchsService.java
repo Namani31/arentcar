@@ -65,6 +65,13 @@ public class BranchsService {
         return branchs;
     }
 
+    // 지점 추가 시 지점명 중복 검증
+    public boolean isBranchNameDuplicate(String branchName) {
+        int count = branchsMapper.duplicateCountByBranchName(branchName);
+        // 중복된 이름이 있다면 true 반환
+        return count > 0;
+    }
+
     // 지점 수정
     public void updateBranchsById(Branchs branchs) {
         branchsMapper.updateBranchsById(branchs);

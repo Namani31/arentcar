@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/arentcar")
@@ -72,11 +74,19 @@ public class BranchsController {
         return branchsService.getManageBranchsDetailById(branchCode);
     }
 
-    // 지점 등록
+    // 지점 추가
     @PostMapping("/manager/branchs")
     public ResponseEntity<Branchs> createBranchs(@RequestBody Branchs branchs) {
         Branchs savedBranchs = branchsService.createBranchs(branchs);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBranchs);
+    }
+
+    @GetMapping("/manager/branchs/check-duplicate")
+    public ResponseEntity<Map<String, Boolean>> checkDuplicateBranchName(@RequestParam String branchName) {
+        boolean isDuplicate = branchsService.isBranchNameDuplicate(branchName);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("isDuplicate", isDuplicate);
+        return ResponseEntity.ok(response);
     }
 
     // 지점 수정

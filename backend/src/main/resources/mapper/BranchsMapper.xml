@@ -67,6 +67,12 @@
              #{availablePickupTime},#{availableReturnTime}, NOW(), NOW())
     </insert>
 
+    <!-- 지점 추가 시 지점명 중복 검증   -->
+    <select id="duplicateCountByBranchName" resultType="int">
+        SELECT COUNT(*)
+        FROM branchs
+        WHERE branch_name = #{branchName}
+    </select>
 
     <!--  지점 수정-->
 <!--    <update id="updateBranchsById" parameterType="com.apple.arentcar.model.Branchs">-->

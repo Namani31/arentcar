@@ -225,33 +225,13 @@ const ManageBranchs = ({ onClick }) => {
             },
             withCredentials: true,
         });
-        
+
         // branchCode가 일치한다면 삭제 (일치하지 않는 지점은 그대로 냅둠), branch.branch_code == branchCode 라고 한다면 삭제하려는 지점만 남겨지고 나머지 모두 삭제 됨
         setBranchs((prevBranch) => prevBranch.filter(branch => branch.branch_code !== branchCode));
-        
+
         // 전체 지점 수 감소
         setTotalCount((prevCount) => prevCount - 1);
         alert("지점이 삭제되었습니다.");
-    };
-
-    const validateCheck = () => {
-        if (!branchName || branchName.trim() === '') {
-            alert("지점명을 입력해주세요.");
-            return false;
-        };
-        if (!regionCode || regionCode.trim() === '') {
-            alert("지역 코드를 입력해주세요.");
-            return false;
-        };
-        if (!branchDetailedAddress || branchDetailedAddress.trim() === '') {
-            alert("상세주소를 입력해주세요.");
-            return false;
-        };
-        if (!branchPhoneNumber || branchPhoneNumber.trim() === '') {
-            alert("전화번호를 입력해주세요.");
-            return false;
-        };
-        return true;
     };
 
     // 수정 버튼 클릭
@@ -290,10 +270,52 @@ const ManageBranchs = ({ onClick }) => {
         setavailableReturnTime("")
     };
 
-    
+    // 지점 추가 시 지점명, 지역코드, 상세주소, 전화번호 입력 필수
+    const validateCheck = () => {
+        if (!branchName || branchName.trim() === '') {
+            alert("지점명을 입력해주세요.");
+            return false;
+        };
+        if (!regionCode || regionCode.trim() === '') {
+            alert("지역 코드를 입력해주세요.");
+            return false;
+        };
+        if (!branchDetailedAddress || branchDetailedAddress.trim() === '') {
+            alert("상세주소를 입력해주세요.");
+            return false;
+        };
+        if (!branchPhoneNumber || branchPhoneNumber.trim() === '') {
+            alert("전화번호를 입력해주세요.");
+            return false;
+        };
+        return true;
+    };
+
+    // 지점 추가 전에 지점명 중복되는지 확인
+    // validateCheck 함수는 클라이언트에서 간단한 검증을 처리
+    // 서버와의 통신을 포함한 중복 체크는 별도의 비동기 함수로 처리하는 것이 일반적
+    const isBranchNameDuplicate = async (branchName) => {
+        const token = localStorage.getItem('accessToken');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/check-duplicate`, {
+            params: { branchName },
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
+        });
+        return response.data.isDuplicate;
+    };
+
+
     // 지점 추가 및 수정
     const handleDataSaveClick = async () => {
-        // 유효성 검사에서 통과하지 못한다면 종료
+
+        // 지점명 중복 입력 검증
+        const isBranchDuplicate = await isBranchNameDuplicate(branchName);
+        if (isBranchDuplicate) {
+            alert("동일한 지점명이 이미 존재합니다. 다른 이름을 입력해주세요.");
+            return;
+        }
+
+        // 지점명, 지역코드, 상세주소, 전화번호 입력칸이 공란인지 검증
         if (!validateCheck()) {
             return;
         }
@@ -389,7 +411,7 @@ const ManageBranchs = ({ onClick }) => {
         // 지점 리스트에 새로 추가된 지점 등록
         setBranchs((prevBranch) => [...prevBranch, newBranch]);
 
-         // 전체 지점 수 증가
+        // 전체 지점 수 증가
         setTotalCount((prevCount) => prevCount + 1);
         alert("지점이 추가 되었습니다.");
     };

@@ -38,6 +38,9 @@ public interface BranchsMapper {
     // 지점 추가
     void createBranchs(Branchs branchs);
 
+    // 중복된 지점명 카운트
+    int duplicateCountByBranchName(@Param("branchName") String branchName);
+
     // 지점 수정
     void updateBranchsById(Branchs branchs);
 
