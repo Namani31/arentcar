@@ -137,7 +137,7 @@ const ManagerReservation = ({ onClick }) => {
   // 렌더링
   useEffect(() => {
     handleFetchBranchNames();
-  });
+  },[]);
   useEffect(() => {
     pageingReservations();
     getTotalCount();
