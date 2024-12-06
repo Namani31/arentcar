@@ -257,8 +257,8 @@ const ManageBranchs = ({ onClick }) => {
     const viewDataInit = () => {
         setbranchCode("");
         setbranchName("");
-        setbranchLongitude("0");
-        setbranchLatitude("0");
+        setbranchLongitude("");
+        setbranchLatitude("");
         setregionCode("1");
         setregionName("");
         setpostCode("");
@@ -546,19 +546,19 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchName">지점명</label>
-                            <input className='width300 word-center' value={branchName} type="text" maxLength={30} onChange={(e) => setbranchName(e.target.value)} />
+                            <input className='width300 word-left' value={branchName} placeholder='지점명을 입력해주세요.' type="text" maxLength={30} onChange={(e) => setbranchName(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchLongitude">경도</label>
-                            <input className='width300 word-center' value={branchLongitude} type="text" maxLength={30} onChange={(e) => setbranchLongitude(e.target.value)} />
+                            <input className='width300 word-left' value={branchLongitude} placeholder='경도를 입력해주세요.' type="text" maxLength={30} onChange={(e) => setbranchLongitude(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchLatitude">위도</label>
-                            <input className='width300 word-center' value={branchLatitude} type="text" maxLength={30} onChange={(e) => setbranchLatitude(e.target.value)} />
+                            <input className='width300 word-left' value={branchLatitude} placeholder='위도를 입력해주세요.' type="text" maxLength={30} onChange={(e) => setbranchLatitude(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="regionCode">지역코드</label>
-                            <input className='width300 word-center' value={regionCode} onChange={(e) => setregionCode(e.target.value)} />
+                            <input className='width300 word-left' value={regionCode} onChange={(e) => setregionCode(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="regionName">지역이름</label>
@@ -580,27 +580,27 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="postCode">우편번호</label>
-                            <input className='width300' type="text" value={postCode} maxLength={50} onChange={(e) => setpostCode(e.target.value)} />
+                            <input className='width300' type="text" value={postCode} placeholder='우편번호를 입력해주세요.' maxLength={50} onChange={(e) => setpostCode(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchBasicAddress">기본주소</label>
-                            <input className='width300' type="text" value={branchBasicAddress} maxLength={50} onChange={(e) => setbranchBasicAddress(e.target.value)} />
+                            <input className='width300' type="text" value={branchBasicAddress} placeholder='기본주소를 입력해주세요.' maxLength={50} onChange={(e) => setbranchBasicAddress(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchDetailedAddress">상세주소</label>
-                            <input className='width300' type="text" value={branchDetailedAddress} maxLength={50} onChange={(e) => setbranchDetailedAddress(e.target.value)} />
+                            <input className='width300' type="text" value={branchDetailedAddress} placeholder='상세주소를 입력해주세요.' maxLength={50} onChange={(e) => setbranchDetailedAddress(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchPhoneNumber">전화번호</label>
-                            <input className='width300' type="text" value={branchPhoneNumber} maxLength={50} onChange={(e) => setbranchPhoneNumber(e.target.value)} />
+                            <input className='width300' type="text" value={branchPhoneNumber} placeholder='전화번호를 입력해주세요.' maxLength={50} onChange={(e) => setbranchPhoneNumber(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availablePickupTime">개점시간</label>
-                            <input className='width300' type="text" value={availablePickupTime} maxLength={50} onChange={(e) => setavailablePickupTime(e.target.value)} />
+                            <input className='width300' type="text" value={availablePickupTime} placeholder='개점시간을 입력해주세요.' maxLength={50} onChange={(e) => setavailablePickupTime(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availableReturnTime">폐점시간</label>
-                            <input className='width300' type="text" value={availableReturnTime} maxLength={50} onChange={(e) => setavailableReturnTime(e.target.value)} />
+                            <input className='width300' type="text" value={availableReturnTime} placeholder='폐점시간을 입력해주세요.' maxLength={50} onChange={(e) => setavailableReturnTime(e.target.value)} />
                         </div>
                     </div>
                 </div>
