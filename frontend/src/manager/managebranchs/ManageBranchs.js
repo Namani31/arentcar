@@ -260,7 +260,7 @@ const ManageBranchs = ({ onClick }) => {
         setbranchLongitude("");
         setbranchLatitude("");
         setregionCode("1");
-        setregionName("");
+        setregionName("경기");
         setpostCode("");
         setavailablePickupTime("");
         setavailableReturnTime("");
@@ -277,8 +277,8 @@ const ManageBranchs = ({ onClick }) => {
             alert("지점명을 입력해주세요.");
             return false;
         };
-        if (!regionCode || regionCode.trim() === '') {
-            alert("지역 코드를 입력해주세요.");
+        if (!branchBasicAddress || branchBasicAddress.trim() === '') {
+            alert("기본주소를 입력해주세요.");
             return false;
         };
         if (!branchDetailedAddress || branchDetailedAddress.trim() === '') {
@@ -287,6 +287,14 @@ const ManageBranchs = ({ onClick }) => {
         };
         if (!branchPhoneNumber || branchPhoneNumber.trim() === '') {
             alert("전화번호를 입력해주세요.");
+            return false;
+        };
+        if (!availablePickupTime || availablePickupTime.trim() === '') {
+            alert("개점시간을 입력해주세요.");
+            return false;
+        };
+        if (!availableReturnTime || availableReturnTime.trim() === '') {
+            alert("폐점시간을 입력해주세요.");
             return false;
         };
         return true;
@@ -546,7 +554,7 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchName">지점명</label>
-                            <input className='width300 word-left' value={branchName} placeholder='지점명을 입력해주세요.' type="text" maxLength={30} onChange={(e) => setbranchName(e.target.value)} />
+                            <input className='width300 word-left' value={branchName} placeholder='지점명을 입력해주세요.' type="text" maxLength={30} onChange={(e) => setbranchName(e.target.value)} autoFocus/>
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchLongitude">경도</label>
