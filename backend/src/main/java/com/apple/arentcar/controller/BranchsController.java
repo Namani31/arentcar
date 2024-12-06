@@ -33,4 +33,5 @@ public class BranchsController {
         List<ChartDataDTO> chartDataDto = branchsService.getBranchChartData(startDate, endDate);
         return ResponseEntity.ok(chartDataDto);
     }
+
 }

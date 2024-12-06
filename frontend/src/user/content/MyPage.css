@@ -1,0 +1,95 @@
+.mypage-button{
+  background: none;
+  font-size: 16px;
+  color: #2E3033;
+}
+.my-page-wrap {
+  width: 100%;
+  background-color: #f7f7f9;
+  min-height: 550px;
+}
+.my-page-content-wrap{
+  position: relative;
+  width: 960px;
+  margin: 0 auto;
+  padding: 60px 0;
+}
+.my-page-content-header-title{
+  margin-left: 5px;
+  color: #2E3033;
+  font-weight: 700;
+}
+
+.my-page-profile-info-wrap{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.my-page-profile-info-text{
+  margin: 30px 0 40px 0;
+  padding: 0 5px;
+}
+.my-page-profile-info-text-title{
+  font-size: 20px;
+  color: #2E3033;
+}
+.my-page-profile-info-text-sub{
+  font-size: 16px;
+  margin-top: 7px;
+}
+
+.my-page-reservation-header-wrap{
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+}
+.my-page-reservation-title{
+  font-size: 18px;
+  font-weight: 700;
+  color: #2E3033;
+}
+.my-page-reservation-list-wrap{
+    margin: 12px 0;
+    padding: 30px;
+    background: #FFFFFF;
+    border: 1px solid #50555C;
+    box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+}
+.my-page-reservation-data-list-search-wrap{
+  display: flex;
+  justify-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+}
+.my-page-reservation-data-list-search-wrap button{
+  background: none;
+  background-color: #f7f7f9;
+  border-radius: 5px;
+  width: 50px;
+}
+.my-page-reservation-data-list-search-wrap button:hover{
+  background-color: #ff7916;
+  color: white;
+}
+.my-page-reservation-data-column-title-ul{
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  font-size: 14px;
+}
+.my-page-reservation-bottom-pagination-wrap{
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    margin-top: 10px; 
+    gap: 10px; 
+}
+.my-page-reservation-pagination-button{
+  width: 100px;
+  background: none;
+}
+.my-page-reservation-no-data{
+  text-align: center;
+  font-size: 14px;
+}

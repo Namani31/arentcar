@@ -44,4 +44,15 @@ public class ReservationsService {
         reservationsMapper.updateReservationStatus(reservationCode, reservationStatus);
     }
 
+    public List<MyReservationsResponseDTO> findReservationsByUserCode(MyReservationsRequestDTO myrequestDTO) {
+        return reservationsMapper.findReservationsByUserCode(myrequestDTO);
+    }
+    public int countMyReservations(MyReservationsRequestDTO SearchRequestDTO) {
+        return reservationsMapper.countMyReservations(SearchRequestDTO);
+    }
+
+    public int countAllMyReservations(String userCode) {
+        return reservationsMapper.countAllMyReservations(userCode);
+    }
+
 }

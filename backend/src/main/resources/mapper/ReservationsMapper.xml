@@ -122,4 +122,57 @@
         SET reservation_status = #{reservationStatus}
         WHERE reservation_code = #{reservationCode}
     </update>
+    <select id="findReservationsByUserCode" parameterType="com.apple.arentcar.dto.MyReservationsRequestDTO"
+            resultType="com.apple.arentcar.dto.MyReservationsResponseDTO">
+        SELECT
+        r.reservation_code AS reservationCode,
+        r.reservation_date AS reservationDate,
+        r.rental_date AS rentalDate,
+        rl.branch_name AS rentalLocationName,
+        r.return_date AS returnDate,
+        rt.branch_name AS returnLocationName,
+        ct.car_type_name AS carTypeName,
+        r.payment_date AS paymentDate,
+        cc.common_name AS reservationStatus
+        FROM
+        reservations r
+        JOIN
+        users u ON r.user_code = u.user_code
+        JOIN
+        branchs rl ON r.rental_location = rl.branch_code
+        JOIN
+        branchs rt ON r.return_location = rt.branch_code
+        JOIN
+        rental_cars rc ON r.car_code = rc.car_code
+        JOIN
+        car_types ct ON rc.car_type_code = ct.car_type_code
+        JOIN
+        common_codes cc ON r.reservation_status = cc.common_code
+        AND cc.common_kind_code = 'reservation_status'
+        WHERE
+        u.user_code = #{userCode}
+        <if test="rentalLocationName != null and rentalLocationName != ''">
+            AND rl.branch_name = #{rentalLocationName}
+        </if>
+        <if test="reservationDate != null and reservationDate != ''">
+            AND r.reservation_date = #{reservationDate}
+        </if>
+        ORDER BY r.reservation_date DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+    <select id="countMyReservations" parameterType="com.apple.arentcar.dto.MyReservationsRequestDTO" resultType="int">
+        SELECT COUNT(*)
+        FROM reservations
+        WHERE user_code = #{userCode}
+        <if test="rentalLocationName != null and rentalLocationName != ''">
+            AND rental_location = #{rentalLocationName}
+        </if>
+        <if test="reservationDate != null and reservationDate != ''">
+            AND reservation_date = #{reservationDate}
+        </if>
+    </select>
+
+    <select id="countAllMyReservations" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM reservations WHERE user_code = #{userCode}
+    </select>
 </mapper>

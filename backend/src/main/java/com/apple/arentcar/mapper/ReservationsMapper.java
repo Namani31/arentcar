@@ -9,9 +9,9 @@ import java.util.List;
 @Mapper
 public interface ReservationsMapper {
     List<ReservationsResponseDTO> getReservations(ReservationsSearchRequestDTO requestDTO);
-    // 조건에 따른 예약 개수 조회
+
     int countByConditions(ReservationsSearchRequestDTO searchRequestDTO);
-    // 전체 예약 개수 조회
+
     int countAllReservations();
 
     ReservationDetailDTO getReservationsDetailById(@Param("reservationCode") String reservationCode);
@@ -19,4 +19,10 @@ public interface ReservationsMapper {
     void updateCarStatus(@Param("carNumber") String carNumber, @Param("carStatus") String carStatus);
 
     void updateReservationStatus(@Param("reservationCode") String reservationCode, @Param("reservationStatus") String reservationStatus);
+
+    List<MyReservationsResponseDTO> findReservationsByUserCode(MyReservationsRequestDTO myrequestDTO);
+
+    int countMyReservations(MyReservationsRequestDTO SearchRequestDTO);
+
+    int countAllMyReservations(String userCode);
 }
