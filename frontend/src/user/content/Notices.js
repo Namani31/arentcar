@@ -62,7 +62,8 @@ const Notices = () => {
           </div>
         </div>
         <div className="user-customers-list">
-            <Link to={"/customers"} className="user-customers-list-button">리스트</Link>
+            {/* + state={{ postState: dtataInfo }} */}
+            <Link to={"/customers"} state={{ postState: 0 }} className="user-customers-list-button">리스트</Link>
         </div>
       </div>
     </div>

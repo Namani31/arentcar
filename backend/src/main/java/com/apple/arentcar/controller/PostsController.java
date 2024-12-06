@@ -297,11 +297,17 @@ public class PostsController {
             @PathVariable Integer postCode
     ){ return ResponseEntity.ok(postsService.getInquirys(postCode)); }
 
+    @DeleteMapping("/manager/post/inquirys/{postCode}")
+    public ResponseEntity<Inquirys> deleteResponses(
+            @PathVariable Integer postCode){
+        postsService.deleteInquirys(postCode);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/manager/post/responses/{postCode}")
     public ResponseEntity<List<Responses>> getResponses(
             @PathVariable Integer postCode
     ){ return ResponseEntity.ok(postsService.getResponses(postCode)); }
-
     @PostMapping("/manager/post/responses")
     public ResponseEntity<Responses> createResponses(
             @RequestBody Responses responses) {

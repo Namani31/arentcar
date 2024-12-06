@@ -1,5 +1,6 @@
 .manager-post-inquirys-wrap{
     margin: 20px;
+    white-space: pre-line;
 }
 
 .manager-post-inquirys-header-h5{
@@ -81,7 +82,7 @@
 .manager-post-inquirys-popup-wrap{
     background-color: #fdfdfd;
     width: 800px;
-    margin: 150px auto;
+    margin: 100px auto;
     padding: 20px;
     border-radius: 10px;
 }

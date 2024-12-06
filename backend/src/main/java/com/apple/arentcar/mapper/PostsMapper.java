@@ -36,6 +36,9 @@ public interface PostsMapper {
     List<Inquirys> getSearchAllInquirys(String keyword, Integer pageSize, Integer pageNumber);
     int countSearchInquirys(String keyword);
     Inquirys getInquirys(Integer postCode);
+    void deleteInquirysPS(Integer postCode);
+    void deleteInquirysIQ(Integer postCode);
+    void deleteInquirysRS(Integer postCode);
     List<Responses> getResponses(Integer postCode);
     void createResponses(Responses responses);
     void updateResponses(Responses responses);

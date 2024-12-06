@@ -24,7 +24,7 @@
         LEFT join admins am on am.admin_code = p.author_code
         LEFT join users us on us.user_code = p.author_code
         where p.post_type = 'NT'
-        ORDER BY p.post_code LIMIT #{pageSize} OFFSET #{pageNumber};
+        ORDER BY p.post_code DESC LIMIT #{pageSize} OFFSET #{pageNumber};
     </select>
 
     <select id="countAllNotices" resultType="int">
@@ -84,7 +84,7 @@
         LEFT join admins am on am.admin_code = p.author_code
         LEFT join users us on us.user_code = p.author_code
         join reviews rv on rv.post_code = p.post_code
-        ORDER BY p.post_code LIMIT #{pageSize} OFFSET #{pageNumber};
+        ORDER BY p.post_code DESC LIMIT #{pageSize} OFFSET #{pageNumber};
     </select>
 
     <select id="countReviews" resultType="int">
@@ -247,7 +247,7 @@
                LEFT join admins am on am.admin_code = p.author_code
                LEFT join users us on us.user_code = p.author_code
         join inquirys iq on iq.post_code = p.post_code
-        LIMIT #{pageSize} OFFSET #{pageNumber};
+        ORDER BY p.post_code DESC LIMIT #{pageSize} OFFSET #{pageNumber};
     </select>
 
     <select id="countInquirys" resultType="int">
@@ -309,6 +309,18 @@
     <update id="updateInquiryStatus" parameterType="com.apple.arentcar.model.Responses">
         UPDATE inquirys SET inquiry_status = 'RS' WHERE post_code = #{postCode};
     </update>
+
+    <delete id="deleteInquirysPS">
+        DELETE FROM posts where post_code = #{postCode};
+    </delete>
+
+    <delete id="deleteInquirysIQ">
+        DELETE FROM inquirys where post_code = #{postCode};
+    </delete>
+
+    <delete id="deleteInquirysRS">
+        DELETE FROM responses where post_code = #{postCode};
+    </delete>
 
     <delete id="deleteResponses">
         DELETE FROM responses where response_code = #{responseCode};

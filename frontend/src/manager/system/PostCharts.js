@@ -36,7 +36,6 @@ const RvCharts = ( {stats} ) => {
     );
     if (response.data) {
       setDataDayCount(response.data);
-      console.log(response.data);
       
     }
   }
@@ -172,7 +171,6 @@ const AvgCharts = ( {stats} ) => {
     );
     if (response.data) {
       setDataAgeAvg(response.data);
-      console.log(response.data);
     }
   }
 

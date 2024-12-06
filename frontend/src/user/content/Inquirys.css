@@ -1,6 +1,7 @@
 .user-customers-inquirys{
     width: 100%;
     background-color: #ededf0;
+    white-space: pre-line;
 }
 
 .user-customers-detail-inquirys{
@@ -8,7 +9,6 @@
 }
 .user-customers-detail-inquirys-header{
     overflow: hidden;
-
 }
 .user-customers-detail-inquirys-title{
     float: left;
@@ -118,6 +118,7 @@
 }
 
 .user-customers-add-responses{
+    margin-top: 20px;
     padding-bottom: 50px;
     /* text-align: center; */
 }

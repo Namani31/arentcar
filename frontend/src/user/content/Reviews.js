@@ -48,7 +48,7 @@ const Reviews = () => {
 
   const isLogin = () => {
     let loginState = store.getState().userState.loginState;
-    if(!loginState) { alert("로그인이 필요합니다."); navigate('/login') }
+    if(!loginState) { alert("로그인이 필요합니다."); navigate('/login', {state : "/customers/RV"}) }
     return loginState;
   }
 
@@ -176,7 +176,8 @@ const Reviews = () => {
           </div>
         )}
         <div className="user-customers-list">
-            <Link to={"/customers"} className="user-customers-list-button">리스트</Link>
+            {/* + state={{ postState: dtataInfo }} */}
+            <Link to={"/customers"} state={{ postState: 1 }} className="user-customers-list-button">리스트</Link> 
             {!params && (<button className="user-customers-create-review-popup-button" onClick={()=>handleCreate()}>작성</button> )} 
         </div>
       </div>
