@@ -79,8 +79,7 @@ public class RentalCarsController {
                                                            @RequestParam(required = false) String seatingCapacity,
                                                            @RequestParam(required = false) String fuelType,
                                                            @RequestParam(required = false) String carManufacturer,
-                                                           @RequestParam(required = false) String modelYear
-                                                           ) {
+                                                           @RequestParam(required = false) String modelYear) {
 
         int count = rentalCarsService.countRentalCarsWithConditions(carNumber, carStatus, carTypeName, branchName, carTypeCategory,
                                                          originType, seatingCapacity, fuelType, carManufacturer, modelYear);

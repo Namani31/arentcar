@@ -33,15 +33,15 @@ public interface RentalCarsMapper {
                                                 @Param("offset") int offset);
     // 조건에 따라 차량 수 조회
     int countRentalCarsWithConditions(@Param("carNumber") String carNumber,
-                           @Param("carStatus") String carStatus,
-                           @Param("carTypeName") String carTypeName,
-                           @Param("branchName") String branchName,
-                           @Param("carTypeCategory") String carTypeCategory,
-                           @Param("originType") String originType,
-                           @Param("seatingCapacity") String seatingCapacity,
-                           @Param("fuelType") String fuelType,
-                           @Param("carManufacturer") String carManufacturer,
-                           @Param("modelYear") String modelYear);
+                                      @Param("carStatus") String carStatus,
+                                      @Param("carTypeName") String carTypeName,
+                                      @Param("branchName") String branchName,
+                                      @Param("carTypeCategory") String carTypeCategory,
+                                      @Param("originType") String originType,
+                                      @Param("seatingCapacity") String seatingCapacity,
+                                      @Param("fuelType") String fuelType,
+                                      @Param("carManufacturer") String carManufacturer,
+                                      @Param("modelYear") String modelYear);
     // 렌탈가능/렌탈중/정비중 전체 차량 수 조회
     @Select("SELECT COUNT(*) FROM rental_cars WHERE car_status = #{carStatus}")
     int countAvailableRentalCars(@Param("carStatus") String carStatus);
