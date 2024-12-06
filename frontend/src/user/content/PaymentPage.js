@@ -32,12 +32,12 @@ const PaymentPage = () => {
    const  requestPayment = async () => {
     const response = await PortOne.requestPayment(
       {
-        storeId: "store-56b88bd8-5068-4c9b-a6d7-7144ba4155ce", // Store ID
+        storeId: "", // Store ID
         paymentId: `payment-${crypto.randomUUID()}`, // 고유 결제 ID
         orderName: reservationInfo.car_type_name, // 결제 상품명
         totalAmount: 100, // 결제 금액
         currency: "KRW", // 올바른 통화 코드
-        channelKey: "channel-key-9ca9285e-034c-4f1f-9d38-73fe6d28833f", // 채널 키
+        channelKey: "", // 채널 키
         payMethod: "CARD", // 결제 방식
       });
       if (response.code !== undefined) {
@@ -150,6 +150,7 @@ const PaymentPage = () => {
       <div className='payment-page-content-payment-info-content-item'>
               <span>차량 대여 요금</span>
               <span>{addCommaToCurrency(reservationInfo.rental_rate)}원</span>
+              <span>{addCommaToCurrency(reservationInfo.payment_amount+reservationInfo.discount_fee)}원</span>
             </div>
             <div className='payment-page-content-payment-info-content-item'>
               <span>차량 보험료</span>
