@@ -6,18 +6,27 @@ import "manager/carinfo/CarInfo.css";
 
 const RentalCarInfo = ({ onClick }) => {
   const [vehicles, setVehicles] = useState([])
+  const [vehiclesTrigger, setVehiclesTrigger] = useState(false);
+
   const [isPopUp, setIsPopUp] = useState(false);
+  const [isDetailPopUp, setIsDetailPopUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [workMode, setWorkMode] = useState("");
   const [searchName, setSearchName] = useState("");
+
+  const pageSize = 15;
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+
   const [carMenuOptions, setCarMenuOptions] = useState([]);
   const [branchMenuOptions, setBranchMenuOptions] = useState([]);
-  const [pageNumber, setPageNumber] = useState(1);
-  const pageSize = 15;
-  const [totalCount, setTotalCount] = useState(0);
+
   const [availableRentalCarsCount, setAvailableRentalCarsCount] = useState(0);
   const [rentedRentalCarsCount, setRentedRentalCarsCount] = useState(0);
   const [maintenanceRentalCarsCount, setMaintenanceRentalCarsCount] = useState(0);
+
+  const [isHandleDetailRentalCarsSearchClick, setIsHandleDetailRentalCarsSearchClick] = useState(false); // 상세검색 페이지네이션 관리
+  const [isSearchClicked, setIsSearchClicked] = useState(false); // 플래그 상태 추가
   
   const [columnDefs] = useState([
     { headerName: '코드', field: 'car_code', width: 75, align: 'center' },
@@ -41,26 +50,69 @@ const RentalCarInfo = ({ onClick }) => {
   const [branchCode, setBranchCode] = useState("");
   const [carStatus, setCarStatus] = useState("");
 
-  const optionsMenuBranchCode = [
-    { value: 1, label: '수원 본점' },
-    { value: 2, label: '용인점' },
-    { value: 3, label: '오산점' },
-    { value: 4, label: '화성점' },
-    { value: 5, label: '평택점' },
-    { value: 6, label: '광명점' },
-    { value: 7, label: '제주점' },
-    { value: 8, label: '대구 본점' },
-    { value: 9, label: '부산점' },
-    { value: 10, label: '대전점' },
-    { value: 11, label: '전주점' },
-    { value: 12, label: '순창점' },
-    { value: 13, label: '춘천점' },
-  ];
+  const [carTypeName, setCarTypeName] = useState("");
+  const [branchName, setBranchName] = useState("");
+  const [carTypeCategory, setCarTypeCategory] = useState("");
+  const [originType, setOriginType] = useState("");
+  const [seatingCapacity, setSeatingCapacity] = useState("");
+  const [fuelType, setFuelType] = useState("");
+  const [carManufacturer, setCarManufacturer] = useState("");
 
   const optionsMenuCarStatus = [
     { value: '01', label: '렌탈가능' },
     { value: '02', label: '렌탈중' },
     { value: '03', label: '정비중' },
+  ];
+
+  const optionsMenuCarTypeCategory = [
+    { value: '01', label: '경형/소형' },
+    { value: '02', label: '중형/대형' },
+    { value: '03', label: 'SUV' },
+    { value: '04', label: '승합' },
+  ];
+
+  const optionsMenuOriginType = [
+    { value: '01', label: '국산'},
+    { value: '02', label: '수입'},
+  ]
+
+  const optionsMenuSeatingCapacity = [
+    { value: '01', label: '4인승' },
+    { value: '02', label: '5인승' },
+    { value: '03', label: '6인승' },
+    { value: '04', label: '7인승' },
+    { value: '01', label: '8인승' },
+    { value: '02', label: '9인승' },
+    { value: '03', label: '10인승' },
+    { value: '04', label: '11인승' },
+    { value: '01', label: '12인승' },
+    { value: '02', label: '15인승' },
+  ];
+
+  const optionsMenuFuelType = [
+    { value: '01', label: '가솔린' },
+    { value: '02', label: '디젤' },
+    { value: '03', label: 'LPG' },
+    { value: '04', label: '전기차' },
+    { value: '05', label: '하이브리드' },
+  ];
+
+  const optionsMenuCarManufacturer = [
+    { value: '01', label: '기아자동차' },
+    { value: '02', label: '현대자동차' },
+    { value: '03', label: '제네시스' },
+    { value: '04', label: '르노코리아' },
+    { value: '05', label: 'KG모빌리티' },
+    { value: '06', label: '쉐보레' },
+    { value: '07', label: '테슬라' },
+    { value: '08', label: '벤츠' },
+    { value: '09', label: 'BMW' },
+    { value: '10', label: 'Jeep' },
+    { value: '11', label: 'MINI' },
+    { value: '12', label: '아우디' },
+    { value: '13', label: '포르쉐' },
+    { value: '14', label: '폭스바겐' },
+    { value: '15', label: '폴스타' },
   ];
 
   const pageingVehicles = async () => {
@@ -88,7 +140,8 @@ const RentalCarInfo = ({ onClick }) => {
       pageNumber,
     };
 
-    if (searchName && searchName.trim() !== '') {
+    if (searchName && searchName.trim() !== "") {
+      // searchName이 설정된 경우
       params.carNumber = searchName;
     }
 
@@ -102,7 +155,6 @@ const RentalCarInfo = ({ onClick }) => {
       });
 
     if (response.data) {
-      // console.log(response.data);
       setVehicles(response.data);
     }
   };
@@ -110,12 +162,20 @@ const RentalCarInfo = ({ onClick }) => {
   const getTotalCount = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      await getCount(token);
+      if (isHandleDetailRentalCarsSearchClick) {
+        await getSearchCount(token)
+      } else {
+        await getCount(token);
+      }
     } catch (error) {
       if (error.response && error.response.status === 403) {
         try {
           const newToken = await refreshAccessToken();
-          await getCount(newToken);
+          if (isHandleDetailRentalCarsSearchClick) {
+            await getSearchCount(newToken);
+          } else {
+            await getCount(newToken);
+          }
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
           handleAdminLogout();
@@ -128,6 +188,45 @@ const RentalCarInfo = ({ onClick }) => {
 
   const getCount = async (token) => {
     const params = searchName ? { carNumber: searchName } : {};
+
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/count`,
+      {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+
+    if (typeof response.data === 'number') {
+      setTotalCount(response.data);
+    } else {
+      console.error('Unexpected response:', response.data);
+    }
+  };
+
+  const getSearchCount = async (token) => {
+    const params = {};
+
+    // 필터 조건들
+    const filters = {
+      carTypeName: carTypeName?.trim(),
+      carStatus: carStatus?.trim(),
+      branchName: branchName?.trim(),
+      originType: originType?.trim(),
+      carTypeCategory: carTypeCategory?.trim(),
+      seatingCapacity: seatingCapacity?.trim(),
+      fuelType: fuelType?.trim(),
+      carManufacturer: carManufacturer?.trim(),
+      modelYear: modelYear?.trim(),
+    };
+    
+    // 조건에 따라 `params`에 추가
+    Object.keys(filters).forEach((key) => {
+      if (filters[key]) {
+        params[key] = filters[key];
+      }
+    })
 
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/count`,
       {
@@ -174,7 +273,6 @@ const RentalCarInfo = ({ onClick }) => {
       });
 
     if (response.data) {
-      // console.log(response.data);
       setAvailableRentalCarsCount(response.data);
     }
   };
@@ -208,7 +306,6 @@ const RentalCarInfo = ({ onClick }) => {
       });
 
     if (response.data) {
-      // console.log(response.data);
       setRentedRentalCarsCount(response.data);
     }
   };
@@ -242,18 +339,25 @@ const RentalCarInfo = ({ onClick }) => {
       });
 
     if (response.data) {
-      // console.log(response.data);
       setMaintenanceRentalCarsCount(response.data);
     }
   };
 
   useEffect(() => {
-    pageingVehicles();
-    getTotalCount();
+    if (isHandleDetailRentalCarsSearchClick) {
+      // 클릭되었을 때만 실행
+      handleDetailRentalCarsSearchClick(); // 상세검색 페이지네이션 기능도 포함 
+      getTotalCount();
+    } else {
+      // 일반적인 초기 로드 및 페이지 변경 시
+      pageingVehicles();
+      getTotalCount();
+    }
+ 
     getAvailabelRentalCarsCount("01");
     getRentedRentalCarsCount("02");
     getMaintenanceRentalCarsCount("03");
-  }, [pageNumber]);
+  }, [pageNumber, vehiclesTrigger]);
 
   useEffect(() => {
     const fetchCarMenus = async () => {
@@ -334,15 +438,101 @@ const RentalCarInfo = ({ onClick }) => {
     setCarStatus("01");
   };
 
+  const viewDetailDataInit = () => {
+    setCarTypeName("");
+    setCarStatus("");
+    setBranchName("");
+    setCarTypeCategory("");
+    setOriginType("");
+    setSeatingCapacity("");
+    setFuelType("");
+    setCarManufacturer("");
+    setModelYear("");
+  }
+
   const handleSearchClick = async () => {
-    pageingVehicles();
-    getTotalCount();
-    setPageNumber(1);
+    setIsHandleDetailRentalCarsSearchClick(false) // 상세검색 페이지네이션 상태 fasle로 변경(일반 페이지네이션 작동)
+    if (pageNumber === 1) {
+      setVehiclesTrigger((prev) => !prev);
+    } else {
+      setPageNumber(1);
+    }
   };
 
-  const handleDetailSearchClick = async () => {
-    pageingVehicles();
-    getTotalCount();
+   const handleDetailSearchClick = async (workMode) => {
+    setIsDetailPopUp(true);
+    setWorkMode(workMode);
+    viewDetailDataInit();
+    setIsSearchClicked(false); // 상세검색 버튼 클릭시 플래그 상태 false로 초기화(시작은 무조건 false, 상세검색 다시 이용 시 1페이지로 이동하는 기능작동)
+   }
+
+   const handleDetailRentalCarsSearchClick = async () => {
+    try {
+        const token = localStorage.getItem('accessToken');
+        await getDetailRentalCars(token);
+        if (!isSearchClicked) { // 검색 클릭시 플래그 상태가 fasle면 1페이지로 이동
+          if (pageNumber === 1) {
+            setVehiclesTrigger((prev) => !prev);
+          } else {
+            setPageNumber(1);
+          }
+          setIsSearchClicked(true); // 1페이지로 이동 후 플래그 상태 true로 변경(페이지 변경 시 계속 1페이지에 머무는 현상 방지)
+          setIsDetailPopUp(false);
+        }
+    } catch (error) {
+      if (error.reponse && error.reponse.status == 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getDetailRentalCars(newToken);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleAdminLogout();
+        }
+      } else {
+        alert("차량 상세검색 중 오류가 발생했습니다." + error);
+      }
+    }
+    setIsHandleDetailRentalCarsSearchClick(true) // 상세검색 페이지네이션 상태 true로 변경(상세검색 페이지네이션 작동)
+   };
+
+   const getDetailRentalCars = async (token) => {
+    const params = {
+      pageSize,
+      pageNumber,
+    };
+
+    // 필터 조건들
+    const filters = {
+      carTypeName: carTypeName?.trim(),
+      carStatus: carStatus?.trim(),
+      branchName: branchName?.trim(),
+      originType: originType?.trim(),
+      carTypeCategory: carTypeCategory?.trim(),
+      seatingCapacity: seatingCapacity?.trim(),
+      fuelType: fuelType?.trim(),
+      carManufacturer: carManufacturer?.trim(),
+      modelYear: modelYear?.trim(),
+    };
+
+    // 조건에 따라 `params`에 추가
+    Object.keys(filters).forEach((key) => {
+      if (filters[key]) {
+        params[key] = filters[key];
+      }
+    })
+
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/paged`, 
+      {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+
+    if (response.data) {
+      setVehicles(response.data);
+    }
    };
 
   const handleInsertClick = (workMode) => {
@@ -380,7 +570,54 @@ const RentalCarInfo = ({ onClick }) => {
       withCredentials: true,
     });
     setVehicles((prevVehicle) => prevVehicle.filter(vehicle => vehicle.car_code !== carCode));
+    setVehiclesTrigger((prev) => !prev);
     alert("차량이 삭제되었습니다.");
+  };
+
+  const handleFinishMaintenanceRentalCarsClick = async (carCode, carStatus) => {
+    if (carStatus == "렌탈가능" || carStatus == "렌탈중") {
+      alert("반납된/정비중인 차량이 아닙니다");
+    } else {
+      if (window.confirm('차량 정비를 완료했습니까?')) {
+        try {
+          const token = localStorage.getItem('accessToken');
+          await updateRentalCarsStatus(token, carCode);
+        } catch (error) {
+          if (error.response && error.response.status === 403) {
+            try {
+              const newToken = await refreshAccessToken();
+              await updateRentalCarsStatus(newToken, carCode);
+            } catch (error) {
+              alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+              handleAdminLogout();
+            }
+          } else {
+            alert("차량 정비 중 오류가 발생했습니다." + error);
+          }
+        }
+      }
+    }
+  };
+
+  const updateRentalCarsStatus = async (token, carCode) => {
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/status/${carCode}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      setVehicles((prevVehicle) => prevVehicle); // 차량 상태 갱신
+      setVehiclesTrigger((prev) => !prev);
+      alert("차량 정비를 완료했습니다.");
+      return response.data;
+    } catch (error) {
+      throw new Error("차량 상태 갱신 중 오류 발생: " + error.message);
+    }
   };
 
   const handleDataSaveClick = async () => {
@@ -454,6 +691,7 @@ const RentalCarInfo = ({ onClick }) => {
       }
     );
     setVehicles((prevVehicle) => prevVehicle.map(vehicle => vehicle.car_code === carCode ? newVehicle : vehicle));
+    setVehiclesTrigger((prev) => !prev);
     alert("차량이 수정되었습니다.");
   };
   
@@ -471,11 +709,13 @@ const RentalCarInfo = ({ onClick }) => {
     newVehicle.car_code = response.data.car_code;
     newVehicle.car_password = response.data.car_password;
     setVehicles((prevVehicle) => [...prevVehicle, savedVehicle]);
+    setVehiclesTrigger((prev) => !prev);
     alert("차량이 등록되었습니다.");
   };
 
   const handlePopupCloseClick = () => {
     setIsPopUp(false);
+    setIsDetailPopUp(false);
   };
 
   const handleCloseClick = () => {
@@ -509,8 +749,10 @@ const RentalCarInfo = ({ onClick }) => {
     setPageNumber(newPageNumber);
   };
 
+  // 엑셀 파일 다운로드
   const handleDownloadExcel = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem('accessToken');
       await getRentalCarsExcel(token);
     } catch (error) {
@@ -525,6 +767,8 @@ const RentalCarInfo = ({ onClick }) => {
       } else {
         console.error('There was an error fetching the rental cars excel!', error);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -547,7 +791,7 @@ const RentalCarInfo = ({ onClick }) => {
       document.body.appendChild(link);
       link.click(); // 링크를 클릭하여 파일 다운로드를 시작한다
       link.remove(); // 다운로드 후 <a>태그를 DOM에서 제거한다
-
+      alert("엑셀파일 다운로드를 완료했습니다")  
     } catch (error) {
       console.error('Error downloading the Excel file', error);
     }
@@ -561,8 +805,21 @@ const RentalCarInfo = ({ onClick }) => {
   return (
     <div className="car-info-wrap">
       <div className="car-info-header-wrap">
-        <div className="car-info-title-wrap">
+        <div className="car-info-title-wrap flex-align-center">
           <div className="manager-title">● 차량관리</div>
+          <div className="car-info-status-wrap flex-align-center">
+            <div className="car-info-status-display car-info-status-display-main">전체차량<div className="car-info-status-content car-info-status-content-main">{totalCount}</div></div>
+            <div className="car-info-status-display">대여가능<div className="car-info-status-content">{availableRentalCarsCount}</div></div>
+            <div className="car-info-status-display">대여중<div className="car-info-status-content">{rentedRentalCarsCount}</div></div>
+            <div className="car-info-status-display">정비중<div className="car-info-status-content">{maintenanceRentalCarsCount}</div></div>
+            <div className="car-info-status-display car-info-status-button-wrap">
+              <div className="car-info-status-excel-wrap">
+                <button className="car-info-status-button" onClick={handleDownloadExcel}>
+                 <img className="car-info-excel-download" src={`${process.env.REACT_APP_IMAGE_URL}/excel-logo.png`} alt="rentalCars excel downlod button" />
+               </button>
+              </div>
+            </div>
+          </div> 
         </div>
         <div
           className='car-info-button-wrap'
@@ -572,7 +829,7 @@ const RentalCarInfo = ({ onClick }) => {
             <label className='manager-label' htmlFor="">차량번호</label>
             <input className='width200' type="text" value={searchName} onChange={(e) => (setSearchName(e.target.value))}/>
             <button className='manager-button manager-button-search' onClick={() => handleSearchClick()}>검색</button>
-            <button className='manager-button manager-button-search' onClick={() => handleDetailSearchClick()}>상세검색</button>
+            <button className='manager-button manager-button-search' onClick={() => handleDetailSearchClick("검색")}>상세검색</button>
             <span>[검색건수 : {totalCount}건]</span>
           </div>
           <div>
@@ -607,6 +864,7 @@ const RentalCarInfo = ({ onClick }) => {
                     <>
                       <button className='manager-button manager-button-update' onClick={() => handleUpdateClick(row, "수정")}>수정</button>
                       <button className='manager-button manager-button-delete' onClick={() => handleDeleteClick(row.car_code)}>삭제</button>
+                      <button className='manager-button' onClick={() => handleFinishMaintenanceRentalCarsClick(row.car_code, row.car_status)}>정비완료</button>
                     </>
                   ) : (
                       row[title.field]
@@ -647,11 +905,11 @@ const RentalCarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="modelYear">년식</label>
-                <input className='width100  word-center' id="modelYear" type="text" placeholder="2024" value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
+                <input className='width100  word-center' id="modelYear" type="text" placeholder="2024" maxLength={4} value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="branchCode">지점명</label>
-                <select className='width100' id="branchCode" value={branchCode} onChange={(e) => (setBranchCode(e.target.value))}>
+                <select className='width100' id="branchCode" value={branchName} onChange={(e) => (setBranchName(e.target.value))}>
                   {branchMenuOptions.map((option) => (
                     <option key={option.branch_code} value={option.branch_code}>
                       {option.branch_name}
@@ -672,9 +930,116 @@ const RentalCarInfo = ({ onClick }) => {
             </div>
           </div>
         }
+
+        {isDetailPopUp &&
+          <div className="manager-popup">
+            <div className="car-info-content-popup-wrap">
+              <div className='car-info-content-popup-close'>
+                <div className='manager-popup-title'>● 차량{workMode}</div>
+                <div className='car-info-content-popup-button'>
+                  <button className='manager-button manager-button-save' onClick={handleDetailRentalCarsSearchClick}>검색</button>
+                  <button className='manager-button manager-button-close' onClick={handlePopupCloseClick}>닫기</button>
+                </div>
+              </div>
+              <div className='car-info-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="carTypeName">차종명</label>
+                <select className='width120' id="carTypeName" value={carTypeName} onChange={(e) => (setCarTypeName(e.target.value))}>
+                  <option value="" disabled>선택해주세요</option>
+                  {carMenuOptions.map((option) => (
+                    <option key={option.car_type_code} value={option.car_type_name}>
+                      {option.car_type_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='car-info-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="carStatus">차량상태</label>
+                <select className='width120' id="carStatus" value={carStatus} onChange={(e) => (setCarStatus(e.target.value))}>
+                  <option value="" disabled>선택해주세요</option>
+                  {optionsMenuCarStatus.map((option) => (
+                    <option key={option.value} value={option.label}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='car-info-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="branchName">지점명</label>
+                <select className='width120' id="branchName" value={branchName} onChange={(e) => (setBranchName(e.target.value))}>
+                  <option value="" disabled>선택해주세요</option>
+                  {branchMenuOptions.map((option) => (
+                    <option key={option.branch_code} value={option.branch_name}>
+                      {option.branch_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='car-info-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="carTypeCategory">차종구분</label>
+                <select className='width120' id="carTypeCategory" value={carTypeCategory} onChange={(e) => (setCarTypeCategory(e.target.value))}>
+                  <option value="" disabled>선택해주세요</option>
+                  {optionsMenuCarTypeCategory.map((option) => (
+                    <option key={option.value} value={option.label}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='car-info-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="originType">국산/수입</label>
+                <select className='width120' id="originType" value={originType} onChange={(e) => (setOriginType(e.target.value))}>
+                  <option option value="" disabled>선택해주세요</option>
+                  {optionsMenuOriginType.map((option) => (
+                    <option key={option.value} value={option.label}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='car-info-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="seatingCapacity">수용인원</label>
+                <select className='width120' id="seatingCapacity" value={seatingCapacity} onChange={(e) => (setSeatingCapacity(e.target.value))}>
+                  <option value="" disabled>선택해주세요</option>
+                  {optionsMenuSeatingCapacity.map((option) => (
+                    <option key={option.value} value={option.label}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='car-info-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="fuelType">연료</label>
+                <select className='width120' id="fuelType" value={fuelType} onChange={(e) => (setFuelType(e.target.value))}>
+                  <option value="" disabled>선택해주세요</option>
+                  {optionsMenuFuelType.map((option) => (
+                    <option key={option.value} value={option.label}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='car-info-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="carManufacturer">제조사</label>
+                <select className='width120' id="carManufacturer" value={carManufacturer} onChange={(e) => (setCarManufacturer(e.target.value))}>
+                  <option value="" disabled>선택해주세요</option>
+                  {optionsMenuCarManufacturer.map((option) => (
+                    <option key={option.value} value={option.label}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='car-info-content-popup-line'>
+                <label className='width80 word-right label-margin-right' htmlFor="modelYear">년식</label>
+                <input className='width120  word-center' id="modelYear" type="text" placeholder="2024" maxLength={4} value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
+              </div>
+            </div>
+          </div>
+        }
       </div>
 
       <div className='car-info-pageing-wrap flex-align-center'>
+        <button className="manager-button" onClick={() => handlePageChange(1)}>처음</button>
         <button 
           className='manager-button'
           style={{color: pageNumber === 1 ?  '#aaa' : 'rgb(38, 49, 155)'}} 
@@ -688,25 +1053,13 @@ const RentalCarInfo = ({ onClick }) => {
           onClick={() => handlePageChange(pageNumber + 1)} 
           disabled={pageNumber === totalPages}
         >다음</button>
-      </div>
-
-      <div className="car-info-status-wrap flex-align-center">
-        <div className="car-info-status-display car-info-status-display-main">전체차량<div className="car-info-status-content car-info-status-content-main">{totalCount}</div></div>
-        <div className="car-info-status-display">대여가능<div className="car-info-status-content">{availableRentalCarsCount}</div></div>
-        <div className="car-info-status-display">대여중<div className="car-info-status-content">{rentedRentalCarsCount}</div></div>
-        <div className="car-info-status-display">정비중<div className="car-info-status-content">{maintenanceRentalCarsCount}</div></div>
-        <div className="car-info-status-display">
-          <div className="car-info-status-excel">
-            <button onClick={handleDownloadExcel}>
-              <img className="car-info-excel-download" src={`${process.env.REACT_APP_IMAGE_URL}/excel-logo.png`} alt="rentalCars excel downlod button" />
-            </button>
-          </div>
-        </div>
+        <button className="manager-button" onClick={() => handlePageChange(totalPages)}>마지막</button>
       </div>
 
       {loading && (<Loading />)}
-      </div>
-  );
-};
+
+    </div>
+    );
+  };
 
 export default RentalCarInfo;

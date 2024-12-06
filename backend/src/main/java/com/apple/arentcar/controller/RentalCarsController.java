@@ -22,19 +22,6 @@ public class RentalCarsController {
     @Autowired
     private RentalCarsService rentalCarsService;
 
-    @GetMapping("/manager/rentalcars/all")
-    public List<RentalCars> getAllRentalCars() { return rentalCarsService.getAllRentalCars(); }
-
-    @GetMapping("/manager/rentalcars/{carCode}")
-    public ResponseEntity<RentalCars> getRentalCarsById(@PathVariable Integer carCode) {
-        RentalCars rentalCars = rentalCarsService.getRentalCarsById(carCode);
-        if (rentalCars != null) {
-            return ResponseEntity.ok(rentalCars);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     // 차량 등록
     @PostMapping("/manager/rentalcars")
     public ResponseEntity<RentalCars> createRentalCars(@RequestBody RentalCars rentalCars) {
@@ -45,7 +32,7 @@ public class RentalCarsController {
     // 차량 삭제
     @DeleteMapping("/manager/rentalcars/{carCode}")
     public ResponseEntity<Void> deleteRentalCars(@PathVariable Integer carCode) {
-        rentalCarsService.deleteRentalCarsById((carCode));
+        rentalCarsService.deleteRentalCarsById(carCode);
         return ResponseEntity.noContent().build();
     }
 
@@ -63,26 +50,40 @@ public class RentalCarsController {
     public ResponseEntity<List<RentalCarsDTO>>  getRentalCarsWithPaging(
                                                 @RequestParam int pageSize,
                                                 @RequestParam int pageNumber,
-                                                @RequestParam(required = false) String carNumber) {
-        List<RentalCarsDTO> rentalCars;
-        if (carNumber != null && !carNumber.isEmpty()) {
-            rentalCars = rentalCarsService.getRentalCarsByNumWithPaging(carNumber, pageSize, pageNumber);
-        } else {
-            rentalCars = rentalCarsService.getRentalCarsWithPaging(pageSize, pageNumber);
-        }
+                                                @RequestParam(required = false) String carNumber,
+                                                @RequestParam(required = false) String carStatus,
+                                                @RequestParam(required = false) String carTypeName,
+                                                @RequestParam(required = false) String branchName,
+                                                @RequestParam(required = false) String carTypeCategory,
+                                                @RequestParam(required = false) String originType,
+                                                @RequestParam(required = false) String seatingCapacity,
+                                                @RequestParam(required = false) String fuelType,
+                                                @RequestParam(required = false) String carManufacturer,
+                                                @RequestParam(required = false) String modelYear) {
+
+        List<RentalCarsDTO> rentalCars = rentalCarsService.getRentalCarsWithPaging(
+                                         carNumber, carStatus, carTypeName, branchName, carTypeCategory,
+                                         originType, seatingCapacity, fuelType, carManufacturer, modelYear,
+                                         pageSize, pageNumber);
         return ResponseEntity.ok(rentalCars);
     }
 
-    // 전체 차량 수 조회(검색 기능 포함)
+    // 조건에 따라 차량 수 조회
     @GetMapping("/manager/rentalcars/count")
-    public ResponseEntity<Integer> getTotalRentalCarsCount(@RequestParam(required = false) String carNumber) {
+    public ResponseEntity<Integer> getTotalRentalCarsCount(@RequestParam(required = false) String carNumber,
+                                                           @RequestParam(required = false) String carStatus,
+                                                           @RequestParam(required = false) String carTypeName,
+                                                           @RequestParam(required = false) String branchName,
+                                                           @RequestParam(required = false) String carTypeCategory,
+                                                           @RequestParam(required = false) String originType,
+                                                           @RequestParam(required = false) String seatingCapacity,
+                                                           @RequestParam(required = false) String fuelType,
+                                                           @RequestParam(required = false) String carManufacturer,
+                                                           @RequestParam(required = false) String modelYear) {
 
-        int count;
-        if (carNumber != null && !carNumber.isEmpty()) {
-            count = rentalCarsService.countRentalCarsByNum(carNumber);
-        } else {
-            count = rentalCarsService.countAllRentalCars();
-        }
+        int count = rentalCarsService.countRentalCarsWithConditions(carNumber, carStatus, carTypeName, branchName, carTypeCategory,
+                                                         originType, seatingCapacity, fuelType, carManufacturer, modelYear);
+
         return ResponseEntity.ok(count);
     }
 
@@ -114,5 +115,12 @@ public class RentalCarsController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=rentalcars.xlsx")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(excelContent); // 엑셀 파일을 응답으로 반환
+    }
+
+    // 정비중인 차량 정비완료(렌탈가능)로 수정
+    @PutMapping("manager/rentalcars/status/{carCode}")
+    public ResponseEntity<Void> updateRentalCarsStatusToAvailableById(@PathVariable Integer carCode) {
+        rentalCarsService.updateRentalCarsStatusToAvailableById(carCode);
+        return ResponseEntity.noContent().build();
     }
 }
