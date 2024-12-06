@@ -1,5 +1,6 @@
 package com.apple.arentcar.service;
 
+import com.apple.arentcar.dto.BranchsRegionNamesOptionDTO;
 import com.apple.arentcar.dto.BranchsSearchDTO;
 import com.apple.arentcar.dto.ChartDataDTO;
 import com.apple.arentcar.mapper.BranchsMapper;
@@ -70,6 +71,11 @@ public class BranchsService {
         int count = branchsMapper.duplicateCountByBranchName(branchName);
         // 중복된 이름이 있다면 true 반환
         return count > 0;
+    }
+
+    // <select>의 <option>값으로 지역이름 동적으로 불러오기
+    public List<BranchsRegionNamesOptionDTO> getRegionCodeName() {
+        return branchsMapper.getRegionCodeName();
     }
 
     // 지점 수정

@@ -41,6 +41,9 @@ public interface BranchsMapper {
     // 중복된 지점명 카운트
     int duplicateCountByBranchName(@Param("branchName") String branchName);
 
+    // <select>의 <option>값으로 지역이름 동적으로 불러오기
+    List<BranchsRegionNamesOptionDTO> getRegionCodeName();
+
     // 지점 수정
     void updateBranchsById(Branchs branchs);
 

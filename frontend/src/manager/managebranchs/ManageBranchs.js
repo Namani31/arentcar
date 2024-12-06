@@ -10,6 +10,7 @@ const ManageBranchs = ({ onClick }) => {
     const [loading, setLoading] = useState(false);
     const [workMode, setWorkMode] = useState("");
     const [searchName, setSearchName] = useState("");
+    const [regionNameMenuOptions, setRegionNameMenuOptions] = useState([]);
     const [totalCount, setTotalCount] = useState(0); // 전체 지점 수
     const [pageNumber, setPageNumber] = useState(1); // 현재 페이지 번호
     const pageSize = 10;
@@ -258,7 +259,7 @@ const ManageBranchs = ({ onClick }) => {
         setbranchName("");
         setbranchLongitude("0");
         setbranchLatitude("0");
-        setregionCode("");
+        setregionCode("1");
         setregionName("");
         setpostCode("");
         setavailablePickupTime("");
@@ -465,6 +466,39 @@ const ManageBranchs = ({ onClick }) => {
         fetchManageBranchDetail(branchCode);
     };
 
+    // 지역이름 드롭박스 데이터 가져오기
+    useEffect(() => {
+        const fetchRegionNameMenus = async () => {
+          try {
+            const token = localStorage.getItem('accessToken');
+            await getRegionNameMenuOptions(token);
+          } catch (error) {
+            if (error.response && error.response.status === 403) {
+              try {
+                const newToken = await refreshAccessToken();
+                await getRegionNameMenuOptions(newToken);
+              } catch (refreshError) {
+                alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+                handleAdminLogout();
+              }
+            } else {
+              console.error('There was an error fetching the regionNameMenu!', error);
+            }
+          }
+        };
+
+        fetchRegionNameMenus();
+      }, []);
+    
+      const getRegionNameMenuOptions = async (token) => {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/option`, {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true, 
+        });
+        console.log(response.data);
+        setRegionNameMenuOptions(response.data);
+      };
+
     return (
         <div className='register-branch-wrap'>
             <div className='register-branch-header-wrap'>
@@ -507,51 +541,65 @@ const ManageBranchs = ({ onClick }) => {
                             </div>
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-center label-margin-right' htmlFor="">지점코드</label>
+                            <label className='width80 word-center label-margin-right' htmlFor="branchCode">지점코드</label>
                             <input className='width50 word-center' type="text" value={branchCode} disabled />
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-right label-margin-right' htmlFor="">지점명</label>
+                            <label className='width80 word-right label-margin-right' htmlFor="branchName">지점명</label>
                             <input className='width300 word-center' value={branchName} type="text" maxLength={30} onChange={(e) => setbranchName(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-right label-margin-right' htmlFor="">경도</label>
+                            <label className='width80 word-right label-margin-right' htmlFor="branchLongitude">경도</label>
                             <input className='width300 word-center' value={branchLongitude} type="text" maxLength={30} onChange={(e) => setbranchLongitude(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-right label-margin-right' htmlFor="">위도</label>
+                            <label className='width80 word-right label-margin-right' htmlFor="branchLatitude">위도</label>
                             <input className='width300 word-center' value={branchLatitude} type="text" maxLength={30} onChange={(e) => setbranchLatitude(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-right label-margin-right' htmlFor="">지역코드</label>
-                            <input className='width300 word-center' value={regionCode} type="text" maxLength={50} onChange={(e) => setregionCode(e.target.value)} />
+                            <label className='width80 word-right label-margin-right' htmlFor="regionCode">지역코드</label>
+                            <input className='width300 word-center' value={regionCode} onChange={(e) => setregionCode(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-right label-margin-right' htmlFor="">지역이름</label>
-                            <input className='width300 word-center' value={regionName} type="text" maxLength={50} onChange={(e) => setregionName(e.target.value)} />
+                            <label className='width80 word-right label-margin-right' htmlFor="regionName">지역이름</label>
+                            <select className='width100 word-left' id="regionName" value={regionCode} 
+                            onChange={(e) => {
+                                // 지역 이름을 선택했을 때, 선택한 지역코드를 자동으로 설정
+                                const selectedRegionCode = e.target.value;
+                                // 지역코드 업데이트
+                                setregionCode(selectedRegionCode);
+                                // 지역이름 업데이트
+                                setregionName(e.target.options[e.target.selectedIndex].text); 
+                            }}>
+                            {regionNameMenuOptions.map((option) => (
+                                <option key={option.region_code} value={option.region_code}>
+                                    {option.region_name}
+                                </option>
+                             ))}
+                            </select>
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-right label-margin-right' htmlFor="">우편번호</label>
+                            <label className='width80 word-right label-margin-right' htmlFor="postCode">우편번호</label>
                             <input className='width300' type="text" value={postCode} maxLength={50} onChange={(e) => setpostCode(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-right label-margin-right' htmlFor="">기본주소</label>
+                            <label className='width80 word-right label-margin-right' htmlFor="branchBasicAddress">기본주소</label>
                             <input className='width300' type="text" value={branchBasicAddress} maxLength={50} onChange={(e) => setbranchBasicAddress(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-right label-margin-right' htmlFor="">상세주소</label>
+                            <label className='width80 word-right label-margin-right' htmlFor="branchDetailedAddress">상세주소</label>
                             <input className='width300' type="text" value={branchDetailedAddress} maxLength={50} onChange={(e) => setbranchDetailedAddress(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-right label-margin-right' htmlFor="">전화번호</label>
+                            <label className='width80 word-right label-margin-right' htmlFor="branchPhoneNumber">전화번호</label>
                             <input className='width300' type="text" value={branchPhoneNumber} maxLength={50} onChange={(e) => setbranchPhoneNumber(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-right label-margin-right' htmlFor="">개점시간</label>
+                            <label className='width80 word-right label-margin-right' htmlFor="availablePickupTime">개점시간</label>
                             <input className='width300' type="text" value={availablePickupTime} maxLength={50} onChange={(e) => setavailablePickupTime(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-right label-margin-right' htmlFor="">폐점시간</label>
+                            <label className='width80 word-right label-margin-right' htmlFor="availableReturnTime">폐점시간</label>
                             <input className='width300' type="text" value={availableReturnTime} maxLength={50} onChange={(e) => setavailableReturnTime(e.target.value)} />
                         </div>
                     </div>

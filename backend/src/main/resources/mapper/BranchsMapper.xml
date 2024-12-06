@@ -74,6 +74,12 @@
         WHERE branch_name = #{branchName}
     </select>
 
+    <!-- <select>의 <option>값으로 지역이름 동적으로 불러오기 -->
+    <select id="getRegionCodeName" resultType="com.apple.arentcar.dto.BranchsRegionNamesOptionDTO">
+        SELECT region_code, region_name
+        FROM regions
+    </select>
+
     <!--  지점 수정-->
 <!--    <update id="updateBranchsById" parameterType="com.apple.arentcar.model.Branchs">-->
 <!--        UPDATE branchs-->
