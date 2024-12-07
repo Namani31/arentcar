@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { refreshAccessToken, handleAdminLogout, formatTime } from 'common/Common';
+import { refreshAccessToken, handleAdminLogout, formatTime, isValidTimeFormat } from 'common/Common';
 import Loading from 'common/Loading';
 import "manager/managebranchs/ManageBranchs.css";
 
@@ -508,7 +508,7 @@ const ManageBranchs = ({ onClick }) => {
     };
 
 
-    // 개점시간 입력 시 HH:mm 식으로 변환
+    // 개점시간 입력 포맷 설정 (09:00)
     const formatPickupTime = (available_pickup_time) => {
         if (available_pickup_time && available_pickup_time.length === 4) {
             // '0900' -> '09:00'
@@ -518,12 +518,19 @@ const ManageBranchs = ({ onClick }) => {
         return available_pickup_time; // 
     };
 
-    // 사용자가 입력한 값에서 HH:mm 형식만 허용
     const handlePickupTimeChange = (e) => {
         const input = e.target.value.replace(/[^0-9:]/g, ""); // 숫자와 ':'만 허용
-        const formatted = input.replace(":", ""); // ':' 제거한 값
+        const formatted = input.replace(":", ""); // ':' 제거한 값 (저장된 값이 09:00 이기 때문)
+
+        // 최대 4자리까지만 상태 저장
         if (formatted.length <= 4) {
-            setavailablePickupTime(formatted); // 최대 4자리까지만 상태 저장
+            if (formatted.length === 4 && !isValidTimeFormat(formatted)) {
+                alert("00:00 ~ 23:59 까지만 입력할 수 있습니다.");
+                // 잘못된 형식일 경우 상태 변경하지 않음
+                return;
+            }
+             // 정상 입력이라면 상태 갱신
+            setavailablePickupTime(formatted);
         }
     };
 
@@ -538,8 +545,13 @@ const ManageBranchs = ({ onClick }) => {
     const handleReturnTimeChange = (e) => {
         const input = e.target.value.replace(/[^0-9:]/g, "");
         const formatted = input.replace(":", "");
+
         if (formatted.length <= 4) {
-            setavailableReturnTime(formatted)
+            if (formatted.length === 4 && !isValidTimeFormat(formatted)) {
+                alert("00:00 ~ 23:59 까지만 입력할 수 있습니다.");
+                return;
+            }
+            setavailableReturnTime(formatted);
         }
     };
 
