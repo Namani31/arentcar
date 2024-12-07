@@ -512,7 +512,7 @@ const ManageBranchs = ({ onClick }) => {
     const formatPickupTime = (available_pickup_time) => {
         if (available_pickup_time && available_pickup_time.length === 4) {
             // '0900' -> '09:00'
-            return `${available_pickup_time.slice(0, 2)}:${time.slice(2, 4)}`; 
+            return `${available_pickup_time.slice(0, 2)}:${available_pickup_time.slice(2, 4)}`; 
         }
         // 기본값으로 원래 시간 반환
         return available_pickup_time; // 
@@ -616,12 +616,13 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availablePickupTime">개점시간</label>
-                            <input className='width300' type="text" value={formatPickupTime(avaliable_pickup_time)} placeholder='개점시간을 입력해주세요.' maxLength={50} 
+                            <input className='width300' type="text" value={formatPickupTime(availablePickupTime)} placeholder='개점시간을 입력해주세요.' maxLength={50} 
                                 onChange={(e) => {
+                                    console.log(availablePickupTime);
                                     // 사용자가 입력할 때, 'HH:mm' 형식으로 저장하려면
                                     const formattedTime = e.target.value.replace(":", "");
                                     if (formattedTime.length === 4) {
-                                        setAvaliablePickupTime(formattedTime); // 0900 형태로 저장
+                                        setavailablePickupTime(formattedTime); // 0900 형태로 저장
                                     }
                                 }}
                             />
