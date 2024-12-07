@@ -97,16 +97,16 @@ public class BranchsController {
         return branchsService.getRegionCodeName();
     }
 
-    // 지점 수정
-    @PutMapping("/manager/branchs/{branchCode}")
-    public ResponseEntity<Void> updateBranchsById(
-            @PathVariable Integer branchCode,
-            @RequestBody Branchs branchs) {
-        branchs.setBranchCode(branchCode);
-
-        branchsService.updateBranchsById(branchs);
-        return ResponseEntity.noContent().build();
-    }
+//    // 지점 수정
+//    @PutMapping("/manager/branchs/{branchCode}")
+//    public ResponseEntity<Void> updateBranchsById(
+//            @PathVariable Integer branchCode,
+//            @RequestBody Branchs branchs) {
+//        branchs.setBranchCode(branchCode);
+//
+//        branchsService.updateBranchsById(branchs);
+//        return ResponseEntity.noContent().build();
+//    }
 
     // 지점 삭제
     @DeleteMapping("/manager/branchs/{branchCode}")
@@ -114,5 +114,11 @@ public class BranchsController {
             @PathVariable Integer branchCode) {
         branchsService.deleteBranchsById(branchCode);
         return ResponseEntity.noContent().build();
+    }
+
+    // 지점 상세
+    @GetMapping("/manager/branchs/detail/{branchCode}")
+    public Branchs getBranchsDetailById(@PathVariable("branchCode") Integer branchCode) {
+        return branchsService.getBranchsDetailById(branchCode);
     }
 }

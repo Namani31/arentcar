@@ -88,4 +88,7 @@ public class BranchsService {
         branchsMapper.deleteBranchsById(branchCode);
     }
 
+    public Branchs getBranchsDetailById(Integer branchCode) {
+        return branchsMapper.getBranchsDetailById(branchCode);
+    }
 }

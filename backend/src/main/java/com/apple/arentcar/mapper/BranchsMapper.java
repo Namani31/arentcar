@@ -49,4 +49,7 @@ public interface BranchsMapper {
 
     // 지점 삭제
     void deleteBranchsById(@Param("branchCode") Integer branchCode);
+
+    // 지점 상세
+    Branchs getBranchsDetailById(@Param("branchCode") Integer branchCode);
 }
