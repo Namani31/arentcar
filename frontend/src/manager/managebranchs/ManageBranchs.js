@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { refreshAccessToken, handleAdminLogout } from 'common/Common';
+import { refreshAccessToken, handleAdminLogout, formatTime } from 'common/Common';
 import Loading from 'common/Loading';
 import "manager/managebranchs/ManageBranchs.css";
 
@@ -542,7 +542,6 @@ const ManageBranchs = ({ onClick }) => {
             setavailableReturnTime(formatted)
         }
     };
-    
 
     return (
         <div className='register-branch-wrap'>
@@ -675,8 +674,11 @@ const ManageBranchs = ({ onClick }) => {
                                     </>
                                 ) : (
                                     <>
-                                        {console.log(row[title.field])}
-                                        {row[title.field]}
+                                        {(title.field === 'available_pickup_time' || title.field === 'available_return_time') ? (
+                                            formatTime(row[title.field]) // 시간 필드만 09:00 형식으로 표시되게 포맷
+                                        ) : (
+                                            row[title.field] // 다른 필드는 그대로 출력
+                                        )}
                                     </>
                                 )}
                             </div>
