@@ -37,13 +37,18 @@ public class ReservationsService {
         reservationsMapper.updateCarStatus(carNumber, carStatus);
     }
 
-    public void updateReservationStatus(String reservationCode, Map<String, Object> reservationStatusRequest) {
-
+    public void updateReservationAndCarStatus(String reservationCode, Map<String, Object> reservationStatusRequest) {
+        // Map에서 데이터 추출
         String reservationStatus = (String) reservationStatusRequest.get("reservationStatus");
+        String paymentStatus = (String) reservationStatusRequest.get("paymentStatus");
+        String carStatus = (String) reservationStatusRequest.get("carStatus");
 
-        reservationsMapper.updateReservationStatus(reservationCode, reservationStatus);
+        // reservations 테이블 업데이트
+        reservationsMapper.updateReservationStatus(reservationCode, reservationStatus, paymentStatus);
+
+        // rental_cars 테이블 업데이트
+        reservationsMapper.updateRentCarStatus(reservationCode, carStatus);
     }
-
     public List<MyReservationsResponseDTO> findReservationsByUserCode(MyReservationsRequestDTO myrequestDTO) {
         return reservationsMapper.findReservationsByUserCode(myrequestDTO);
     }

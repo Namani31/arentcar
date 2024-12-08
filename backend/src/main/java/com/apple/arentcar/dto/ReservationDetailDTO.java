@@ -33,4 +33,7 @@ public class ReservationDetailDTO {
     private String paymentTypeName;      // 결제 방식 이름
     private String paymentAmount;        // 결제 금액
     private String reservationStatus;    // 예약 상태
+    private String paymentStatus;        // 결제 상태
+    private String reservationDate;      // 예약일
+    private String paymentDate;          // 결제일
 }

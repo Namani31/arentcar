@@ -18,6 +18,12 @@ public interface ReservationsMapper {
 
     void updateCarStatus(@Param("carNumber") String carNumber, @Param("carStatus") String carStatus);
 
+    void updateReservationStatus(@Param("reservationCode") String reservationCode,
+                                 @Param("reservationStatus") String reservationStatus,
+                                 @Param("paymentStatus") String paymentStatus);
+
+    void updateRentCarStatus(@Param("reservationCode") String reservationCode,
+                         @Param("carStatus") String carStatus);
     void updateReservationStatus(@Param("reservationCode") String reservationCode, @Param("reservationStatus") String reservationStatus);
 
     List<MyReservationsResponseDTO> findReservationsByUserCode(MyReservationsRequestDTO myrequestDTO);

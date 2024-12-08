@@ -40,8 +40,6 @@
         SELECT COUNT(*)
         FROM reservations r
         JOIN users u ON r.user_code = u.user_code
-        JOIN rental_cars rc ON r.car_code = rc.car_code
-        JOIN car_types ct ON rc.car_type_code = ct.car_type_code
         JOIN branchs rl ON r.rental_location = rl.branch_code
         WHERE 1=1
         <if test="rentalLocationName != null and rentalLocationName != ''">
@@ -81,7 +79,10 @@
         cc_payment_category.common_name AS paymentCategoryName,
         cc_payment_type.common_name AS paymentTypeName,
         r.payment_amount,
-        cc_status.common_name AS reservationStatus
+        cc_reservation_status.common_name AS reservationStatus,
+        cc_payment_status.common_name AS paymentStatus,
+        r.payment_date,
+        r.reservation_date
         FROM
         reservations r
         JOIN users u ON r.user_code = u.user_code
@@ -106,9 +107,12 @@
         WHEN r.payment_category = '2' THEN 'payment_type_pay'
         ELSE NULL
         END
-        JOIN common_codes cc_status
-        ON r.reservation_status = cc_status.common_code
-        AND cc_status.common_kind_code = 'reservation_status'
+        JOIN common_codes cc_reservation_status
+        ON r.reservation_status = cc_reservation_status.common_code
+        AND cc_reservation_status.common_kind_code = 'reservation_status'
+        JOIN common_codes cc_payment_status
+        ON r.payment_status = cc_payment_status.common_code
+        AND cc_payment_status.common_kind_code = 'payment_status'
         WHERE
         r.reservation_code = #{reservationCode};
     </select>
@@ -119,8 +123,23 @@
     </update>
     <update id="updateReservationStatus" parameterType="com.apple.arentcar.dto.ReservationStatusRequestDTO">
         UPDATE reservations
-        SET reservation_status = #{reservationStatus}
+        SET
+        reservation_status = #{reservationStatus},
+        payment_status = #{paymentStatus}
+        WHERE
+        reservation_code = #{reservationCode};
+    </update>
+
+    <update id="updateRentCarStatus" parameterType="com.apple.arentcar.dto.ReservationStatusRequestDTO">
+        UPDATE rental_cars
+        SET
+        car_status = #{carStatus}
+        WHERE
+        car_code = (
+        SELECT car_code
+        FROM reservations
         WHERE reservation_code = #{reservationCode}
+        );
     </update>
     <select id="findReservationsByUserCode" parameterType="com.apple.arentcar.dto.MyReservationsRequestDTO"
             resultType="com.apple.arentcar.dto.MyReservationsResponseDTO">

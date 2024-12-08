@@ -286,7 +286,6 @@ const MyPage = () => {
             <div className="my-page-reservation-list-wrap">
               <div className="my-page-reservation-data-list">
                 <div className='my-page-reservation-data-list-search-wrap'>
-
                   <input type="date"
                     placeholder="예약일"
                     value={selectedReservationDate}
@@ -297,7 +296,7 @@ const MyPage = () => {
                     value={selectedBranch} // 선택된 값
                     onChange={(e) => setSelectedBranch(e.target.value)} // 선택값 변경
                   >
-                    <option value="">대여지점</option>
+                    <option value="">지점</option>
                     {branchNames.map((branch, index) => (
                       <option key={index} value={branch}>
                         {branch}
