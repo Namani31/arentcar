@@ -24,7 +24,6 @@ public interface ReservationsMapper {
 
     void updateRentCarStatus(@Param("reservationCode") String reservationCode,
                          @Param("carStatus") String carStatus);
-    void updateReservationStatus(@Param("reservationCode") String reservationCode, @Param("reservationStatus") String reservationStatus);
 
     List<MyReservationsResponseDTO> findReservationsByUserCode(MyReservationsRequestDTO myrequestDTO);
 

@@ -84,8 +84,7 @@ public class ReservationsController {
     public ResponseEntity<Void> updateReservationAndCarStatus(
             @PathVariable String reservationCode,
             @RequestBody Map<String, Object> reservationStatusRequest) {
-        System.out.println("Reservation Code: " + reservationCode);
-        System.out.println("Request Body: " + reservationStatusRequest);
+
         reservationsService.updateReservationAndCarStatus(reservationCode, reservationStatusRequest);
 
         return ResponseEntity.noContent().build();
