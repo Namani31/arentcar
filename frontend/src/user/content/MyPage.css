@@ -102,7 +102,7 @@
 }
 
 .my_page_reservation_content_popup_wrap {
-  width: 500px;
+  width: 600px;
   margin: 250px auto;
   padding: 20px 20px;
   background-color: #fff;
@@ -152,10 +152,9 @@
 }
 
 .my_page_reservation_popup_field_row label {
-  width: 15%;
+  width: 12%;
   font-weight: bold; /* 라벨 강조 */
   margin-right: 5px; /* 라벨과 값 사이의 간격 최소화 */
-
 }
 
 .my_page_reservation_popup_field_row span {

@@ -41,6 +41,12 @@ const MyPage = () => {
     return date.replace(/-/g, ""); // "-"를 제거하여 반환
   };
 
+  const formatNumberWithCommas = (number) => {
+    if (!number && number !== 0) {
+      return ""; // 숫자가 없으면 빈 문자열 반환
+    }
+    return `${number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원`;
+  };
   const pagingMyReservations = async () => {
     try {
       const token = localStorage.getItem('accessToken');
@@ -428,7 +434,7 @@ const MyPage = () => {
                         <div className="my_page_reservation_popup_field_row">
                           <label>특이사항 </label>
                           <span>
-                            {`나이면허제한: ${myReservationDetails?.license_restriction || "없음"}, 속도제한: ${myReservationDetails?.speed_limit || "없음"}`}
+                            {`나이면허제한 : ${myReservationDetails?.license_restriction || "없음"}, 속도제한 : ${myReservationDetails?.speed_limit || "없음"}`}
                           </span>
                         </div>
                         <div className="my_page_reservation_popup_field_row">
@@ -472,7 +478,7 @@ const MyPage = () => {
                         </div>
                         <div className="my_page_reservation_popup_field_row">
                           <label>결제금액 </label>
-                          <span>{myReservationDetails?.payment_amount}</span>
+                          <span>{formatNumberWithCommas(myReservationDetails?.payment_amount)}</span>
                         </div>
                         <div className="my_page_reservation_popup_field_row">
                           <label>결제방식    </label>

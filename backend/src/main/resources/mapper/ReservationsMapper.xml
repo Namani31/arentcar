@@ -182,12 +182,12 @@
         r.reservation_code AS reservation_code,
         r.reservation_date AS reservation_date,
         rl.branch_name AS rental_branch_name,
-        rl.branch_basic_address AS rental_branch_address,
+        rl.branch_detailed_address AS rental_branch_address,
         rl.branch_phone_number AS rental_branch_phone_number,
         r.rental_date AS rental_date,
         r.rental_time AS rental_time,
         rt.branch_name AS return_branch_name,
-        rt.branch_basic_address AS return_branch_address,
+        rt.branch_detailed_address AS return_branch_address,
         rt.branch_phone_number AS return_branch_phone_number,
         r.return_date AS return_date,
         r.return_time AS return_time,
@@ -200,7 +200,7 @@
         cc_speed_limit.common_name AS speed_limit,
         cc_insurance_type.common_name AS insurance_type,
         cc_fuel_type.common_name AS fuel_type,
-        cc_payment_status.common_name AS payment_status,
+        cc_payment_status.common_name AS <p></p>ayment_status,
         cc_payment_category.common_name AS payment_category,
         cc_payment_type.common_name AS payment_type
         FROM reservations r
