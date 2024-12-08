@@ -10,6 +10,7 @@ import FooterMain from 'user/footer/FooterMain';
 import ReservationPage from 'user/content/ReservationPage';
 import ReservationDetail from 'user/content/ReservationDetail';
 import PaymentPage from 'user/content/PaymentPage';
+import PaymentCompletedPage from 'user/content/PaymentCompletedPage';
 
 const UserMenu = () => {
   return (
@@ -27,6 +28,7 @@ const UserMenu = () => {
           <Route path="/reservation" element={<ReservationPage />} /> 
           <Route path="/reservationdetail" element={<ReservationDetail />} /> 
           <Route path="/paymentpage" element={<PaymentPage />} /> 
+          <Route path="/PaymentCompletedPage" element={<PaymentCompletedPage />} /> 
         </Routes>
       </div>
       <div className='user-menu-footer-wrap'>

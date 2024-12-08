@@ -76,12 +76,24 @@ public class CarController {
         return carService.getAllBranchs(region);
     }
 
+    @PutMapping("/user/cars/reservation/updatecar/status")
+    public ResponseEntity<Void> updateCarStatus(@RequestBody CarStatusRequest request) {
+        carService.updateCarStatus(request.getCarCode());
+        return ResponseEntity.ok(null);
+    }
+
+
     @GetMapping("/user/cars/regions")
     public List<RegionsDTO> getAllRegions() {
         return carService.getAllRegions();
     }
+
     @GetMapping("/user/cars/insurance")
         public List<InsuranceDTO> getInsurance() { return carService.getInsurance(); }
+
+    @GetMapping("/user/cars/reservation/number")
+    public Integer getReservationNumber() { return carService.getReservationNumber(); }
+
 
     @PostMapping("/user/cars/reservation")
     public ResponseEntity<Void> InsertUserReservation(

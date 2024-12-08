@@ -62,4 +62,11 @@ public class CarService {
     public List<RegionsDTO> getAllRegions() {
         return CarMapper.getAllRegions();
     }
+
+    public void updateCarStatus(Integer carCode) { CarMapper.updateCarStatus(carCode);
+    }
+
+    public Integer getReservationNumber() {
+        return CarMapper.getReservationNumber();
+    }
 }

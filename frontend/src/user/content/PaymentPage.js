@@ -1,17 +1,19 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import 'user/content/PaymentPage.css';
 import * as PortOne from "@portone/browser-sdk/v2";
 
 const PaymentPage = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const reservationInfo = location.state;
   const [userData, setUserData] = useState({});
   const currentDate = new Date();
   const userName = useSelector((state) => state.userState.userName);
   const userLicense = useSelector((state) => state.userState.userLicense);
+  
   const params = {
     userCode: reservationInfo.user_code,
     carCode: reservationInfo.car_code,
@@ -32,12 +34,12 @@ const PaymentPage = () => {
    const  requestPayment = async () => {
     const response = await PortOne.requestPayment(
       {
-        storeId: "", // Store ID
+        storeId: "store-56b88bd8-5068-4c9b-a6d7-7144ba4155ce", // Store ID
         paymentId: `payment-${crypto.randomUUID()}`, // 고유 결제 ID
         orderName: reservationInfo.car_type_name, // 결제 상품명
         totalAmount: 100, // 결제 금액
         currency: "KRW", // 올바른 통화 코드
-        channelKey: "", // 채널 키
+        channelKey: "channel-key-9ca9285e-034c-4f1f-9d38-73fe6d28833f", // 채널 키
         payMethod: "CARD", // 결제 방식
       });
       if (response.code !== undefined) {
@@ -47,6 +49,7 @@ const PaymentPage = () => {
         insertUserReservation();
         updateCarStatus();
           alert("결제가 성공적으로 완료되었습니다!");
+          navigate('/PaymentCompletedPage',{state : {...reservationInfo}});
       }
   };
   
