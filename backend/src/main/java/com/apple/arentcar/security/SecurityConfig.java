@@ -35,10 +35,10 @@
                     .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                     .authorizeHttpRequests(auth -> auth
                             .requestMatchers("/arentcar/user/**").permitAll()
-                            .requestMatchers("/arentcar/manager/**").permitAll()
+//                            .requestMatchers("/arentcar/manager/**").permitAll()
                             .requestMatchers("/arentcar/manager/admins/login", "/arentcar/manager/admins/refresh", "/arentcar/manager/menus", "/arentcar/user/users/newpassword").permitAll()
                             .requestMatchers("/ws/").permitAll()
-//                            .requestMatchers("/arentcar/manager/**").authenticated()
+                            .requestMatchers("/arentcar/manager/**").authenticated()
                             .anyRequest().authenticated()  // 나머지 요청은 인증 필요
                     )
                     .sessionManagement(session -> session

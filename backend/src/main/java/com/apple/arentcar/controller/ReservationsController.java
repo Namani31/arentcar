@@ -137,4 +137,22 @@ public class ReservationsController {
             @RequestParam("userCode") String userCode) {
         return reservationsService.getReservationDetailByUserAndCode(reservationCode, userCode);
     }
+    @PutMapping("/manager/myreservations/cancel")
+    public ResponseEntity<String> cancelMyReservation(
+            @RequestParam("reservationCode") String reservationCode,
+            @RequestParam("userCode") String userCode,
+            @RequestParam("reservationStatus") String reservationStatus,
+            @RequestParam("paymentStatus") String paymentStatus,
+            @RequestParam("carStatus") String carStatus) {
+
+        // DTO 생성
+        ReservationStatusRequestDTO mypagerequestDTO = new ReservationStatusRequestDTO(
+                reservationStatus, paymentStatus, carStatus
+        );
+
+        reservationsService.cancelMyReservation(reservationCode, userCode, mypagerequestDTO);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -32,4 +32,11 @@ public interface ReservationsMapper {
     int countAllMyReservations(String userCode);
 
     MyReservationsDetailResponseDTO getReservationDetailByUserAndCode(@Param("reservationCode") String reservationCode, @Param("userCode") String userCode);
+
+    void updateReservationAndPaymentStatus(
+            @Param("reservationCode") String reservationCode, @Param("userCode") String userCode,
+            @Param("reservationStatus") String reservationStatus, @Param("paymentStatus") String paymentStatus);
+
+    void updateCarStatusForCancellation(
+            @Param("reservationCode") String reservationCode, @Param("userCode") String userCode, @Param("carStatus") String carStatus);
 }

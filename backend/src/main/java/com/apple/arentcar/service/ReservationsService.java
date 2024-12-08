@@ -62,4 +62,14 @@ public class ReservationsService {
     public MyReservationsDetailResponseDTO getReservationDetailByUserAndCode(String reservationCode,String userCode) {
         return reservationsMapper.getReservationDetailByUserAndCode(reservationCode, userCode);
     }
+
+    public void cancelMyReservation(String reservationCode, String userCode, ReservationStatusRequestDTO mypagerequestDTO) {
+
+        String reservationStatus = mypagerequestDTO.getReservationStatus();
+        String paymentStatus = mypagerequestDTO.getPaymentStatus();
+        String carStatus = mypagerequestDTO.getCarStatus();
+
+        reservationsMapper.updateReservationAndPaymentStatus(reservationCode, userCode, reservationStatus, paymentStatus);
+        reservationsMapper.updateCarStatusForCancellation(reservationCode, userCode, carStatus);
+    }
 }

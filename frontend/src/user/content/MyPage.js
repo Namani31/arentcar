@@ -233,17 +233,56 @@ const MyPage = () => {
     setMyReservationDetails([]);
   };
 
-  const handleMyReservationCancel = async () => {
+  const handleMyReservationCancel = async (reservationCode, userCode) => {
     // 예약 취소 여부 확인
     const MyreservationCancelConfirmed = window.confirm("정말로 예약을 취소하시겠습니까?");
     if (!MyreservationCancelConfirmed) {
       alert("예약이 정상적으로 유지되었습니다.");
       return;
-    } else {
-      alert("예약이 정상적으로 취소되었습니다."); // 성공 메시지
     }
-  };
 
+    try {
+      const token = localStorage.getItem("accessToken"); 
+      const params = {
+        reservationCode,
+        userCode,
+        reservationStatus: "2", // 예약 상태: '취소'
+        paymentStatus: "2",     // 결제 상태: '취소' 
+        carStatus: "01",        // 렌탈카 상태 : '렌탈가능'
+      };
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/arentcar/manager/myreservations/cancel`,
+        null,
+        {
+          params,
+          headers: {
+            Authorization: `Bearer ${token}`, // 인증 헤더
+          },
+          withCredentials: true, // 쿠키 포함
+        }
+      );
+      alert("예약이 취소되었습니다."); // 성공 메시지
+      await handleFetchMyReservationDetail(reservationCode, userCode);
+    } catch (error) {
+      console.error("Error in handleMyReservationCancel:", error);
+
+      if (error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+
+          localStorage.setItem("accessToken", newToken);
+
+          await handleMyReservationCancel(reservationCode, userCode);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요."); // 인증 만료 알림
+          handleLogout(); // 로그아웃 처리
+        }
+      } else {
+        alert("예약 취소에 실패했습니다."); // 사용자 알림
+      }
+    }
+};
+  
   return (
     <div className="my-page-wrap">
       <div className="my-page-content-wrap">
@@ -301,7 +340,6 @@ const MyPage = () => {
                           textAlign: title.align,
                           fontSize: '16px',
                           padding: '5px 0px',
-                          fontWeight: 700,
                         }}
                       >
                         {title.titlename}
@@ -494,7 +532,7 @@ const MyPage = () => {
                       <div className="my_page_reservation_content_popup_footer_wrap">
                         <button
                           className="my_page_reservation_content_popup_footer_cancel"
-                          onClick={handleMyReservationCancel}
+                          onClick={() => handleMyReservationCancel(myReservationDetails.reservation_code, userCode)}
                         >
                           예약취소
                         </button>

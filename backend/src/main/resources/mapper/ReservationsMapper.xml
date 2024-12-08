@@ -259,4 +259,25 @@
         WHERE r.user_code = #{userCode}
         AND r.reservation_code = #{reservationCode};
     </select>
+    <update id="updateCarStatusForCancellation" parameterType="com.apple.arentcar.dto.ReservationStatusRequestDTO">
+        UPDATE rental_cars
+        SET
+        car_status = #{carStatus}
+        WHERE
+        car_code = (
+        SELECT car_code
+        FROM reservations
+        WHERE user_code = #{userCode}
+        AND reservation_code = #{reservationCode}
+        );
+    </update>
+    <update id="updateReservationAndPaymentStatus" parameterType="com.apple.arentcar.dto.ReservationStatusRequestDTO">
+        UPDATE reservations
+        SET
+        reservation_status = #{reservationStatus},
+        payment_status = #{paymentStatus}
+        WHERE
+        user_code = #{userCode}
+        AND reservation_code = #{reservationCode};
+    </update>
 </mapper>
