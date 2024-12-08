@@ -54,16 +54,13 @@ public class ReservationsController {
                     (rentalDate != null && !rentalDate.isEmpty()) ||
                     (userName != null && !userName.isEmpty())) {
 
-                // 조건별 DTO 생성
                 ReservationsSearchRequestDTO searchRequestDTO = new ReservationsSearchRequestDTO();
                 searchRequestDTO.setRentalLocationName(rentalLocationName);
                 searchRequestDTO.setRentalDate(rentalDate);
                 searchRequestDTO.setUserName(userName);
 
-                // 조건에 따른 개수 조회
                 count = reservationsService.countByConditions(searchRequestDTO);
             } else {
-                // 전체 예약 개수 조회
                 count = reservationsService.countAllReservations();
             }
 
@@ -120,10 +117,6 @@ public class ReservationsController {
             @RequestParam(required = false) String rentalLocationName,
             @RequestParam(required = false) String reservationDate) {
 
-        System.out.println("Received userCode: " + userCode);
-        System.out.println("Received rentalLocationName: " + rentalLocationName);
-        System.out.println("Received reservationDate: " + reservationDate);
-
         int count;
         if ((rentalLocationName != null && !rentalLocationName.isEmpty()) ||
                 (reservationDate != null && !reservationDate.isEmpty())) {
@@ -136,10 +129,12 @@ public class ReservationsController {
         } else {
             count = reservationsService.countAllMyReservations(userCode);
         }
-
-        // 카운트값을 로그로 출력
-        System.out.println("Total count: " + count);
-
         return ResponseEntity.ok(count);
+    }
+    @GetMapping("/manager/myreservations/detail")
+    public MyReservationsDetailResponseDTO getReservationDetailByUserAndCode(
+            @RequestParam("reservationCode") String reservationCode,
+            @RequestParam("userCode") String userCode) {
+        return reservationsService.getReservationDetailByUserAndCode(reservationCode, userCode);
     }
 }

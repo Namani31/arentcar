@@ -3,7 +3,7 @@ import 'user/content/MyPage.css';
 import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import axios from "axios";
-import { refreshAccessToken, handleLogout, formatDate } from "common/Common";
+import { refreshAccessToken, handleLogout, formatDate, formatTime, formatPhone } from "common/Common";
 
 
 const MyPage = () => {
@@ -19,18 +19,18 @@ const MyPage = () => {
   const pageSize = 5; // 한 페이지에 보여줄 데이터 개수
   const [totalCount, setTotalCount] = useState(0); // 전체 페이지 수
   const [myreservations, setMyReservations] = useState([]);
-  // const [reservationDetails, setReservationDetails] = useState([]);
+  const [myReservationDetails, setMyReservationDetails] = useState([]);
   const [columnDefs] = useState([
     { titlename: "예약ID", field: "reservation_code", width: 100, align: "center" },
     { titlename: "예약일", field: "reservation_date", width: 150, align: "center" },
-    { titlename: "대여일", field: "rental_date", width: 150, align: "center" },
+    { titlename: "대여일", field: "rental_date", width: 120, align: "center" },
     { titlename: "대여지점", field: "rental_location_name", width: 100, align: "center" },
-    { titlename: "반납일", field: "return_date", width: 150, align: "center" },
+    { titlename: "반납일", field: "return_date", width: 120, align: "center" },
     { titlename: "반납지점", field: "return_location_name", width: 100, align: "center" },
     { titlename: "차종", field: "car_type_name", width: 100, align: "center" },
     { titlename: "결제일", field: "payment_date", width: 150, align: "center" },
     { titlename: "예약상태", field: "reservation_status", width: 100, align: "center" },
-    { titlename: "상세", field: "", width: 100, align: "center" },
+    { titlename: "", field: "", width: 100, align: "center" },
   ]);
 
   // YYYY-MM-DD → YYYYMMDD 변환 함수
@@ -177,19 +177,72 @@ const MyPage = () => {
     getTotalCount();
   }, [pageNumber]);
 
+  const handleFetchMyReservationDetail = async (reservationCode, userCode) => {
+    console.log("fetchMyReservationDetail called with:", { reservationCode, userCode });
+    if (!reservationCode || !userCode) {
+      console.error("Invalid reservationCode or userCode");
+      return; // 값이 없으면 중단
+    }
+    try {
+      const token = localStorage.getItem("accessToken");
+      console.log("Access token retrieved:", token);
+      await getMyReservationDetails(token, reservationCode, userCode);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getMyReservationDetails(newToken, reservationCode, userCode);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error("There was an error fetching the reservation details!", error);
+      }
+    }
+  };
+  const getMyReservationDetails = async (token, reservationCode, userCode) => {
+
+    if (!reservationCode || !userCode) {
+      return;
+    }
+
+    const params = {
+      reservationCode,
+      userCode,
+    };
+
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/arentcar/manager/myreservations/detail`,
+      {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (response.data) {
+      setMyReservationDetails(response.data);
+    }
+  };
+
 
   const handleButtonNavigation = (path) => {
     navigate(path);
   };
 
-  const handleDetailClick = () => {
+  const handleDetailClick = (reservationCode, userCode) => {
     setIsPopUp(true);
+    handleFetchMyReservationDetail(reservationCode, userCode);
   };
 
 
 
   const handlePopupClodeClick = () => {
     setIsPopUp(false);
+    setMyReservationDetails([]);
   };
 
   return (
@@ -271,9 +324,9 @@ const MyPage = () => {
                             {column.field === "" ? (
                               <button
                                 className="my-page-reservation-data-button-detail"
-                                onClick={handleDetailClick}
+                                onClick={() => handleDetailClick(myreservations.reservation_code, userCode)}
                               >
-                                상세
+                                상세보기
                               </button>
                             ) : (
                               column.field === "rental_date" ? (
@@ -322,118 +375,117 @@ const MyPage = () => {
                 {/* 상세 팝업 */}
 
                 {isPopUp && (
-                  <div className="manager-reservation-popup manager-popup">
-                    <div className="manager-reservation-content-popup-wrap">
-                      <div className="manager-reservation-content-popup-header-wrap">
-                        <div className="manager-popup-title">● 예약상세</div>
+                  <div className="my_page_reservation_popup my_page_popup manager-popup">
+                    <div className="my_page_reservation_content_popup_wrap">
+                      <div className="my_page_reservation_content_popup_header_wrap">
+                        <div className="my_page_popup_title">렌탈 상세내역</div>
                         <button
-                          className="manager-button manager-button-close"
+                          className="my_page_button my_page_button_close"
                           onClick={handlePopupClodeClick}
                         >
                           닫기
                         </button>
                       </div>
 
-                      {/* 예약 ID */}
-                      <div className="manager-reservation-popup-high-reservation-id">
-                        <label>예약ID : </label>
-                        {/* <span>{reservationDetails.reservation_code}</span> */}
+                      {/* 예약 코드 */}
+                      <div className="my_page_reservation_popup_high_reservation_id">
+                        <label>예약ID </label>
+                        <span>{myReservationDetails?.reservation_code}</span>
                       </div>
 
-                      {/* 고객정보 */}
-                      <div className="manager-reservation-popup-section">
-                        <div className="manager-reservation-popup-section-title">고객정보</div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>성명 : </label>
-                          {/* <span>{reservationDetails.user_name}</span> */}
+                      {/* 예약 정보 */}
+                      <div className="my_page_reservation_popup_section">
+                        <div className="my_page_reservation_popup_section_title">예약정보</div>
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>예약ID </label>
+                          <span>{myReservationDetails?.reservation_code}</span>
+                          <label>예약일 </label>
+                          <span>{formatDate(myReservationDetails?.reservation_date)}</span>
                         </div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>생년월일 : </label>
-                          {/* <span>{formatDate(reservationDetails.user_birth_date)}</span> */}
-                          <label>연락처 : </label>
-                          {/* <span>{formatPhone(reservationDetails.user_phone_number)}</span> */}
-                        </div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>이메일 : </label>
-                          {/* <span>{reservationDetails.user_email}</span> */}
-                        </div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>면허발급일 : </label>
-                          {/* <span>{formatDate(reservationDetails.license_issue_date)}</span> */}
-                          <label>면허갱신일 : </label>
-                          {/* <span>{formatDate(reservationDetails.license_expiry_date)}</span> */}
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>예약자 </label>
+                          <span>{myReservationDetails?.user_name}</span>
+                          <label>연락처 </label>
+                          <span>{formatPhone(myReservationDetails?.user_phone_number)}</span>
                         </div>
                       </div>
 
-                      {/* 예약정보 */}
-                      <div className="manager-reservation-popup-section">
-                        <div className="manager-reservation-popup-section-title">예약정보</div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>예약ID : </label>
-                          {/* <span>{reservationDetails.reservation_code}</span> */}
-                          <label>예약일 : </label>
-                          {/* <span>{reservationDetails?.reservation_date || "예약일 없음"}</span> */}
+                      {/* 차량 정보 */}
+                      <div className="my_page_reservation_popup_section">
+                        <div className="my_page_reservation_popup_section_title">차량정보</div>
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>차량명 </label>
+                          <span>{myReservationDetails?.car_type_name}</span>
+                          <label>연식 </label>
+                          <span>{myReservationDetails?.model_year}년식</span>
                         </div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>차량번호 :{' '}</label>
-                          {/* <span>{reservationDetails.car_number}</span> */}
-                          <label>차량명 : </label>
-                          {/* <span>{reservationDetails.car_type_name}</span> */}
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>인승 </label>
+                          <span>{myReservationDetails?.seating_capacity}</span>
+                          <label>연료 </label>
+                          <span>{myReservationDetails?.fuel_type}</span>
                         </div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>연식 : </label>
-                          {/* <span>{reservationDetails.model_year}</span> */}
-                          <label>연료 : </label>
-                          {/* <span>{reservationDetails.fuel_type_name}</span> */}
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>특이사항 </label>
+                          <span>
+                            {`나이면허제한: ${myReservationDetails?.license_restriction || "없음"}, 속도제한: ${myReservationDetails?.speed_limit || "없음"}`}
+                          </span>
                         </div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>대여일시 : </label>
-                          {/* <span>{formatDate(reservationDetails.rental_date)}{' '}{formatTime(reservationDetails.rental_time)}</span> */}
-                          <label>대여지점 : </label>
-                          {/* <span>{reservationDetails.rental_location_name}</span> */}
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>대여일 </label>
+                          <span>{formatDate(myReservationDetails?.rental_date)} {formatTime(myReservationDetails?.rental_time) || ""}</span>
+                          <label>대여지점 </label>
+                          <span>{myReservationDetails?.rental_branch_name}</span>
                         </div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>반납일시 : </label>
-                          {/* <span>{formatDate(reservationDetails.return_date)}{' '}{formatTime(reservationDetails.return_time)}</span> */}
-                          <label>반납지점 : </label>
-                          {/* <span>{reservationDetails.return_location_name}</span> */}
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>주소 </label>
+                          <span>{myReservationDetails?.rental_branch_address}</span>
+                          <label>연락처 </label>
+                          <span>{myReservationDetails?.rental_branch_phone_number}</span>
                         </div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>보험 : </label>
-                          {/* <span>{reservationDetails.insurance_name}</span> */}
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>반납일 </label>
+                          <span>{formatDate(myReservationDetails?.return_date)} {formatTime(myReservationDetails?.return_time) || ""}</span>
+                          <label>반납지점 </label>
+                          <span>{myReservationDetails?.return_branch_name}</span>
                         </div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>예약상태 : </label>
-                          {/* <span>{reservationDetails.reservation_status}</span> */}
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>주소 </label>
+                          <span>{myReservationDetails?.return_branch_address}</span>
+                          <label>연락처 </label>
+                          <span>{myReservationDetails?.return_branch_phone_number}</span>
+                        </div>
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>보험 </label>
+                          <span>{myReservationDetails?.insurance_type}</span>
                         </div>
                       </div>
-                      {/* 결제정보 */}
-                      <div className="manager-reservation-popup-section">
-                        <div className="manager-reservation-popup-section-title">결제정보</div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>결제방식 : </label>
-                          {/* <span>{reservationDetails.payment_category_name}</span> */}
-                          <label>결제수단 : </label>
-                          {/* <span>{reservationDetails.payment_type_name}</span> */}
+
+                      {/* 결제 정보 */}
+                      <div className="my_page_reservation_popup_section">
+                        <div className="my_page_reservation_popup_section_title">결제정보</div>
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>결제일 </label>
+                          <span>{formatDate(myReservationDetails?.payment_date)}</span>
+                          <label>결제상태 </label>
+                          <span>{myReservationDetails?.payment_status}</span>
                         </div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>결제금액 : </label>
-                          {/* <span>{formatNumberWithCommas(reservationDetails?.payment_amount) || ""}</span> */}
-                          <label>결제일 : </label>
-                          {/* <span>{reservationDetails?.payment_date || "결제일 없음"}</span> */}
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>결제금액 </label>
+                          <span>{myReservationDetails?.payment_amount}</span>
                         </div>
-                        <div className="manager-reservation-popup-field-row">
-                          <label>결제상태 : </label>
-                          {/* <span>{reservationDetails?.payment_status || "결제 상태 없음"}</span> */}
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>결제방식    </label>
+                          <span>
+                            {myReservationDetails?.payment_category || "정보 없음"} / {myReservationDetails?.payment_type || "정보 없음"}
+                          </span>
                         </div>
                       </div>
 
                       {/* 액션 버튼 */}
-
-                      <div className="manager-reservation-content-popup-footer-wrap">
+                      <div className="my_page_reservation_content_popup_footer_wrap">
                         <button
-                          className="manager-reservation-content-popup-footer-return manager-button"
-                        // onClick={() => { handleCarReturn(reservationDetails.car_number); }}
+                          className="my_page_reservation_content_popup_footer_cancel"
                         >
                           예약취소
                         </button>

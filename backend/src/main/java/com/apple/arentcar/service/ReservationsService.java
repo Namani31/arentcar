@@ -3,9 +3,9 @@ package com.apple.arentcar.service;
 
 import com.apple.arentcar.dto.*;
 import com.apple.arentcar.mapper.ReservationsMapper;
-import com.apple.arentcar.model.Reservations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -54,5 +54,7 @@ public class ReservationsService {
     public int countAllMyReservations(String userCode) {
         return reservationsMapper.countAllMyReservations(userCode);
     }
-
+    public MyReservationsDetailResponseDTO getReservationDetailByUserAndCode(String reservationCode,String userCode) {
+        return reservationsMapper.getReservationDetailByUserAndCode(reservationCode, userCode);
+    }
 }

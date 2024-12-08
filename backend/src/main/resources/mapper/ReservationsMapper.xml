@@ -175,4 +175,70 @@
     <select id="countAllMyReservations" parameterType="String" resultType="int">
         SELECT COUNT(*) FROM reservations WHERE user_code = #{userCode}
     </select>
+    <select id="getReservationDetailByUserAndCode" resultType="com.apple.arentcar.dto.MyReservationsDetailResponseDTO">
+        SELECT
+        u.user_name AS user_name,
+        u.user_phone_number AS user_phone_number,
+        r.reservation_code AS reservation_code,
+        r.reservation_date AS reservation_date,
+        rl.branch_name AS rental_branch_name,
+        rl.branch_basic_address AS rental_branch_address,
+        rl.branch_phone_number AS rental_branch_phone_number,
+        r.rental_date AS rental_date,
+        r.rental_time AS rental_time,
+        rt.branch_name AS return_branch_name,
+        rt.branch_basic_address AS return_branch_address,
+        rt.branch_phone_number AS return_branch_phone_number,
+        r.return_date AS return_date,
+        r.return_time AS return_time,
+        r.payment_date AS payment_date,
+        r.payment_amount AS payment_amount,
+        rc.model_year AS model_year,
+        ct.car_type_name AS car_type_name,
+        cc_seating_capacity.common_name AS seating_capacity,
+        cc_license_restriction.common_name AS license_restriction,
+        cc_speed_limit.common_name AS speed_limit,
+        cc_insurance_type.common_name AS insurance_type,
+        cc_fuel_type.common_name AS fuel_type,
+        cc_payment_status.common_name AS payment_status,
+        cc_payment_category.common_name AS payment_category,
+        cc_payment_type.common_name AS payment_type
+        FROM reservations r
+        JOIN users u ON r.user_code = u.user_code
+        JOIN branchs rl ON r.rental_location = rl.branch_code
+        JOIN branchs rt ON r.return_location = rt.branch_code
+        JOIN rental_cars rc ON r.car_code = rc.car_code
+        JOIN car_types ct ON rc.car_type_code = ct.car_type_code
+        LEFT JOIN common_codes cc_insurance_type
+        ON cc_insurance_type.common_kind_code = 'insurance_type'
+        AND r.insurance_type = cc_insurance_type.common_code
+        LEFT JOIN common_codes cc_fuel_type
+        ON cc_fuel_type.common_kind_code = 'fuel_type'
+        AND ct.fuel_type = cc_fuel_type.common_code
+        LEFT JOIN common_codes cc_seating_capacity
+        ON cc_seating_capacity.common_kind_code = 'seating_capacity'
+        AND ct.seating_capacity = cc_seating_capacity.common_code
+        LEFT JOIN common_codes cc_speed_limit
+        ON cc_speed_limit.common_kind_code = 'speed_limit'
+        AND ct.speed_limit = cc_speed_limit.common_code
+        LEFT JOIN common_codes cc_license_restriction
+        ON cc_license_restriction.common_kind_code = 'license_restriction'
+        AND ct.license_restriction = cc_license_restriction.common_code
+        LEFT JOIN common_codes cc_payment_status
+        ON cc_payment_status.common_kind_code = 'payment_status'
+        AND r.payment_status = cc_payment_status.common_code
+        LEFT JOIN common_codes cc_payment_category
+        ON cc_payment_category.common_kind_code = 'payment_category'
+        AND r.payment_category = cc_payment_category.common_code
+        LEFT JOIN common_codes cc_payment_type
+        ON cc_payment_type.common_kind_code =
+        CASE
+        WHEN r.payment_category = '1' THEN 'payment_type_card'
+        WHEN r.payment_category = '2' THEN 'payment_type_pay'
+        ELSE NULL
+        END
+        AND r.payment_type = cc_payment_type.common_code
+        WHERE r.user_code = #{userCode}
+        AND r.reservation_code = #{reservationCode};
+    </select>
 </mapper>

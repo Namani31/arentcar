@@ -25,4 +25,6 @@ public interface ReservationsMapper {
     int countMyReservations(MyReservationsRequestDTO SearchRequestDTO);
 
     int countAllMyReservations(String userCode);
+
+    MyReservationsDetailResponseDTO getReservationDetailByUserAndCode(@Param("reservationCode") String reservationCode, @Param("userCode") String userCode);
 }
