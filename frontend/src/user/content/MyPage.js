@@ -251,6 +251,17 @@ const MyPage = () => {
     setMyReservationDetails([]);
   };
 
+  const handleMyReservationCancel = async () => {
+    // 예약 취소 여부 확인
+    const MyreservationCancelConfirmed = window.confirm("정말로 예약을 취소하시겠습니까?");
+    if (!MyreservationCancelConfirmed) {
+      alert("예약이 정상적으로 유지되었습니다.");
+      return;
+    }else{
+      alert("예약이 정상적으로 취소되었습니다."); // 성공 메시지
+    }
+  };
+
   return (
     <div className="my-page-wrap">
       <div className="my-page-content-wrap">
@@ -275,6 +286,7 @@ const MyPage = () => {
             <div className="my-page-reservation-list-wrap">
               <div className="my-page-reservation-data-list">
                 <div className='my-page-reservation-data-list-search-wrap'>
+
                   <input type="date"
                     placeholder="예약일"
                     value={selectedReservationDate}
@@ -395,23 +407,23 @@ const MyPage = () => {
 
                       {/* 예약 코드 */}
                       <div className="my_page_reservation_popup_high_reservation_id">
-                        <label>예약ID </label>
-                        <span>{myReservationDetails?.reservation_code}</span>
+                        <label>예약ID : </label>
+                        <span>{' '}{myReservationDetails?.reservation_code}</span>
                       </div>
 
                       {/* 예약 정보 */}
                       <div className="my_page_reservation_popup_section">
                         <div className="my_page_reservation_popup_section_title">예약정보</div>
                         <div className="my_page_reservation_popup_field_row">
-                          <label>예약ID </label>
+                          <label>예약ID : </label>
                           <span>{myReservationDetails?.reservation_code}</span>
-                          <label>예약일 </label>
+                          <label>예약일 : </label>
                           <span>{formatDate(myReservationDetails?.reservation_date)}</span>
                         </div>
                         <div className="my_page_reservation_popup_field_row">
-                          <label>예약자 </label>
+                          <label>예약자 : </label>
                           <span>{myReservationDetails?.user_name}</span>
-                          <label>연락처 </label>
+                          <label>연락처 : </label>
                           <span>{formatPhone(myReservationDetails?.user_phone_number)}</span>
                         </div>
                       </div>
@@ -420,50 +432,54 @@ const MyPage = () => {
                       <div className="my_page_reservation_popup_section">
                         <div className="my_page_reservation_popup_section_title">차량정보</div>
                         <div className="my_page_reservation_popup_field_row">
-                          <label>차량명 </label>
+                          <label>차량명 : </label>
                           <span>{myReservationDetails?.car_type_name}</span>
-                          <label>연식 </label>
+                          <label>연식 : </label>
                           <span>{myReservationDetails?.model_year}년식</span>
                         </div>
                         <div className="my_page_reservation_popup_field_row">
-                          <label>인승 </label>
+                          <label>인승 : </label>
                           <span>{myReservationDetails?.seating_capacity}</span>
-                          <label>연료 </label>
+                          <label>연료 : </label>
                           <span>{myReservationDetails?.fuel_type}</span>
+                        </div>
+                        <div className="my_page_reservation_popup_field_row">
+                          <label>보험 : </label>
+                          <span>{myReservationDetails?.insurance_type}</span>
                         </div>
                         <div className="my_page_reservation_popup_field_row">
                           <label>특이사항 </label>
                           <span>
-                            {`나이면허제한 : ${myReservationDetails?.license_restriction || "없음"}, 속도제한 : ${myReservationDetails?.speed_limit || "없음"}`}
+                            {`면허제한 : ${myReservationDetails?.license_restriction || "없음"}, 속도제한 : ${myReservationDetails?.speed_limit || "없음"}`}
                           </span>
                         </div>
+                      </div>
+
+                      <div className="my_page_reservation_popup_section">
+                        <div className="my_page_reservation_popup_section_title">이용지점</div>
                         <div className="my_page_reservation_popup_field_row">
-                          <label>대여일 </label>
+                          <label>대여일 : </label>
                           <span>{formatDate(myReservationDetails?.rental_date)} {formatTime(myReservationDetails?.rental_time) || ""}</span>
-                          <label>대여지점 </label>
+                          <label>대여지점 : </label>
                           <span>{myReservationDetails?.rental_branch_name}</span>
                         </div>
                         <div className="my_page_reservation_popup_field_row">
-                          <label>주소 </label>
+                          <label>주소 : </label>
                           <span>{myReservationDetails?.rental_branch_address}</span>
-                          <label>연락처 </label>
+                          <label>연락처 : </label>
                           <span>{myReservationDetails?.rental_branch_phone_number}</span>
                         </div>
                         <div className="my_page_reservation_popup_field_row">
-                          <label>반납일 </label>
+                          <label>반납일 : </label>
                           <span>{formatDate(myReservationDetails?.return_date)} {formatTime(myReservationDetails?.return_time) || ""}</span>
-                          <label>반납지점 </label>
+                          <label>반납지점 : </label>
                           <span>{myReservationDetails?.return_branch_name}</span>
                         </div>
                         <div className="my_page_reservation_popup_field_row">
-                          <label>주소 </label>
+                          <label>주소 : </label>
                           <span>{myReservationDetails?.return_branch_address}</span>
-                          <label>연락처 </label>
+                          <label>연락처 : </label>
                           <span>{myReservationDetails?.return_branch_phone_number}</span>
-                        </div>
-                        <div className="my_page_reservation_popup_field_row">
-                          <label>보험 </label>
-                          <span>{myReservationDetails?.insurance_type}</span>
                         </div>
                       </div>
 
@@ -471,17 +487,17 @@ const MyPage = () => {
                       <div className="my_page_reservation_popup_section">
                         <div className="my_page_reservation_popup_section_title">결제정보</div>
                         <div className="my_page_reservation_popup_field_row">
-                          <label>결제일 </label>
+                          <label>결제일 : </label>
                           <span>{formatDate(myReservationDetails?.payment_date)}</span>
-                          <label>결제상태 </label>
+                          <label>결제상태 : </label>
                           <span>{myReservationDetails?.payment_status}</span>
                         </div>
                         <div className="my_page_reservation_popup_field_row">
-                          <label>결제금액 </label>
+                          <label>결제금액 : </label>
                           <span>{formatNumberWithCommas(myReservationDetails?.payment_amount)}</span>
                         </div>
                         <div className="my_page_reservation_popup_field_row">
-                          <label>결제방식    </label>
+                          <label>결제방식 : </label>
                           <span>
                             {myReservationDetails?.payment_category || "정보 없음"} / {myReservationDetails?.payment_type || "정보 없음"}
                           </span>
@@ -492,6 +508,7 @@ const MyPage = () => {
                       <div className="my_page_reservation_content_popup_footer_wrap">
                         <button
                           className="my_page_reservation_content_popup_footer_cancel"
+                          onClick={handleMyReservationCancel}
                         >
                           예약취소
                         </button>

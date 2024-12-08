@@ -122,8 +122,21 @@
   font-weight: 700;
   color: #2E3033;
 }
+.my_page_button_close{
+  background-color: #f7f7f9;
+  border-radius: 5px;
+  width: 40px;
+  height: 25px;
+  font-size: 14px;
+}
+.my_page_button_close:hover{
+  background-color: #ff7916;
+  color: white;
+}
 .my_page_reservation_popup_high_reservation_id{
   margin-bottom: 7px;
+  color: #2E3033;
+  font-size: 14px;
 }
 
 .my_page_reservation_popup_section {
@@ -140,7 +153,8 @@
   font-weight: bold; /* 섹션 제목 강조 */
   color: #333; /* 글자 색상 */
   margin-left: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  font-size: 16px;
 }
 .my_page_reservation_popup_field_row {
   display: flex; /* 라벨과 값을 한 줄에 배치 */
@@ -149,12 +163,14 @@
   gap: 0; /* 라벨과 값 사이의 간격 완전히 제거 */
   margin-bottom: 2px; /* 필드 간 간격 최소화 */
   padding-left: 5px;
+  font-size: 14px;
 }
 
 .my_page_reservation_popup_field_row label {
-  width: 12%;
+  width: 13%;
   font-weight: bold; /* 라벨 강조 */
   margin-right: 5px; /* 라벨과 값 사이의 간격 최소화 */
+  text-align: right; /* 값도 왼쪽 정렬 */
 }
 
 .my_page_reservation_popup_field_row span {
@@ -172,9 +188,11 @@
   background: none;
   background-color: #f7f7f9;
   border-radius: 5px;
-  width: 50px;
+  width: 70px;
+  height: 30px;
+  font-size: 14px;
 }
-.my_page_reservation_content_popup_footer_cancel button:hover{
+.my_page_reservation_content_popup_footer_wrap button:hover{
   background-color: #ff7916;
   color: white;
 }

@@ -200,7 +200,7 @@
         cc_speed_limit.common_name AS speed_limit,
         cc_insurance_type.common_name AS insurance_type,
         cc_fuel_type.common_name AS fuel_type,
-        cc_payment_status.common_name AS <p></p>ayment_status,
+        cc_payment_status.common_name AS payment_status,
         cc_payment_category.common_name AS payment_category,
         cc_payment_type.common_name AS payment_type
         FROM reservations r
