@@ -49,10 +49,11 @@ public class RentalCarsService {
 
     // 조건에 따라 차량 수 조회
     public int countRentalCarsWithConditions(String carNumber, String carStatus, String carTypeName, String branchName,
-                                  String carTypeCategory, String originType, String seatingCapacity,
-                                  String fuelType, String carManufacturer, String modelYear) {
-        return rentalCarsMapper.countRentalCarsWithConditions(carNumber, carStatus, carTypeName, branchName, carTypeCategory,
-                                                   originType, seatingCapacity, fuelType, carManufacturer, modelYear);
+                                             String carTypeCategory, String originType, String seatingCapacity,
+                                             String fuelType, String carManufacturer, String modelYear) {
+        return rentalCarsMapper.countRentalCarsWithConditions(carNumber, carStatus, carTypeName, branchName,
+                                                              carTypeCategory, originType, seatingCapacity, fuelType,
+                                                              carManufacturer, modelYear);
     }
 
     // 렌탈가능/렌탈중/정비중 전체 차량 수 조회

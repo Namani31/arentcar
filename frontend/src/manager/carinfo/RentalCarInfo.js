@@ -882,7 +882,7 @@ const RentalCarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="carTypeCode">차종명</label>
-                <select className='width100' id="carTypeCode" value={carTypeCode} onChange={(e) => (setCarTypeCode(e.target.value))}>
+                <select className='width120' id="carTypeCode" value={carTypeCode} onChange={(e) => (setCarTypeCode(e.target.value))}>
                   {carMenuOptions.map((option) => (
                     <option key={option.car_type_code} value={option.car_type_code}>
                       {option.car_type_name}
@@ -892,15 +892,15 @@ const RentalCarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="carNumber">차량번호</label>
-                <input className='width100  word-center' id="carNumber" type="text" placeholder="01가1001" value={carNumber} onChange={(e) => {setCarNumber(e.target.value)}} />
+                <input className='width120  word-center' id="carNumber" type="text" placeholder="01가1001" maxLength={10} value={carNumber} onChange={(e) => {setCarNumber(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="modelYear">년식</label>
-                <input className='width100  word-center' id="modelYear" type="text" placeholder="2024" maxLength={4} value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
+                <input className='width120  word-center' id="modelYear" type="text" placeholder="2024" maxLength={4} value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="branchCode">지점명</label>
-                <select className='width100' id="branchCode" value={branchName} onChange={(e) => (setBranchName(e.target.value))}>
+                <select className='width120' id="branchCode" value={branchName} onChange={(e) => (setBranchName(e.target.value))}>
                   {branchMenuOptions.map((option) => (
                     <option key={option.branch_code} value={option.branch_code}>
                       {option.branch_name}
@@ -910,7 +910,7 @@ const RentalCarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="carStatus">차량상태</label>
-                <select className='width100' id="carStatus" value={carStatus} onChange={(e) => (setCarStatus(e.target.value))}>
+                <select className='width120' id="carStatus" value={carStatus} onChange={(e) => (setCarStatus(e.target.value))}>
                   {optionsMenuCarStatus.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
