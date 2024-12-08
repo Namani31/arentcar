@@ -44,13 +44,14 @@ const PaymentPage = () => {
         return alert(response.message);
       }else{
         console.log("결제 성공 데이터:", response);
-          InsertUserReservation();
+        insertUserReservation();
+        updateCarStatus();
           alert("결제가 성공적으로 완료되었습니다!");
       }
   };
   
 
-  const InsertUserReservation = async () => {
+  const insertUserReservation = async () => {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/arentcar/user/cars/reservation`,
@@ -69,6 +70,32 @@ const PaymentPage = () => {
       }
     }
   };
+
+  const updateCarStatus = async () => {
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/arentcar/user/cars/reservation/updatecar/status`,
+        { car_code: reservationInfo.car_code },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      alert('차량 렌탈 중으로 변경 완료');
+    } catch (error) {
+      if (error.response) {
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+      } else if (error.request) {
+        console.error('Request error:', error.request);
+      } else {
+        console.error('Error', error.message);
+      }
+    }
+  };
+  
+  
 
   const addCommaToCurrency = (fee) => {
     if (fee.toString().length > 6) {
