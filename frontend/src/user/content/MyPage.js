@@ -14,22 +14,20 @@ const MyPage = () => {
   const [branchNames, setBranchNames] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState("");
   const [selectedReservationDate, setSelcetedreservationDate] = useState("");
-  // const [reserverName, setReserverName] = useState("");
   const [pageNumber, setPageNumber] = useState(1); // 현재 페이지 번호
   const pageSize = 5; // 한 페이지에 보여줄 데이터 개수
   const [totalCount, setTotalCount] = useState(0); // 전체 페이지 수
   const [myreservations, setMyReservations] = useState([]);
   const [myReservationDetails, setMyReservationDetails] = useState([]);
   const [columnDefs] = useState([
-    { titlename: "예약ID", field: "reservation_code", width: 100, align: "center" },
-    { titlename: "예약일", field: "reservation_date", width: 150, align: "center" },
+    { titlename: "예약ID", field: "reservation_code", width: 90, align: "center" },
+    { titlename: "예약일", field: "reservation_date", width: 120, align: "center" },
     { titlename: "대여일", field: "rental_date", width: 120, align: "center" },
-    { titlename: "대여지점", field: "rental_location_name", width: 100, align: "center" },
+    { titlename: "대여지점", field: "rental_location_name", width: 120, align: "center" },
     { titlename: "반납일", field: "return_date", width: 120, align: "center" },
-    { titlename: "반납지점", field: "return_location_name", width: 100, align: "center" },
-    { titlename: "차종", field: "car_type_name", width: 100, align: "center" },
-    { titlename: "결제일", field: "payment_date", width: 150, align: "center" },
-    { titlename: "예약상태", field: "reservation_status", width: 100, align: "center" },
+    { titlename: "반납지점", field: "return_location_name", width: 120, align: "center" },
+    { titlename: "차종", field: "car_type_name", width: 150, align: "center" },
+    { titlename: "예약상태", field: "reservation_status", width: 120, align: "center" },
     { titlename: "", field: "", width: 100, align: "center" },
   ]);
 
@@ -72,10 +70,6 @@ const MyPage = () => {
       pageNumber,
       userCode,
     };
-    console.log(params);
-    // 조건이 참일 때만 필드 추가
-    console.log("Fetching My Reservations with params:", params); // 디버깅: 요청 파라미터
-    console.log("API URL:", `${process.env.REACT_APP_API_URL}/arentcar/manager/myreservations`); // 디버깅: API URL
 
     if (selectedBranch && selectedBranch.trim() !== '') {
       params.rentalLocationName = selectedBranch;
@@ -97,7 +91,6 @@ const MyPage = () => {
       setMyReservations(response.data); // 데이터가 있는 경우
     } else {
       setMyReservations([]); // 데이터가 없는 경우 빈 배열로 설정
-      console.log("No data found for the given conditions.");
     }
   };
 
@@ -126,10 +119,6 @@ const MyPage = () => {
       ...((selectedBranch && { rentalLocationName: selectedBranch }) || {}),
       ...((selectedReservationDate && { reservationDate: formatDateToCompact(selectedReservationDate) }) || {}),
     };
-    console.log("Params sent to API:", params);
-    console.log("Fetching Total Count with params:", params); // 디버깅: 요청 파라미터
-    console.log("API URL:", `${process.env.REACT_APP_API_URL}/arentcar/manager/myreservations/count`); // 디버깅: API URL
-
 
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/myreservations/count`,
       {
@@ -142,8 +131,6 @@ const MyPage = () => {
 
     if (typeof response.data === 'number') {
       setTotalCount(response.data);
-      console.log("Total Count:", totalCount);
-      console.log("Total Pages:", totalPages);
     } else {
       console.error('Unexpected response:', response.data);
     }
@@ -155,8 +142,6 @@ const MyPage = () => {
 
   // 검색 조건 변경 후 초기화 코드
   const handleSearchClick = async () => {
-    console.log("Selected Branch:", selectedBranch);
-    console.log("Selected Reservation Date:", selectedReservationDate);
     setPageNumber(1);
     await pagingMyReservations();
     await getTotalCount();
@@ -184,14 +169,11 @@ const MyPage = () => {
   }, [pageNumber]);
 
   const handleFetchMyReservationDetail = async (reservationCode, userCode) => {
-    console.log("fetchMyReservationDetail called with:", { reservationCode, userCode });
     if (!reservationCode || !userCode) {
-      console.error("Invalid reservationCode or userCode");
       return; // 값이 없으면 중단
     }
     try {
       const token = localStorage.getItem("accessToken");
-      console.log("Access token retrieved:", token);
       await getMyReservationDetails(token, reservationCode, userCode);
     } catch (error) {
       if (error.response && error.response.status === 403) {
@@ -257,7 +239,7 @@ const MyPage = () => {
     if (!MyreservationCancelConfirmed) {
       alert("예약이 정상적으로 유지되었습니다.");
       return;
-    }else{
+    } else {
       alert("예약이 정상적으로 취소되었습니다."); // 성공 메시지
     }
   };
@@ -317,6 +299,9 @@ const MyPage = () => {
                         style={{
                           width: `${title.width}px`,
                           textAlign: title.align,
+                          fontSize: '16px',
+                          padding: '5px 0px',
+                          fontWeight: 700,
                         }}
                       >
                         {title.titlename}
@@ -328,14 +313,16 @@ const MyPage = () => {
                 <div className="my-page-reservation-data-column">
                   {myreservations.length > 0 ? (
                     myreservations.map((myreservations, index) => (
-                      <ul key={index} className="my-page-reservation-data-column-title-ul">
+                      <ul key={index}
+                        className="my-page-reservation-data-column-title-ul">
                         {columnDefs.map((column, colIndex) => (
                           <li
                             key={colIndex}
-                            className="my-page-reservation-data-column-title-li"
+                            className="my-page-reservation-data-column-data-li"
                             style={{
                               width: `${column.width}px`,
                               textAlign: column.align || "center",
+                              lineHeight: '30px',
                             }}
                           >
                             {column.field === "" ? (
@@ -343,7 +330,7 @@ const MyPage = () => {
                                 className="my-page-reservation-data-button-detail"
                                 onClick={() => handleDetailClick(myreservations.reservation_code, userCode)}
                               >
-                                상세보기
+                                예약상세
                               </button>
                             ) : (
                               column.field === "rental_date" ? (
@@ -447,7 +434,7 @@ const MyPage = () => {
                           <span>{myReservationDetails?.insurance_type}</span>
                         </div>
                         <div className="my_page_reservation_popup_field_row">
-                          <label>특이사항 </label>
+                          <label>특이사항 - </label>
                           <span>
                             {`면허제한 : ${myReservationDetails?.license_restriction || "없음"}, 속도제한 : ${myReservationDetails?.speed_limit || "없음"}`}
                           </span>

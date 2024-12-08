@@ -17,6 +17,5 @@ public class MyReservationsResponseDTO {
     private String returnDate;
     private String returnLocationName;
     private String carTypeName;
-    private String paymentDate;
     private String reservationStatus;
 }

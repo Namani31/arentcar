@@ -151,7 +151,6 @@
         r.return_date AS returnDate,
         rt.branch_name AS returnLocationName,
         ct.car_type_name AS carTypeName,
-        r.payment_date AS paymentDate,
         cc.common_name AS reservationStatus
         FROM
         reservations r

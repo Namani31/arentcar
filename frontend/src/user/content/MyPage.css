@@ -76,12 +76,33 @@
 .my-page-reservation-data-column-title-ul{
   display: flex;
   justify-content: center;
-  gap: 15px;
   font-size: 14px;
+  text-align: center;
+  height: 30px;
+  
+}
+
+.my-page-reservation-data-column{
+  background-color: #f7f7f9;
+  border-radius: 5px;
+
+}
+
+.my-page-reservation-data-column-data-li {
+  background-color: #ffffff;
+  border: 1px solid #f7f7f9;
+  border-radius: 5px;
 }
 .my-page-reservation-data-button-detail{
   background: none;
   color: #2E3033;
+  border-radius: 5px;
+  width: 80px;
+  height: 28px;
+}
+.my-page-reservation-data-button-detail:hover{
+  background-color: #ff7916;
+  color: white;
 }
 .my-page-reservation-bottom-pagination-wrap{
     display: flex; 
