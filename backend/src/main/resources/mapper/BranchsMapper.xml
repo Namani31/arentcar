@@ -80,24 +80,24 @@
         FROM regions
     </select>
 
-    <!--  지점 수정-->
-<!--    <update id="updateBranchsById" parameterType="com.apple.arentcar.model.Branchs">-->
-<!--        UPDATE branchs-->
-<!--        SET-->
-<!--            branch_name = #{branchName},-->
-<!--            branch_longitude= #{branchLongitude},-->
-<!--            branch_latitude= #{branchLatitude},-->
-<!--            region_code= #{regionCode},-->
-<!--            region_name= #{regionName},-->
-<!--            post_code= #{postCode},-->
-<!--            post_code= #{branchBasicAddress},-->
-<!--            post_code= #{branchDetailedAddress},-->
-<!--            post_code= #{branchPhoneNumber},-->
-<!--            post_code= #{availablePickupTime},-->
-<!--            post_code= #{availableReturnTime},-->
-<!--            updated_at = NOW()-->
-<!--        WHERE branch_code = #{branchCode}-->
-<!--    </update>-->
+    <!-- 지점 수정 -->
+    <update id="updateBranchsById" parameterType="com.apple.arentcar.dto.BranchsSearchDTO">
+        UPDATE branchs b
+        JOIN regions r ON b.region_code = r.region_code
+        SET
+            b.branch_name = #{branchName},
+            b.branch_longitude= #{branchLongitude},
+            b.branch_latitude= #{branchLatitude},
+            b.region_code= #{regionCode},
+            b.post_code= #{postCode},
+            b.branch_basic_address= #{branchBasicAddress},
+            b.branch_detailed_address= #{branchDetailedAddress},
+            b.branch_phone_number= #{branchPhoneNumber},
+            b.available_pickup_time= #{availablePickupTime},
+            b.available_return_time= #{availableReturnTime},
+            b.updated_at = NOW()
+        WHERE b.branch_code = #{branchCode}
+    </update>
 
     <!-- 지점 삭제-->
     <delete id="deleteBranchsById">

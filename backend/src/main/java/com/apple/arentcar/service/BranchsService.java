@@ -74,8 +74,8 @@ public class BranchsService {
     }
 
     // 지점 수정
-    public void updateBranchsById(Branchs branchs) {
-        branchsMapper.updateBranchsById(branchs);
+    public void updateBranchsById(BranchsSearchDTO branchsSearchDTO) {
+        branchsMapper.updateBranchsById(branchsSearchDTO);
     }
 
     // 지점 삭제

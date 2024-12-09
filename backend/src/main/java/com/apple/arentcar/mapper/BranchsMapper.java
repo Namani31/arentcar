@@ -42,7 +42,7 @@ public interface BranchsMapper {
     List<BranchsRegionNamesOptionDTO> getRegionCodeName();
 
     // 지점 수정
-    void updateBranchsById(Branchs branchs);
+    void updateBranchsById(BranchsSearchDTO branchsSearchDTO);
 
     // 지점 삭제
     void deleteBranchsById(@Param("branchCode") Integer branchCode);

@@ -52,16 +52,15 @@
   text-align: left; /* 값도 왼쪽 정렬 */
 }
 
-.manager-branch-detail-popup-close {
-  display: flex;
-  justify-content: space-between;
-}
-
-.manager-branch-detail-popup-line {
-  margin: 5px 0px;
-}
 
 .manager-branch-popup-high-branch-id{
+  margin-bottom: 5px;
+}
+
+.manager-branch-popup-section-title {
+  font-weight: bold; /* 섹션 제목 강조 */
+  color: #333; /* 글자 색상 */
+  margin-left: 10px;
   margin-bottom: 5px;
 }
 
@@ -116,6 +115,31 @@
     border-radius: 6px;
   }
   
+  .manager-branch-detail-popup-close {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .manager-branch-detail-popup-line {
+    margin: 5px 0px;
+  }
+  .manager-branch-update-popup-wrap {
+    width: 500px;
+    margin: 250px auto;
+    padding: 20px 20px;
+    background-color: #fff;
+    border-radius: 6px;
+  }
+  
+  .manager-branch-update-popup-close {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .manager-branch-update-popup-line {
+    margin: 5px 0px;
+  }
+
   .register-branch-pageing-wrap {
     margin-top: 5px;
   }
