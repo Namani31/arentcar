@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class BranchsSearchDTO {
-    private int branchCode;
+    private Integer branchCode;
     private String branchName;
     private String branchLongitude;
     private String branchLatitude;
-    private int regionCode;
+    private Integer regionCode;
     private String regionName;
     private String postCode;
     private String branchBasicAddress;
