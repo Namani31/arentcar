@@ -17,9 +17,10 @@ import ManagerReservation from 'manager/reservation/ManagerReservation';
 import RentalRates from 'manager/managepayment/RentalRates';
 import PostNotices from 'manager/system/PostNotices';
 import PostInquirys from 'manager/system/PostInquirys';
-import AllBranchesReservationChart from 'manager/analysis/AllBranchesReservationChart';
-import BranchesReservationChart from 'manager/analysis/BranchesReservationChart';
-import AllCarTypeReservationChart from 'manager/analysis/AllCarTypeReservationChart';
+import AllBranchesReservationChart from 'manager/analysis/charts/AllBranchesReservationChart';
+import BranchesReservationChart from 'manager/analysis/charts/BranchesReservationChart';
+import AllCarTypeReservationChart from 'manager/analysis/charts/AllCarTypeReservationChart';
+import ManageBranchs from 'manager/managebranchs/ManageBranchs';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -55,6 +56,7 @@ const ManagerMenu = () => {
     AllBranchesReservationChart: <AllBranchesReservationChart onClick={handleCloseClick} />,
     BranchesReservationChart: <BranchesReservationChart onClick={handleCloseClick} />,
     AllCarTypeReservationChart: <AllCarTypeReservationChart onClick={handleCloseClick} />,
+    ManageBranchs: <ManageBranchs onClick={handleCloseClick} />,
   };
 
   useEffect(() => {
