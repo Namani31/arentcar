@@ -512,17 +512,16 @@ const ManageBranchs = ({ onClick }) => {
     };
 
     // 지점 상세 버튼 클릭
-    const handleDetailClick = (row) => {
-        console.log("[handleDetailClick] row 데이터:", row);
+    const handleDetailClick = (row, workMode) => {
 
         const branchCode = row.branch_code;
-        console.log("[handleDetailClick] 클릭한 branchCode:", branchCode);
 
         if (!row.branch_code) {
             console.error("Invalid branchCode:", branchCode);
             return;
         }
         setIsDetailPopUp(true);
+        setWorkMode(workMode);
         fetchBranchDetails(branchCode);
     };
 
@@ -748,14 +747,14 @@ const ManageBranchs = ({ onClick }) => {
                 <div className='manager-branch-update-popup manager-popup'>
                     <div className='manager-branch-update-popup-wrap'>
                         <div className='manager-branch-update-popup-close'>
-                            <div className='manager-branch-title'>● 지점{workMode}</div>
+                            <div className='manager-popup-title'>● 지점{workMode}</div>
                             <div className='branch-info-content-popup-button'>
                                 <button className='manager-button manager-button-save' onClick={handleDataSaveClick}>저장</button>
                                 <button className='manager-button manager-button-close' onClick={handlePopupCloseClick}>닫기</button>
                             </div>
                         </div>
                         <div className='register-branch-content-popup-line'>
-                            <label className='width80 word-center label-margin-right' htmlFor="branchCode">지점코드</label>
+                            <label className='width80 word-right label-margin-right' htmlFor="branchCode">지점코드</label>
                             <input className='width50 word-center' type="text" value={branchCode} disabled />
                         </div>
                         <div className='register-branch-content-popup-line'>
