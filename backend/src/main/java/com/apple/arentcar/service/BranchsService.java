@@ -45,11 +45,6 @@ public class BranchsService {
         return branchsMapper.getBranchsWithPaging(pageSize, offset);
     }
 
-    // 지점 상세보기
-    public Branchs getManageBranchsDetailById(String branchCode) {
-        return branchsMapper.getManageBranchsDetailById(branchCode);
-    }
-
     // 전체 차종 수 조회(검색 기능 포함)
     public int countBranchByName(String branchName) {
         return branchsMapper.countBranchByName(branchName);
@@ -88,6 +83,7 @@ public class BranchsService {
         branchsMapper.deleteBranchsById(branchCode);
     }
 
+    // 지점 상세
     public BranchsSearchDTO getBranchsDetailById(Integer branchCode) {
         return branchsMapper.getBranchsDetailById(branchCode);
     }

@@ -67,12 +67,11 @@ public class BranchsController {
         }
         return ResponseEntity.ok(count);
     }
-
+    
     // 지점 상세보기
-    @GetMapping("/manager/banchs/detail/{branchCode}")
-    public Branchs getManageBranchsDetailById(
-            @PathVariable("branchCode") String branchCode) {
-        return branchsService.getManageBranchsDetailById(branchCode);
+    @GetMapping("/manager/branchs/detail/{branchCode}")
+    public BranchsSearchDTO getBranchsDetailById(@PathVariable("branchCode") Integer branchCode) {
+        return branchsService.getBranchsDetailById(branchCode);
     }
 
     // 지점 추가
@@ -116,9 +115,5 @@ public class BranchsController {
         return ResponseEntity.noContent().build();
     }
 
-    // 지점 상세
-    @GetMapping("/manager/branchs/detail/{branchCode}")
-    public Branchs getBranchsDetailById(@PathVariable("branchCode") Integer branchCode) {
-        return branchsService.getBranchsDetailById(branchCode);
-    }
+
 }

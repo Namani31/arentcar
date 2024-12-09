@@ -26,9 +26,6 @@ public interface BranchsMapper {
     // 지점 조회 및 페이지네이션
     List<BranchsSearchDTO> getBranchsWithPaging(@Param("pageSize") int pageSize, @Param("offset") int offset);
 
-    Branchs getManageBranchsDetailById(
-            @Param("branchCode") String branchCode);
-
     // 전체 차종 수 조회(검색 기능 포함)
     int countBranchByName(@Param("branchName") String branchName);
 

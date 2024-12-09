@@ -105,7 +105,7 @@
         WHERE branch_code = #{branchCode}
     </delete>
 
-    <select id="getReservationsDetailById" parameterType="Integer" resultType="com.apple.arentcar.model.Branchs">
+    <select id="getBranchsDetailById" parameterType="Integer" resultType="com.apple.arentcar.dto.BranchsSearchDTO">
         SELECT
             b.branch_code,
             b.branch_name,
@@ -121,7 +121,7 @@
             b.created_at,
             b.updated_at,
             r.region_name -- regions 테이블에서 region_name도 조회
-        FROM Branchs b
+        FROM branchs b
         LEFT JOIN regions r ON b.region_code = r.region_code
         WHERE b.branch_code = #{branchCode}
     </select>

@@ -33,18 +33,18 @@ const ManageBranchs = ({ onClick }) => {
         { headerName: '상세보기', field: '', width: 180, align: 'center' },
     ]);
 
-    const [branchCode, setbranchCode] = useState("");
-    const [branchName, setbranchName] = useState("");
-    const [branchLongitude, setbranchLongitude] = useState("");
-    const [branchLatitude, setbranchLatitude] = useState("");
-    const [regionCode, setregionCode] = useState("");
-    const [regionName, setregionName] = useState("");
-    const [postCode, setpostCode] = useState("");
-    const [branchBasicAddress, setbranchBasicAddress] = useState("");
-    const [branchDetailedAddress, setbranchDetailedAddress] = useState("");
-    const [branchPhoneNumber, setbranchPhoneNumber] = useState("");
-    const [availablePickupTime, setavailablePickupTime] = useState("");
-    const [availableReturnTime, setavailableReturnTime] = useState("");
+    const [branchCode, setBranchCode] = useState("");
+    const [branchName, setBranchName] = useState("");
+    const [branchLongitude, setBranchLongitude] = useState("");
+    const [branchLatitude, setBranchLatitude] = useState("");
+    const [regionCode, setRegionCode] = useState("");
+    const [regionName, setRegionName] = useState("");
+    const [postCode, setPostCode] = useState("");
+    const [branchBasicAddress, setBranchBasicAddress] = useState("");
+    const [branchDetailedAddress, setBranchDetailedAddress] = useState("");
+    const [branchPhoneNumber, setBranchPhoneNumber] = useState("");
+    const [availablePickupTime, setAvailablePickupTime] = useState("");
+    const [availableReturnTime, setAvailableReturnTime] = useState("");
 
     // 지점 데이터 페이징 처리
     const pageingBranchs = async () => {
@@ -243,36 +243,36 @@ const ManageBranchs = ({ onClick }) => {
     const handleUpdateClick = (findCode, workMode) => {
         setIsCreatePopUp(true); // TODO: isUpdatePopUp() 으로 수정해야 함
         setWorkMode(workMode);
-        setbranchCode(findCode.branch_code);
-        setbranchName(findCode.branch_name);
-        setbranchLongitude(findCode.branch_longitude);
-        setbranchLatitude(findCode.branch_latitude);
-        setregionCode(findCode.region_code);
-        setregionName(findCode.region_name);
-        setpostCode(findCode.post_code);
-        setbranchBasicAddress(findCode.branch_basic_address);
-        setbranchDetailedAddress(findCode.branch_detailed_address);
-        setbranchPhoneNumber(findCode.branch_phone_number);
-        setavailablePickupTime(findCode.available_pickup_time);
-        setavailableReturnTime(findCode.available_return_time);
+        setBranchCode(findCode.branch_code);
+        setBranchName(findCode.branch_name);
+        setBranchLongitude(findCode.branch_longitude);
+        setBranchLatitude(findCode.branch_latitude);
+        setRegionCode(findCode.region_code);
+        setRegionName(findCode.region_name);
+        setPostCode(findCode.post_code);
+        setBranchBasicAddress(findCode.branch_basic_address);
+        setBranchDetailedAddress(findCode.branch_detailed_address);
+        setBranchPhoneNumber(findCode.branch_phone_number);
+        setAvailablePickupTime(findCode.available_pickup_time);
+        setAvailableReturnTime(findCode.available_return_time);
     };
 
     // 지점 추가 시 데이터 초기화
     const viewDataInit = () => {
-        setbranchCode("");
-        setbranchName("");
-        setbranchLongitude("");
-        setbranchLatitude("");
-        setregionCode("1");
-        setregionName("경기");
-        setpostCode("");
-        setavailablePickupTime("");
-        setavailableReturnTime("");
-        setbranchBasicAddress("");
-        setbranchDetailedAddress("");
-        setbranchPhoneNumber("");
-        setavailablePickupTime("");
-        setavailableReturnTime("")
+        setBranchCode("");
+        setBranchName("");
+        setBranchLongitude("");
+        setBranchLatitude("");
+        setRegionCode("1");
+        setRegionName("경기");
+        setPostCode("");
+        setAvailablePickupTime("");
+        setAvailableReturnTime("");
+        setBranchBasicAddress("");
+        setBranchDetailedAddress("");
+        setBranchPhoneNumber("");
+        setAvailablePickupTime("");
+        setAvailableReturnTime("")
     };
 
     // 지점 추가 시 지점명, 지역코드, 상세주소, 전화번호 입력 필수
@@ -334,7 +334,7 @@ const ManageBranchs = ({ onClick }) => {
 
 
     // 지점 추가 및 수정
-    const handleDataSaveClick = async () => {
+    const handleDataSaveClick = async (row) => {
 
         // 지점명 중복 입력 검증
         const isBranchDuplicate = await isBranchNameDuplicate(branchName);
@@ -391,6 +391,15 @@ const ManageBranchs = ({ onClick }) => {
         } else if (workMode === "상세") {
             try {
                 setLoading(true);
+
+                const branchCode = row.branch_code;
+                console.log("[상세 작업] branchCode:", branchCode);
+
+                if (!branchCode) {
+                    console.error("[상세 작업] branchCode가 유효하지 않습니다:", branchCode);
+                    return;
+                }
+
                 const token = localStorage.getItem('accessToken');
                 await getBranchDetails(token, branchCode);
             } catch (error) {
@@ -399,11 +408,12 @@ const ManageBranchs = ({ onClick }) => {
                         const newToken = await refreshAccessToken();
                         await getBranchDetails(newToken, branchCode);
                     } catch (error) {
+                        console.error("[상세 작업] 토큰 갱신 실패:", error)
                         alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
                         handleAdminLogout();
                     }
                 } else {
-                    alert("지점 추가 중 오류가 발생했습니다. \n" + error);
+                    alert("지점 상세 조회 중 오류가 발생했습니다. \n" + error);
                 }
             } finally {
                 setLoading(false);
@@ -411,7 +421,6 @@ const ManageBranchs = ({ onClick }) => {
             setBranchDetails(false);
         };
     }
-
 
     // 지점 수정
     const updateBranch = async (token, newBranch) => {
@@ -452,7 +461,7 @@ const ManageBranchs = ({ onClick }) => {
 
     // 지점 상세 팝업창 열기
     const fetchBranchDetails = async (branchCode) => {
-        console.log("fetchBranchDetail - branchCode:", branchCode);
+        console.log("[fetchBranchDetails] 시작 - branchCode:", branchCode); // 함수 시작
 
         try {
             const token = localStorage.getItem("accessToken");
@@ -460,45 +469,68 @@ const ManageBranchs = ({ onClick }) => {
         } catch (error) {
             if (error.response && error.response.status === 403) {
                 try {
-                  const newToken = await refreshAccessToken();
-                  await getBranchDetails(newToken, branchCode);
+                    const newToken = await refreshAccessToken();
+                    console.log("[fetchBranchDetails] 새 토큰 발급 성공:", newToken); // 새 토큰 확인
+                    await getBranchDetails(newToken, branchCode);
+
                 } catch (error) {
-                  alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-                  handleAdminLogout();
+                    console.error("[fetchBranchDetails] 토큰 갱신 실패:", error);
+                    alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+                    handleAdminLogout();
                 }
-              } else {
-                console.error("There was an error fetching the branchs details!", error);
-              }
+            } else {
+                console.error("[fetchBranchDetails] 예외 처리되지 않은 에러:", error);
+                // console.error("There was an error fetching the branchs details!", error);
+            }
         }
     };
 
     const getBranchDetails = async (token, branchCode) => {
-        console.log("getBranchDetails - branchCode:", branchCode); // 값 확인
-        console.log("getBranchDetails - token:", token); // 토큰 확인
+        console.log("[getBranchDetails] 시작 - token:", token, "branchCode:", branchCode);
 
         if (!branchCode) {
+            console.error("[getBranchDetails] branchCode가 없습니다!");
             return;
         }
 
-        const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/detail/${branchCode}`,
-            {
+        try {
+            const url = `${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/detail/${branchCode}`;
+            console.log("[getBranchDetails] API 요청 URL:", url);
+            const response = await axios.get(url, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
                 withCredentials: true,
-            }
-        );
-
-        if (response.data) {
-            console.log(response.data);
+            });
+            console.log("[getBranchDetails] 응답 성공:", response.data);
             setBranchDetails(response.data);
+
+            // const response = await axios.get(
+            //     `${process.env.REACT_APP_API_URL}/arentcar/manager/branchs/detail/${branchCode}`,
+            //     {
+            //         headers: {
+            //             Authorization: `Bearer ${token}`,
+            //         },
+            //         withCredentials: true,
+            //     }
+            // );
+        } catch (error) {
+            console.error("[getBranchDetails] 에러 발생:", error);
+            if (error.response) {
+                console.error("[getBranchDetails] 서버 응답 에러:", error.response.data);
+            }
+            throw error; // 상위로 에러 전달
         }
-    }
+    };
 
     // 지점 상세 버튼 클릭
-    const handleDetailClick = (branchCode) => {
-        if (!branchCode) {
+    const handleDetailClick = (row) => {
+        console.log("[handleDetailClick] row 데이터:", row); 
+
+        const branchCode = row.branch_code;
+        console.log("[handleDetailClick] 클릭한 branchCode:",branchCode);
+
+        if (!row.branch_code) {
             console.error("Invalid branchCode:", branchCode);
             return;
         }
@@ -562,7 +594,7 @@ const ManageBranchs = ({ onClick }) => {
                 return;
             }
             // 정상 입력이라면 상태 갱신
-            setavailablePickupTime(formatted);
+            setAvailablePickupTime(formatted);
         }
     };
 
@@ -583,7 +615,7 @@ const ManageBranchs = ({ onClick }) => {
                 alert("00:00 ~ 23:59 까지만 입력할 수 있습니다.");
                 return;
             }
-            setavailableReturnTime(formatted);
+            setAvailableReturnTime(formatted);
         }
     };
 
@@ -634,19 +666,19 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchName">지점명</label>
-                            <input className='width300 word-left' value={branchName} placeholder='지점명을 입력해주세요.' type="text" maxLength={30} onChange={(e) => setbranchName(e.target.value)} autoFocus />
+                            <input className='width300 word-left' value={branchName} placeholder='지점명을 입력해주세요.' type="text" maxLength={30} onChange={(e) => setBranchName(e.target.value)} autoFocus />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchLongitude">경도</label>
-                            <input className='width300 word-left' value={branchLongitude} placeholder='경도를 입력해주세요.' type="text" maxLength={30} onChange={(e) => setbranchLongitude(e.target.value)} />
+                            <input className='width300 word-left' value={branchLongitude} placeholder='경도를 입력해주세요.' type="text" maxLength={30} onChange={(e) => setBranchLongitude(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchLatitude">위도</label>
-                            <input className='width300 word-left' value={branchLatitude} placeholder='위도를 입력해주세요.' type="text" maxLength={30} onChange={(e) => setbranchLatitude(e.target.value)} />
+                            <input className='width300 word-left' value={branchLatitude} placeholder='위도를 입력해주세요.' type="text" maxLength={30} onChange={(e) => setBranchLatitude(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="regionCode">지역코드</label>
-                            <input className='width300 word-left' value={regionCode} onChange={(e) => setregionCode(e.target.value)} />
+                            <input className='width300 word-left' value={regionCode} onChange={(e) => setRegionCode(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="regionName">지역이름</label>
@@ -655,9 +687,9 @@ const ManageBranchs = ({ onClick }) => {
                                     // 지역 이름을 선택했을 때, 선택한 지역코드를 자동으로 설정
                                     const selectedRegionCode = e.target.value;
                                     // 지역코드 업데이트
-                                    setregionCode(selectedRegionCode);
+                                    setRegionCode(selectedRegionCode);
                                     // 지역이름 업데이트
-                                    setregionName(e.target.options[e.target.selectedIndex].text);
+                                    setRegionName(e.target.options[e.target.selectedIndex].text);
                                 }}>
                                 {regionNameMenuOptions.map((option) => (
                                     <option key={option.region_code} value={option.region_code}>
@@ -668,19 +700,19 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="postCode">우편번호</label>
-                            <input className='width300' type="text" value={postCode} placeholder='우편번호를 입력해주세요.' maxLength={50} onChange={(e) => setpostCode(e.target.value)} />
+                            <input className='width300' type="text" value={postCode} placeholder='우편번호를 입력해주세요.' maxLength={50} onChange={(e) => setPostCode(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchBasicAddress">기본주소</label>
-                            <input className='width300' type="text" value={branchBasicAddress} placeholder='기본주소를 입력해주세요.' maxLength={50} onChange={(e) => setbranchBasicAddress(e.target.value)} />
+                            <input className='width300' type="text" value={branchBasicAddress} placeholder='기본주소를 입력해주세요.' maxLength={50} onChange={(e) => setBranchBasicAddress(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchDetailedAddress">상세주소</label>
-                            <input className='width300' type="text" value={branchDetailedAddress} placeholder='상세주소를 입력해주세요.' maxLength={50} onChange={(e) => setbranchDetailedAddress(e.target.value)} />
+                            <input className='width300' type="text" value={branchDetailedAddress} placeholder='상세주소를 입력해주세요.' maxLength={50} onChange={(e) => setBranchDetailedAddress(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchPhoneNumber">전화번호</label>
-                            <input className='width300' type="text" value={branchPhoneNumber} placeholder='전화번호를 입력해주세요.' maxLength={50} onChange={(e) => setbranchPhoneNumber(e.target.value)} />
+                            <input className='width300' type="text" value={branchPhoneNumber} placeholder='전화번호를 입력해주세요.' maxLength={50} onChange={(e) => setBranchPhoneNumber(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availablePickupTime">개점시간</label>
@@ -700,14 +732,69 @@ const ManageBranchs = ({ onClick }) => {
                 <div className='manager-branch-detail-popup manager-popup'>
                     <div className='manager-branch-detail-popup-wrap'>
                         <div className='manager-branch-detail-popup-close'>
-                            <div className='manager-branch-title'>● 지점{workMode}</div>
+                            <div className='manager-popup-title'>● 지점{workMode}</div>
                             <div className='branch-info-content-popup-button'>
                                 <button className='manager-button manager-button-close' onClick={handlePopupCloseClick}>닫기</button>
                             </div>
                         </div>
+
+                        {/* 지점코드 */}
                         <div className='manager-branch-popup-high-branch-id'>
                             <label>지점코드: </label>
-                            <span>{branchDetails.branch_code}</span>
+                            <span> {branchDetails.branch_code}</span>
+                        </div>
+
+                        {/* 지점정보 */}
+                        <div className="manager-branch-popup-section">
+                            <div className="manager-branch-popup-section-title">지점정보</div>
+                            <div className="manager-branch-popup-field-row">
+                                <label>지점명 : </label>
+                                <span>{branchDetails.branch_name}</span>
+                                <label>전화번호 : </label>
+                                <span>{branchDetails.branch_phone_number}</span>
+                            </div>
+                            <div className="manager-branch-popup-field-row">
+                                <label>기본주소 : </label>
+                                <span>{branchDetails.branch_basic_address}</span>
+                            </div>
+                            <div className="manager-branch-popup-field-row">
+                                <label>상세주소 : </label>
+                                <span>{branchDetails.branch_detailed_address}</span>
+                            </div>
+                        </div>
+
+                        {/* 지역정보*/}
+                        <div className="manager-branch-popup-section">
+                            <div className="manager-branch-popup-section-title">지역정보</div>
+                            <div className="manager-branch-popup-field-row">
+                                <label>지역코드 : </label>
+                                <span>{branchDetails.region_code}</span>
+                                <label>지역이름 : </label>
+                                <span>{branchDetails.region_name}</span>
+                            </div>
+                            <div className="manager-branch-popup-field-row">
+                                <label>우편번호 : </label>
+                                <span>{branchDetails.post_code}</span>
+                            </div>
+                            <div className="manager-branch-popup-field-row">
+                                <label>위도 : </label>
+                                <span>{branchDetails.branch_longitude}</span>
+                            </div>
+                            <div className="manager-branch-popup-field-row">
+                                <label>경도 : </label>
+                                <span>{branchDetails.branch_latitude}</span>
+                            </div>
+                        </div>
+
+                        {/* 영업정보 */}
+                        <div className="manager-branch-popup-section">
+                            <div className="manager-branch-popup-section-title">영업정보</div>
+                            <div className="manager-branch-popup-field-row">
+                                <label>개점시간 : </label>
+                                <span>{formatTime(branchDetails.available_pickup_time)}</span>
+                                <label>폐점시간 : </label>
+                                <span>{formatTime(branchDetails.available_return_time)}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
