@@ -51,5 +51,5 @@ public interface BranchsMapper {
     void deleteBranchsById(@Param("branchCode") Integer branchCode);
 
     // 지점 상세
-    Branchs getBranchsDetailById(@Param("branchCode") Integer branchCode);
+    BranchsSearchDTO getBranchsDetailById(@Param("branchCode") Integer branchCode);
 }
