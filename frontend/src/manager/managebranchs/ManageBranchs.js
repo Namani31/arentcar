@@ -384,6 +384,7 @@ const ManageBranchs = ({ onClick }) => {
                 }
             } finally {
                 setLoading(false);
+                setIsCreatePopUp(false);
             }
         } else if (workMode === "상세") {
             try {
