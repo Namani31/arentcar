@@ -189,9 +189,9 @@ const ManageBranchs = ({ onClick }) => {
 
     // 추가 버튼
     const handleInsertClick = (workMode) => {
+        viewDataInit();
         setIsCreatePopUp(true);
         setWorkMode(workMode);
-        viewDataInit();
     };
 
     // 삭제 버튼
@@ -318,12 +318,11 @@ const ManageBranchs = ({ onClick }) => {
 
     // 지점 추가 및 수정
     const handleDataSaveClick = async () => {
-
-        // 지점명, 지역코드, 상세주소, 전화번호 입력칸이 공란인지 검증
+    // 지점명, 지역코드, 상세주소, 전화번호 입력칸이 공란인지 검증
         if (!validateCheck()) {
             return;
         }
-
+        
         let newBranch = {
             branch_code: branchCode,
             branch_name: branchName,
@@ -361,7 +360,6 @@ const ManageBranchs = ({ onClick }) => {
                 setIsUpdatePopUp(false);
             }
         } else if (workMode === "추가") {
-
             try {
                 setLoading(true);
                 // 지점명 중복 입력 검증
@@ -390,13 +388,7 @@ const ManageBranchs = ({ onClick }) => {
         } else if (workMode === "상세") {
             try {
                 setLoading(true);
-
-                // TODO: branchCode를 주석처리 했을 때 사이드이펙트가 있는지 화깅ㄴ해야 함
-                // const branchCode = row.branch_code;
-                console.log("[상세 작업] branchCode:", branchCode);
-
                 if (!branchCode) {
-                    console.error("[상세 작업] branchCode가 유효하지 않습니다:", branchCode);
                     return;
                 }
 
@@ -408,7 +400,6 @@ const ManageBranchs = ({ onClick }) => {
                         const newToken = await refreshAccessToken();
                         await getBranchDetails(newToken, branchCode);
                     } catch (error) {
-                        console.error("[상세 작업] 토큰 갱신 실패:", error)
                         alert("인증이 만료되었습니다. 다시 로그인 해주세요." + error);
                         handleAdminLogout();
                     }
@@ -442,9 +433,11 @@ const ManageBranchs = ({ onClick }) => {
         }
     };
 
+
     // 지점 추가
     const createBranch = async (token, newBranch) => {
-        const response = await axios.getBranchs(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs`,
+        // 지점명, 지역코드, 상세주소, 전화번호 입력칸이 공란인지 검증
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs`,
             newBranch,
             {
                 headers: {
@@ -679,7 +672,7 @@ const ManageBranchs = ({ onClick }) => {
                         <div className='register-branch-content-popup-close'>
                             <div className='manager-branch-title'>● 지점{workMode}</div>
                             <div className='branch-info-content-popup-button'>
-                                <button className='manager-button manager-button-save' onClick={handleDataSaveClick()}>저장</button>
+                                <button className='manager-button manager-button-save' onClick={handleDataSaveClick}>저장</button>
                                 <button className='manager-button manager-button-close' onClick={handlePopupCloseClick}>닫기</button>
                             </div>
                         </div>
@@ -813,7 +806,7 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchPhoneNumber">전화번호</label>
-                            <input className='width300' type="text" value={formatBranchPhoneNumber(branchPhoneNumber)} placeholder='전화번호를 입력해주세요.' maxLength={50} onChange={(e) => setBranchPhoneNumber(e.target.value)} />
+                            <input className='width300' type="text" value={branchPhoneNumber} placeholder='전화번호를 입력해주세요.' maxLength={50} onChange={(e) => setBranchPhoneNumber(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availablePickupTime">개점시간</label>
