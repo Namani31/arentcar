@@ -51,11 +51,6 @@
     font-size: 15px;
 }
 
-/* 통계 필터 글자 크기 */
-.manager-head-column {
-    font-size: 15px;
-}
-
 /* 차트 컨테이너 스타일 */
 .pie-chart-wrapper {
     width: 100%; /* 차트 너비를 부모 컨테이너에 맞춤 */

@@ -17,10 +17,9 @@ import ManagerReservation from 'manager/reservation/ManagerReservation';
 import RentalRates from 'manager/managepayment/RentalRates';
 import PostNotices from 'manager/system/PostNotices';
 import PostInquirys from 'manager/system/PostInquirys';
-import ReservationStatistics from 'manager/analysis/ReservationStatistics';
-import AllBranchesReservationChart from 'manager/analysis/charts/AllBranchesReservationChart';
-import BranchesReservationChart from 'manager/analysis/charts/BranchesReservationChart';
-import AllCarTypeReservationChart from 'manager/analysis/charts/AllCarTypeReservationChart';
+import AllBranchesReservationChart from 'manager/analysis/AllBranchesReservationChart';
+import BranchesReservationChart from 'manager/analysis/BranchesReservationChart';
+import AllCarTypeReservationChart from 'manager/analysis/AllCarTypeReservationChart';
 
 const ManagerMenu = () => {
   const [menus, setMenus] = useState([]);
@@ -43,16 +42,16 @@ const ManagerMenu = () => {
     RegisterMenu: <RegisterMenu onClick={handleCloseClick} />,
     managerRentalCar: <RentalCarInfo onClick={handleCloseClick} />,
     managerCar: <CarInfo onClick={handleCloseClick} />,
+    // 관리자 게시판
+    manageNotices: <PostNotices onClick={handleCloseClick} />,
+    manageReviews: <PostReviews onClick={handleCloseClick}/>,
+    manageInquirys: <PostInquirys onClick={handleCloseClick}/>,
+    RegisterAdmin: <RegisterAdmin onClick={handleCloseClick} />,
     ManagerUser: <ManagerUser onClick={handleCloseClick} />,
     ConnectionStatus: <ConnectionStatus onClick={handleCloseClick} />,
     VisitorCount: <VisitorCount onClick={handleCloseClick} />,
     ManagerReservation: <ManagerReservation onClick={handleCloseClick} />,
     RentalRates: <RentalRates onClick={handleCloseClick} />,
-    manageNotices: <PostNotices onClick={handleCloseClick} />,
-    manageReviews: <PostReviews onClick={handleCloseClick} />,
-    managementCustomer: <PostInquirys onClick={handleCloseClick} />,
-    RegisterAdmin: <RegisterAdmin onClick={handleCloseClick} />,
-    ReservationStatistics: <ReservationStatistics onClick={handleCloseClick} />,
     AllBranchesReservationChart: <AllBranchesReservationChart onClick={handleCloseClick} />,
     BranchesReservationChart: <BranchesReservationChart onClick={handleCloseClick} />,
     AllCarTypeReservationChart: <AllCarTypeReservationChart onClick={handleCloseClick} />,

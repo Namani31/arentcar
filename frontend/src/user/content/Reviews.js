@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "./Reviews.css"
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -169,14 +169,17 @@ const Reviews = () => {
                 rows={15} ref={textarea} onChange={(e)=>{handleResizeHeight(e)}}/>
               </div>
               <div className="user-customers-create-review-popup-line">
-                <button className="user-customers-create-review-popup-button" onClick={()=>handleCreate()}>작성</button> 
+                {/* <button className="user-customers-create-review-popup-button" onClick={()=>handleCreate()}>작성</button>  */}
                 {/* <button className="manager-button" onClick={()=>handleColse()}>닫기</button> */}
               </div>
             </div>
           </div>
         )}
+        <div className="user-customers-list">
+            <Link to={"/customers"} className="user-customers-list-button">리스트</Link>
+            {!params && (<button className="user-customers-create-review-popup-button" onClick={()=>handleCreate()}>작성</button> )} 
+        </div>
       </div>
-
     </div>
   )
 }
