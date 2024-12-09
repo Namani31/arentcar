@@ -317,7 +317,7 @@ const ManageBranchs = ({ onClick }) => {
 
 
     // 지점 추가 및 수정
-    const handleDataSaveClick = async() => {
+    const handleDataSaveClick = async () => {
 
         // 지점명, 지역코드, 상세주소, 전화번호 입력칸이 공란인지 검증
         if (!validateCheck()) {
@@ -615,6 +615,32 @@ const ManageBranchs = ({ onClick }) => {
         }
     };
 
+
+    // 매장 전화번호 형식 변환 함수
+    const formatBranchPhoneNumber = (branchPhoneNumber) => {
+        if (!branchPhoneNumber) {
+            return "";
+        }
+
+        // phoneNumber 숫자 형식일 때 (예: 01011112222)
+        const phoneNumberStr = branchPhoneNumber.toString();
+
+
+        // 이미 '-'가 포함된 경우 그대로 반환
+        if (phoneNumberStr.includes('-')) {
+            return phoneNumberStr;
+        }
+
+        if (phoneNumberStr.length === 10) {
+            const phoneNumber1 = phoneNumberStr.slice(0, 3);
+            const phoneNumber2 = phoneNumberStr.slice(3, 6);
+            const phoneNumber3 = phoneNumberStr.slice(6, 10);
+
+            return `${phoneNumber1}-${phoneNumber2}-${phoneNumber3}`;
+        }
+        return "";
+    };
+
     return (
         <div className='register-branch-wrap'>
             <div className='register-branch-header-wrap'>
@@ -709,7 +735,7 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchPhoneNumber">전화번호</label>
-                            <input className='width300' type="text" value={branchPhoneNumber} placeholder='전화번호를 입력해주세요.' maxLength={50} onChange={(e) => setBranchPhoneNumber(e.target.value)} />
+                            <input className='width300' type="text" value={formatBranchPhoneNumber(branchPhoneNumber)} placeholder='전화번호를 입력해주세요.' maxLength={50} onChange={(e) => setBranchPhoneNumber(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availablePickupTime">개점시간</label>
@@ -787,7 +813,7 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchPhoneNumber">전화번호</label>
-                            <input className='width300' type="text" value={branchPhoneNumber} placeholder='전화번호를 입력해주세요.' maxLength={50} onChange={(e) => setBranchPhoneNumber(e.target.value)} />
+                            <input className='width300' type="text" value={formatBranchPhoneNumber(branchPhoneNumber)} placeholder='전화번호를 입력해주세요.' maxLength={50} onChange={(e) => setBranchPhoneNumber(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availablePickupTime">개점시간</label>
@@ -826,7 +852,7 @@ const ManageBranchs = ({ onClick }) => {
                                 <label>지점명 : </label>
                                 <span>{branchDetails.branch_name}</span>
                                 <label>전화번호 : </label>
-                                <span>{branchDetails.branch_phone_number}</span>
+                                <span>{formatBranchPhoneNumber(branchDetails.branch_phone_number)}</span>
                             </div>
                             <div className="manager-branch-popup-field-row">
                                 <label>기본주소 : </label>
