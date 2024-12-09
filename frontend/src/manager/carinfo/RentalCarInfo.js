@@ -727,8 +727,11 @@ const RentalCarInfo = ({ onClick }) => {
     if (!modelYear || modelYear.trim() === '') {
       alert("년식을 입력해주세요.");
       return false;
-    };
-
+    }
+    if (isNaN(modelYear) || modelYear.length < 1 || modelYear.length > 4) {
+      alert("년식은 1~4자리 숫자만 입력 가능합니다.");
+      return false;
+    }
     return true; 
   };
 
