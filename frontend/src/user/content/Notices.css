@@ -1,6 +1,7 @@
 .user-customers-detail{
     width: 100%;
     background-color: #ededf0;
+    white-space: pre-line;
 }
 .user-customers-detail-notices{
     padding: 0px;

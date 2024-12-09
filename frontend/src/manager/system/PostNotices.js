@@ -304,6 +304,14 @@ const PostNotices = ({ onClick }) => {
     getTotalCount();
   }, [totalNotices, pageNumber])
 
+  useEffect(()=>{
+    console.log(textarea.current);
+    
+    if(textarea.current) {
+      resizeHeight();
+    }
+  },[postContent, isPopUp])
+
   //검색
   const handleSearchClick = async () => {
     pageingNotices();
@@ -336,17 +344,19 @@ const PostNotices = ({ onClick }) => {
   }
   //수정 팝업창
   const handleUpdateClick = (e,i) => {
-    setIsPopUp(true);
     setPopupType(e);
     setAuthorType("AM");
     setPostType("NT");
-    getByCodeNotices(i); //setPostTitle() setPostContent()
+    getByCodeNotices(i).then(()=>{
+      setIsPopUp(true);
+    }); //setPostTitle() setPostContent()
   }
   //보기 팝업창
   const handleReadClick = async (e,i) => {
-    setIsPopUp(true);
     setPopupType(e);
-    getByCodeNotices(i);
+    getByCodeNotices(i).then(()=>{
+      setIsPopUp(true);
+    });
   }
 
   //삭제 기능
@@ -369,6 +379,9 @@ const PostNotices = ({ onClick }) => {
   const textarea = useRef();
   const handleResizeHeight = (e) => {
     setPostContent(e.target.value);
+    resizeHeight();
+  }
+  const resizeHeight = () => {
     textarea.current.style.height = "auto";
     textarea.current.style.height = textarea.current.scrollHeight + "px";
   }
@@ -460,6 +473,7 @@ const PostNotices = ({ onClick }) => {
                   <label className='manager-post-notice-popup-line-label' style={{verticalAlign: 'top'}}>내용</label>
                   <textarea className='width400 manager-post-notice-popup-line-textarea' 
                   rows={2} ref={textarea} value={postContent} onChange={(e)=>{handleResizeHeight(e)}}/>
+                  
                 </div>
                 <div className='manager-post-notice-popup-line'>
                   <label className='manager-post-notice-popup-line-label'>게시물 코드</label>
@@ -467,7 +481,7 @@ const PostNotices = ({ onClick }) => {
                 </div>
                 <div className='manager-post-notice-popup-line'>
                   <label className='manager-post-notice-popup-line-label'>게시물 유형</label>
-                  <input className='width50 word-center' type="text" value={postType} disabled/>
+                  <input className='width50 word-center' type="text" value={ Type[postType] } disabled/>
                 </div>
                 <div className='manager-post-notice-popup-line'>
                   <label className='manager-post-notice-popup-line-label'>작성자</label>

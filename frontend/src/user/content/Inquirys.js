@@ -74,7 +74,7 @@ const Inquirys = () => {
 
   const isLogin = () => {
     let loginState = store.getState().userState.loginState;
-    if(!loginState) { alert("로그인이 필요합니다."); navigate('/login') }
+    if(!loginState) { alert("로그인이 필요합니다."); navigate('/login', {state : "/customers/IQ"}) }
     return loginState;
   }
 
@@ -215,12 +215,12 @@ const Inquirys = () => {
               <div className="user-customers-create-inquirys-popup-line">
                 <h6>제목</h6> 
                 <textarea className="width400 user-customers-create-inquirys-popup-content"
-                rows={1} ref={textarea} onChange={(e)=>{handleResizeHeight(e,setPostContent)}}/> 
+                rows={1} ref={textarea} onChange={(e)=>{handleResizeHeight(e,setPostTitle)}}/> 
               </div>
               <div className="user-customers-create-inquirys-popup-line">
                 <h6>내용</h6>
                 <textarea className="width400 user-customers-create-inquirys-popup-content"
-                rows={10} ref={textarea} onChange={(e)=>{handleResizeHeight(e,setPostTitle)}}/>
+                rows={10} ref={textarea} onChange={(e)=>{handleResizeHeight(e,setPostContent)}}/>
               </div>
               <div className="user-customers-create-inquirys-popup-line">
                 {/* <button className="user-customers-create-inquirys-popup-button" onClick={()=>{}}>작성</button>  */}
@@ -231,8 +231,10 @@ const Inquirys = () => {
         )}
 
         <div className="user-customers-list">
-          <Link to={"/customers"} className="user-customers-list-button">리스트</Link>
-          {!params && (<button className="user-customers-create-inquirys-popup-button" onClick={()=>handleCreate()}>작성</button>)}
+            {/* + state={{ postState: dtataInfo }} */}
+          <Link to={"/customers"} state={{ postState: 2 }} className="user-customers-list-button">리스트</Link>
+          {!params && 
+            (<button className="user-customers-create-inquirys-popup-button" onClick={()=>handleCreate()}>작성</button>)}
           {authorCode === crystalCode && 
             ( <button className="user-customers-create-inquirys-popup-button" onClick={()=>{handleAddResponses()}}> 추가 </button> )}
         </div>

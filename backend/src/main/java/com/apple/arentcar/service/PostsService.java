@@ -82,6 +82,11 @@ public class PostsService {
     }
     public int countSearchInquirys(String keyword) { return postsMapper.countSearchInquirys(keyword); }
     public Inquirys getInquirys(Integer postCode) { return postsMapper.getInquirys(postCode); }
+    public void deleteInquirys(Integer postCode) {
+        postsMapper.deleteInquirysIQ(postCode);
+        postsMapper.deleteInquirysRS(postCode);
+        postsMapper.deleteInquirysPS(postCode);
+    }
     public List<Responses> getResponses(Integer pageCode) { return postsMapper.getResponses(pageCode); }
     public void createResponses(Responses responses) {
         postsMapper.updateInquiryStatus(responses);

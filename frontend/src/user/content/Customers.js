@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import "./Customers.css"
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Customers = () => {
   const menus = ["공지사항","고객후기","고객문의"];
-  const postUrl = ['notices','reviews','inquirys']
-  const [postState, setPostState] = useState(0);
+  const postUrl = ['notices','reviews','inquirys'];
+  const state = useLocation();
+  const [postState, setPostState] = useState( state.state ? state.state.postState : 0 );
   const [customers, setCustomers] = useState([]);
   
   const [totalCustomers, setTotalCustomers] = useState(0);
@@ -88,9 +89,6 @@ const Customers = () => {
   const pageNum = () => {
     setPageNums([]);
     
-    console.log( pagingMax * pageOffset );
-    console.log( max );
-
     // 최대치 설정 추가 x / 검색된 내용이 없을시 오류 수정 o
     for (let index = pagingMax * pageOffset; index < max; index++) {
       setPageNums(pageNums => [...pageNums, index+1])
@@ -139,11 +137,14 @@ const Customers = () => {
             <div className="user-customers-wrap-post-notices">
               <ul className="user-customers-wrap-post-list">
                 {customers.map((notices, index)=>(
-                  <li key={index}> <Link to={`/customers/${notices.post_type}/${notices.post_code}`}> {notices.post_title} </Link> 
-                  <div className="user-customers-wrap-post-list-info"> <span>{notices.author}</span> <span> {notices.created_at.substr(0,10)} </span> </div>  </li>
+                  <li key={index}> 
+                    <Link to={`/customers/${notices.post_type}/${notices.post_code}`}> {notices.post_title} </Link> 
+                    <div className="user-customers-wrap-post-list-info"> <span>{notices.author}</span> <span> {notices.created_at.substr(0,10)} </span> </div>  
+                  </li>
                 ))}
                 {/* <li> <a href="/customers/코드"> 제목 </a> <div className="user-customers-wrap-post-list-info"> <span>작성자</span> <span>작성일</span> </div>  </li> */}
               </ul>
+
               <div className="user-customers-wrap-post-paging">
                 <button onClick={()=>{handlePaging(-1)}}
                   style={{color: pageNumber === 0 ? '#aaa' : '#fff'}}
@@ -182,8 +183,10 @@ const Customers = () => {
             <div className="user-customers-wrap-post-reviews">
               <ul className="user-customers-wrap-post-list">
                 {customers.map((notices, index)=>(
-                  <li key={index}> <Link to={`/customers/${notices.post_type}/${notices.post_code}`}> {notices.post_title} </Link> 
-                  <div className="user-customers-wrap-post-list-info"> <span>{notices.author}</span> <span> {notices.created_at.substr(0,10)} </span> </div>  </li>
+                  <li key={index}> 
+                    <Link to={`/customers/${notices.post_type}/${notices.post_code}`}> {notices.post_title} </Link> 
+                    <div className="user-customers-wrap-post-list-info"> <span>{notices.author}</span> <span> {notices.created_at.substr(0,10)} </span> </div>  
+                  </li>
                 ))}
                 {/* <li> <a href="/customers/코드"> 제목 </a> <div className="user-customers-wrap-post-list-info"> <span>작성자</span> <span>작성일</span> </div>  </li> */}
               </ul>
@@ -231,8 +234,10 @@ const Customers = () => {
             <div className="user-customers-wrap-post-reviews">
               <ul className="user-customers-wrap-post-list">
                 {customers.map((notices, index)=>(
-                  <li key={index}> <Link to={`/customers/${notices.post_type}/${notices.post_code}`}> {notices.post_title} </Link> 
-                  <div className="user-customers-wrap-post-list-info"> <span>{notices.author}</span> <span> {notices.created_at.substr(0,10)} </span> </div>  </li>
+                  <li key={index}> 
+                    <Link to={`/customers/${notices.post_type}/${notices.post_code}`}> {notices.post_title} </Link> 
+                    <div className="user-customers-wrap-post-list-info"> <span>{notices.author}</span> <span> {notices.created_at.substr(0,10)} </span> </div>  
+                  </li>
                 ))}
                 {/* <li> <a href="/customers/코드"> 제목 </a> <div className="user-customers-wrap-post-list-info"> <span>작성자</span> <span>작성일</span> </div>  </li> */}
               </ul>

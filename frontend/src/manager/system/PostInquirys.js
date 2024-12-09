@@ -81,7 +81,7 @@ const PostInquirys = ({ onClick }) => {
       }
     );
     if(response.data) {
-      setInquirys(response.data);
+      setInquirys(response.data);      
     }
   }
 
@@ -302,13 +302,48 @@ const PostInquirys = ({ onClick }) => {
     alert("답변이 삭제되었습니다.");
   }
 
-  //manager/post/responses/{postCode}
+  const postDeleteInquiry = async (code) => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('accessToken');
+      await deleteInquiry(token, code)
+    } catch (error) {
+      if(error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await deleteInquiry(newToken,code);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the movies!', error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const deleteInquiry = async (token, code) => {
+    const response = await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/inquirys/${code}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      }
+    )
+  }
   
   useEffect(()=>{
     postGetCount();
     postGetInquirys();
     handleAdminCode();
   },[pageNumber, totalInquirys])
+
+  useEffect(()=>{
+    resizeHeight();
+  },[responses])
 
   const handleSearchClick = async () => {
     postGetInquirys();
@@ -331,17 +366,22 @@ const PostInquirys = ({ onClick }) => {
   const handleAnswer = (i) => {
     setCreateContent("");
     postGetCodeInquiry(i);
-    postGetResponses(i);
-    setIsPopUp(true);
+    postGetResponses(i).then(()=>{
+      setIsPopUp(true);
+    });
+    
+
+    // for (const Height of textarea.current) {}
+    // textarea.current[0].dispatchEvent(new Event('change', { bubbles: true }));
   }
 
-  const handleUpdateResponses = () => {
+  const handleUpdateResponses = () => { //update state
     if(window.confirm('수정하시겠습니까?')) {
       postUpdateResponses();
     }
   }
 
-  const handleDeleteResponses = (code) => {
+  const handleDeleteResponses = (code) => { //update state
     if(window.confirm('삭제하시겠습니까?')) {
       postDeleteResponses(code).then(function (value) {
         //성공했을 때 실행
@@ -353,42 +393,54 @@ const PostInquirys = ({ onClick }) => {
     }
   }
 
-  const handleCreate = () => {
-    postCreateResponses().then(function (value) {
-      //성공했을 때 실행
-      postGetInquirys();
-      postGetResponses(postCode);
-    }, function (reason) {
-      //실패했을 때 실행
-      alert("작성의 실패했습니다.")
-    });
+  const handleCreate = () => { //update state
+    if(createContent !== "") {
+      postCreateResponses().then(function (value) {
+        //성공했을 때 실행
+        postGetInquirys();
+        postGetResponses(postCode);
+        setCreateContent("");
+      }, function (reason) {
+        //실패했을 때 실행
+        alert("작성의 실패했습니다.")
+      });
+    } else {
+      alert("답변을 입력해주세요.")
+    }
+  }
 
+  const handleDeleteInquiry = (code) => {
+    if(window.confirm('삭제하시겠습니까?')) {
+      postDeleteInquiry(code).then(()=>{
+        postGetCount();
+      });
+    }
   }
 
   const textarea = useRef([]);
+  const resizeHeight = () => {
+    for (const Height of textarea.current) {
+      if(Height) {
+        Height.style.height = "auto";
+        Height.style.height = Height.scrollHeight + "px";
+      }
+    }
+    return "";
+  }
   const handleResizeHeight = (e,i) => {
     const copy = [...responses]
     copy[i].response_content = e.target.value;
     setResponses(copy)
-    
     // setPostContent(e.target.value);
-    for (let index = 0; index < textarea.current.length; index++) {
-      if(textarea.current[index]) {
-        textarea.current[index].style.height = "auto";
-        textarea.current[index].style.height = textarea.current[index].scrollHeight + "px";
-      }
-    }
-
+    resizeHeight();
+      // if(textarea.current[index]) {
+      //   list.current[index].style.height = "auto";
+      //   list.current[index].style.height = textarea.current[index].scrollHeight + "px";
+      // }
   }
   const handleCreateResizeHeight = (e) => {
     setCreateContent(e.target.value);
-
-    for (let index = 0; index < textarea.current.length; index++) {
-      if(textarea.current[index]) {
-        textarea.current[index].style.height = "auto";
-        textarea.current[index].style.height = textarea.current[index].scrollHeight + "px";
-      }
-    }
+    resizeHeight();
   }
   let totalPages = Math.ceil(totalInquirys / pageSize);
   if (totalPages < 1) { totalPages = 1; }
@@ -399,7 +451,7 @@ const PostInquirys = ({ onClick }) => {
       return(<>
         {/* <button className='manager-button post-btn3' > 보기 </button>  */}
         <button className='manager-button post-btn2' onClick={()=>handleAnswer(value["post_code"])}> 답변 </button> 
-        {/* <button className='manager-button post-btn1' onClick={()=>console.log(inquiry["post_code"])}> 삭제 </button>  */}
+        <button className='manager-button post-btn1' onClick={()=>handleDeleteInquiry(value["post_code"])}> 삭제 </button> 
       </>)
     } else if(column.field === 'post_type') {
       return( Type[value[column.field]] )
@@ -524,7 +576,7 @@ const PostInquirys = ({ onClick }) => {
                 <h6 className="manager-post-inquirys-popup-answer-h6"> 답변 </h6>
                 <textarea className='manager-post-inquirys-popup-line-textarea' 
                 rows={2} ref={el => (textarea.current[0] = el)} value={createContent} onChange={(e)=>{handleCreateResizeHeight(e)}}/> 
-                <button className="manager-button post-btn2" onClick={()=>handleCreate()}>작성</button>
+                <button className="manager-button post-btn2" onClick={()=>handleCreate()}> 작성 </button>
               </div>
               {/* postCode postType postTitle postContent authorCode authorType postContent가 넘어갔을때 문제 */}
             </div>

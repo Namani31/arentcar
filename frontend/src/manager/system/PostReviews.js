@@ -2,8 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { refreshAccessToken, handleLogout } from 'common/Common';
 import 'manager/system/PostReviews.css';
-import ReviewPopup from 'manager/system/ReviewPopup';
-import { AvgCharts, RvCharts } from './Charts';
+// import ReviewPopup from 'manager/system/ReviewPopup';
+import { AvgCharts, RvCharts } from 'manager/system/PostCharts';
 import Loading from 'common/Loading';
 
 
@@ -32,12 +32,12 @@ const PostReviews = ({ onClick }) => {
   const [isPopUp, setIsPopUp] = useState(false);
   const [popupType, setPopupType] = useState()
   // 상세내용
-  const [postCode,setPostCode] = useState();
-  const [postType,setPostType] = useState();
+  // const [postCode,setPostCode] = useState();
+  // const [postType,setPostType] = useState();
   const [postTitle,setPostTitle] = useState("");
   const [postContent,setPostContent] = useState("");
-  const [authorCode,setAuthorCode] = useState();
-  const [authorType,setAuthorType] = useState();
+  // const [authorCode,setAuthorCode] = useState();
+  // const [authorType,setAuthorType] = useState();
   const [authorName,setAuthorName] = useState();
   const [reviewRating, setReviewRating] = useState();
   //통계
@@ -157,6 +157,7 @@ const PostReviews = ({ onClick }) => {
 
   const postDeleteReviews = async (code) => {
     try {
+      setLoading(true);
       const token = localStorage.getItem('accessToken');
       await deleteReviews(token,code);
     } catch (error) {
@@ -211,15 +212,15 @@ const PostReviews = ({ onClick }) => {
   const handlePopupClick = (e) =>{
     if(e[0] === "보기") {
       setPopupType(e[0]);
-      getByCodeReviews(e[1]);
-      
+      getByCodeReviews(e[1]).then(()=>{setIsPopUp(true);});
     } else if(e[0] === "통계") {
       setPopupType(e[0]);
-    } else if(e[0] === "추가") {
-      setPopupType(e[0]);
-    }
-    
-    setIsPopUp(true)
+      setIsPopUp(true);
+    } 
+    // else if(e[0] === "추가") {
+    //   setPopupType(e[0]);
+    // }
+    // setIsPopUp(true);
   }
 
   let totalPages = Math.ceil(totalReviews/ pageSize);
