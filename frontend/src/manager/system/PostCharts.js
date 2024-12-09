@@ -186,7 +186,7 @@ const AvgCharts = ( {stats} ) => {
         <XAxis dataKey="column_name"/>
         <YAxis />
         <Tooltip />
-        <Line dataKey="avg_rv" strokeWidth={3} />
+        <Line isAnimationActive={false} dataKey="avg_rv" strokeWidth={3} />
       </LineChart> 
     )}
     {stats === 1 && (

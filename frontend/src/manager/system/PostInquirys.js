@@ -394,16 +394,19 @@ const PostInquirys = ({ onClick }) => {
   }
 
   const handleCreate = () => { //update state
-    postCreateResponses().then(function (value) {
-      //성공했을 때 실행
-      postGetInquirys();
-      postGetResponses(postCode);
-      setCreateContent("");
-    }, function (reason) {
-      //실패했을 때 실행
-      alert("작성의 실패했습니다.")
-    });
-
+    if(createContent !== "") {
+      postCreateResponses().then(function (value) {
+        //성공했을 때 실행
+        postGetInquirys();
+        postGetResponses(postCode);
+        setCreateContent("");
+      }, function (reason) {
+        //실패했을 때 실행
+        alert("작성의 실패했습니다.")
+      });
+    } else {
+      alert("답변을 입력해주세요.")
+    }
   }
 
   const handleDeleteInquiry = (code) => {
@@ -417,8 +420,10 @@ const PostInquirys = ({ onClick }) => {
   const textarea = useRef([]);
   const resizeHeight = () => {
     for (const Height of textarea.current) {
-      Height.style.height = "auto";
-      Height.style.height = Height.scrollHeight + "px";
+      if(Height) {
+        Height.style.height = "auto";
+        Height.style.height = Height.scrollHeight + "px";
+      }
     }
     return "";
   }
