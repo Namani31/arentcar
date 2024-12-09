@@ -8,7 +8,6 @@ import axios from 'axios';
 const ReservationDetail = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const carInfoLocation = useLocation();
     const car = location.state;
     const rentalRate = car.rental_rate;
     const [insurance,setInsurance] = useState([0,0]);
@@ -44,22 +43,35 @@ const ReservationDetail = () => {
     
           fetchInsurance();
           console.log(car);
-          //밀리초단위로 계산해라
-          setRentalperiod(Number(car.return_date.substring (0,4))-Number(car.rental_date.substring (0,4))+
-          (Number(car.return_date.substring (4,6))-Number(car.rental_date.substring (4,6)))+
-          (Number(car.return_date.substring (6))-Number(car.rental_date.substring (6))));
+
+          // 날짜를 밀리초 단위로 변환하는 함수
+function dateToMilliseconds(dateString) {
+    const year = Number(dateString.substring(0, 4));
+    const month = Number(dateString.substring(4, 6)) - 1; // 월은 0부터 시작
+    const day = Number(dateString.substring(6, 8));
+    return new Date(year, month, day).getTime();
+}
+
+// 렌탈 기간 계산 함수
+function calculateRentalPeriod(rentalDate, returnDate) {
+    const startMilliseconds = dateToMilliseconds(rentalDate);
+    const endMilliseconds = dateToMilliseconds(returnDate);
+
+    // 밀리초 차이를 일 단위로 변환
+    const millisecondsInADay = 24 * 60 * 60 * 1000;
+    const rentalDays = (endMilliseconds - startMilliseconds) / millisecondsInADay;
+
+    return rentalDays;
+}
+          
+          setRentalperiod(calculateRentalPeriod(car.rental_date,car.return_date));
+          console.log(`렌탈 기간: ${calculateRentalPeriod(car.rental_date,car.return_date)}일`);
           
         //   setCarInfo({...car,user_code : userCode,payment_amount : totalRentalFee});
     },[])
-    
-    useEffect(()=>{
-        console.log(Number(car.return_date.substring (0,4)));
-        console.log(Number(car.rental_date.substring (0,4)));
-        console.log(rentalperiod);
-    },[rentalperiod])
 
     useEffect(()=>{
-        setCarInfo({...car,discount_fee : discountFee,user_code : userCode,payment_amount : totalRentalFee,insurance_type : insuranceTypeCode});
+        setCarInfo({...car,discount_fee : discountFee,user_code : userCode,payment_amount : totalRentalFee,insurance_type : insuranceTypeCode,rental_period : rentalperiod});
     },[userCode,totalRentalFee,insuranceTypeCode])
 
     useEffect(() => {
@@ -78,7 +90,7 @@ const ReservationDetail = () => {
 
     useEffect(() => {
         if (driverRangeFee === 'everyone' && insuranceType === '일반 자차') {
-            setTotalRentalFee((Number(estimatedRentalFee)*rentalperiod + 20000));
+            setTotalRentalFee((Number(estimatedRentalFee) + 20000));
         }
         else if(driverRangeFee === 'everyone' && insuranceType === '완전 자차'){
             setTotalRentalFee(Number(estimatedRentalFee) + 20000 +(Number( insurance[1].insurance_fee)-Number( insurance[0].insurance_fee)));
@@ -152,7 +164,7 @@ const ReservationDetail = () => {
                                 </li>
                                 <li>
                                     <span>운전자 범위 추가 비용</span>
-                                    <span>0원</span>
+                                    <span>{driverRangeFee === 'standard' ? '0':'20,000'}원</span>
                                 </li>
                                 <li>
                                     <span>할인금액</span>

@@ -10,19 +10,19 @@ const PaymentPage = () => {
   const location = useLocation();
   const reservationInfo = location.state;
   const [userData, setUserData] = useState({});
+  const [reservationNumber, setReservationNumber] = useState({});
   const currentDate = new Date();
   const userName = useSelector((state) => state.userState.userName);
   const userLicense = useSelector((state) => state.userState.userLicense);
-  
   const params = {
     userCode: reservationInfo.user_code,
     carCode: reservationInfo.car_code,
     rentalLocation: reservationInfo.branch_name,
     rentalDate: reservationInfo.rental_date,
-    rentalTime: '0800',
+    rentalTime: `${reservationInfo.rental_time}00`,
     returnLocation: reservationInfo.branch_name,
     returnDate: reservationInfo.return_date,
-    returnTime: '0900',
+    returnTime: `${reservationInfo.return_time}00`,
     insuranceType: reservationInfo.insurance_type,
     paymentCategory: '1',
     paymentType: '01',
@@ -34,27 +34,29 @@ const PaymentPage = () => {
    const  requestPayment = async () => {
     const response = await PortOne.requestPayment(
       {
-        storeId: "store-56b88bd8-5068-4c9b-a6d7-7144ba4155ce", // Store ID
+        storeId: "", // Store ID
         paymentId: `payment-${crypto.randomUUID()}`, // 고유 결제 ID
         orderName: reservationInfo.car_type_name, // 결제 상품명
         totalAmount: 100, // 결제 금액
         currency: "KRW", // 올바른 통화 코드
-        channelKey: "channel-key-9ca9285e-034c-4f1f-9d38-73fe6d28833f", // 채널 키
+        channelKey: "", // 채널 키
         payMethod: "CARD", // 결제 방식
       });
       if (response.code !== undefined) {
         return alert(response.message);
       }else{
         console.log("결제 성공 데이터:", response);
-        insertUserReservation();
-        updateCarStatus();
+          InsertUserReservation();
+          updateCarStatus();
           alert("결제가 성공적으로 완료되었습니다!");
-          navigate('/PaymentCompletedPage',{state : {...reservationInfo}});
+          navigate('/PaymentCompletedPage',{
+            state: {...reservationInfo}
+          });
       }
   };
   
 
-  const insertUserReservation = async () => {
+  const InsertUserReservation = async () => {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/arentcar/user/cars/reservation`,
@@ -62,8 +64,9 @@ const PaymentPage = () => {
         { params: params }
 
       );
-      if (response.status === 200) {
+      if (response.data) {
         alert('예약 성공');
+        console.log(response.data);
       }
     } catch (error) {
       if (axios.isCancel(error)) {
@@ -73,7 +76,6 @@ const PaymentPage = () => {
       }
     }
   };
-
   const updateCarStatus = async () => {
     try {
       const response = await axios.put(
@@ -97,8 +99,6 @@ const PaymentPage = () => {
       }
     }
   };
-  
-  
 
   const addCommaToCurrency = (fee) => {
     if (fee.toString().length > 6) {
