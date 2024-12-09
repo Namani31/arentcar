@@ -318,11 +318,11 @@ const ManageBranchs = ({ onClick }) => {
 
     // 지점 추가 및 수정
     const handleDataSaveClick = async () => {
-    // 지점명, 지역코드, 상세주소, 전화번호 입력칸이 공란인지 검증
+        // 지점명, 지역코드, 상세주소, 전화번호 입력칸이 공란인지 검증
         if (!validateCheck()) {
             return;
         }
-        
+
         let newBranch = {
             branch_code: branchCode,
             branch_name: branchName,
@@ -633,6 +633,22 @@ const ManageBranchs = ({ onClick }) => {
         return "";
     };
 
+    const formatPhoneNumber = (branch_phone_number) => {
+        if (branch_phone_number && branch_phone_number.length === 10) {
+            // '0311234567'
+            return `${branch_phone_number.slice(0, 3)}-${branch_phone_number.slice(3, 6)}-${branch_phone_number.slice(6, 10)}`;
+        }
+        // 기본값으로 원래 시간 반환
+        return branch_phone_number;
+    };
+
+    const handlePhoneNumberChange = (e) => {
+        const input = e.target.value.replace(/[^0-9:]/g, ""); // 숫자와 ':'만 허용
+        const formatted = input.replace(":", ""); // ':' 제거한 값 (저장된 값이 09:00 이기 때문)
+
+        setBranchPhoneNumber(formatted);
+    }
+
     return (
         <div className='register-branch-wrap'>
             <div className='register-branch-header-wrap'>
@@ -669,7 +685,7 @@ const ManageBranchs = ({ onClick }) => {
                 <div className='manager-branch-create-popup manager-popup'>
                     <div className='register-branch-content-popup-wrap'>
                         <div className='register-branch-content-popup-close'>
-                            <div className='manager-branch-title'>● 지점{workMode}</div>
+                            <div className='manager-popup-title'>● 지점{workMode}</div>
                             <div className='branch-info-content-popup-button'>
                                 <button className='manager-button manager-button-save' onClick={handleDataSaveClick}>저장</button>
                                 <button className='manager-button manager-button-close' onClick={handlePopupCloseClick}>닫기</button>
@@ -715,7 +731,7 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="postCode">우편번호</label>
-                            <input className='width300' type="text" value={postCode} placeholder='우편번호를 입력해주세요.' maxLength={50} onChange={(e) => setPostCode(e.target.value)} />
+                            <input className='width300' type="text" value={postCode} placeholder='우편번호를 입력해주세요.' maxLength={5} onChange={(e) => setPostCode(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchBasicAddress">기본주소</label>
@@ -727,16 +743,16 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchPhoneNumber">전화번호</label>
-                            <input className='width300' type="text" value={formatBranchPhoneNumber(branchPhoneNumber)} placeholder='전화번호를 입력해주세요.' maxLength={50} onChange={(e) => setBranchPhoneNumber(e.target.value)} />
+                            <input className='width300' type="text" value={formatPhoneNumber(branchPhoneNumber)} placeholder='전화번호를 입력해주세요.' maxLength={12} onChange={(e) => handlePhoneNumberChange(e)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availablePickupTime">개점시간</label>
                             {/* maxLength={5}인 이유는 '09:00', 콜론 */}
-                            <input className='width300' type="text" value={formatPickupTime(availablePickupTime)} placeholder='개점시간을 입력해주세요.' maxLength={5} onChange={handlePickupTimeChange} />
+                            <input className='width300' type="text" value={formatPickupTime(availablePickupTime)} placeholder='개점시간을 입력해주세요.' maxLength={5} onChange={(e) => handlePickupTimeChange(e)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availableReturnTime">폐점시간</label>
-                            <input className='width300' type="text" value={formatReturnTime(availableReturnTime)} placeholder='폐점시간을 입력해주세요.' maxLength={5} onChange={handleReturnTimeChange} />
+                            <input className='width300' type="text" value={formatReturnTime(availableReturnTime)} placeholder='폐점시간을 입력해주세요.' maxLength={5} onChange={(e) => handleReturnTimeChange(e)} />
                         </div>
                     </div>
                 </div>
@@ -793,7 +809,7 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="postCode">우편번호</label>
-                            <input className='width300' type="text" value={postCode} placeholder='우편번호를 입력해주세요.' maxLength={50} onChange={(e) => setPostCode(e.target.value)} />
+                            <input className='width300' type="text" value={postCode} placeholder='우편번호를 입력해주세요.' maxLength={5} onChange={(e) => setPostCode(e.target.value)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchBasicAddress">기본주소</label>
@@ -805,16 +821,17 @@ const ManageBranchs = ({ onClick }) => {
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="branchPhoneNumber">전화번호</label>
-                            <input className='width300' type="text" value={branchPhoneNumber} placeholder='전화번호를 입력해주세요.' maxLength={50} onChange={(e) => setBranchPhoneNumber(e.target.value)} />
+                            {/* maxLength={12}: "010-123-1234" 기준 최대 길이 */}
+                            <input className='width300' type="text" value={formatPhoneNumber(branchPhoneNumber)} placeholder='전화번호를 입력해주세요.' maxLength={12} onChange={(e) => handlePhoneNumberChange(e)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availablePickupTime">개점시간</label>
                             {/* maxLength={5}인 이유는 '09:00', 콜론 */}
-                            <input className='width300' type="text" value={formatPickupTime(availablePickupTime)} placeholder='개점시간을 입력해주세요.' maxLength={5} onChange={handlePickupTimeChange} />
+                            <input className='width300' type="text" value={formatPickupTime(availablePickupTime)} placeholder='개점시간을 입력해주세요.' maxLength={5} onChange={(e) => handlePickupTimeChange(e)} />
                         </div>
                         <div className='register-branch-content-popup-line'>
                             <label className='width80 word-right label-margin-right' htmlFor="availableReturnTime">폐점시간</label>
-                            <input className='width300' type="text" value={formatReturnTime(availableReturnTime)} placeholder='폐점시간을 입력해주세요.' maxLength={5} onChange={handleReturnTimeChange} />
+                            <input className='width300' type="text" value={formatReturnTime(availableReturnTime)} placeholder='폐점시간을 입력해주세요.' maxLength={5} onChange={(e) => handleReturnTimeChange(e)} />
                         </div>
                     </div>
                 </div>
@@ -915,13 +932,15 @@ const ManageBranchs = ({ onClick }) => {
                                         <button className='manager-button manager-branch-button-delete' onClick={() => handleDeleteClick(row.branch_code)}>삭제</button>
                                     </>
                                 ) : (
-                                    <>
-                                        {(title.field === 'available_pickup_time' || title.field === 'available_return_time') ? (
-                                            formatTime(row[title.field]) // 시간 필드만 09:00 형식으로 표시되게 포맷
-                                        ) : (
-                                            row[title.field] // 다른 필드는 그대로 출력
-                                        )}
-                                    </>
+                                    <div>
+                                    {(title.field === 'available_pickup_time' || title.field === 'available_return_time') ? (
+                                        formatTime(row[title.field]) // 시간 필드만 09:00 형식으로 표시되게 포맷
+                                    ) : title.field === 'branch_phone_number' ? (
+                                        formatPhoneNumber(row[title.field]) // 전화번호 필드 포맷
+                                    ) : (
+                                        row[title.field] // 다른 필드는 그대로 출력
+                                    )}
+                                </div>
                                 )}
                             </div>
                         ))}
