@@ -42,6 +42,7 @@
 }
 .user-customers-create-review-popup-wrap h6{
     font-weight: bold;
+    font-size: 18px;
 }
 .user-customers-create-review-popup-score{
     font-size: 22px;
@@ -87,3 +88,8 @@
     border-radius: 20px;
     background-color: #ee0a0a;
 }
+
+.user-customers-create-review-popup-score{
+    color: #ee0a0a;
+}
+

@@ -29,11 +29,11 @@
     border-bottom: 1px solid #ededf0;
 }
 .user-customers-header-menu>li.on{
-    border-bottom: 3px solid #ff7916;
+    border-bottom: 2px solid #ee0a0a;
 }
 .user-customers-header-menu>li.on>h5{
     font-weight: 600;
-    color: #ff7916;
+    /* color: #ff7916; */
 }
 .user-customers-wrap{
     max-width: 1280px;
