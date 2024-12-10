@@ -16,6 +16,7 @@ import Customers from 'user/content/Customers';
 import Notices from 'user/content/Notices';
 import Reviews from 'user/content/Reviews';
 import Inquirys from 'user/content/Inquirys';
+import MyPage from 'user/content/MyPage';
 
 const UserMenu = () => {
   return (
@@ -34,7 +35,8 @@ const UserMenu = () => {
           <Route path="/reservationdetail" element={<ReservationDetail />} /> 
           <Route path="/rentalrateguide" element={<RentalRateGuide />} /> 
           <Route path="/branches" element={<Branches />} /> 
-          <Route path="/paymentpage" element={<PaymentPage />} /> 
+          <Route path="/paymentpage" element={<PaymentPage />} />
+          <Route path="/mypage" element={<MyPage />} /> 
           {/* 고객지원 */}
           <Route path="/customers" element={<Customers />} ></Route>
           <Route path="/customers/NT/:postId" element={<Notices />} ></Route>

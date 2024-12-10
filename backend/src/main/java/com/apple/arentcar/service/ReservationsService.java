@@ -3,9 +3,9 @@ package com.apple.arentcar.service;
 
 import com.apple.arentcar.dto.*;
 import com.apple.arentcar.mapper.ReservationsMapper;
-import com.apple.arentcar.model.Reservations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -37,11 +37,39 @@ public class ReservationsService {
         reservationsMapper.updateCarStatus(carNumber, carStatus);
     }
 
-    public void updateReservationStatus(String reservationCode, Map<String, Object> reservationStatusRequest) {
-
+    public void updateReservationAndCarStatus(String reservationCode, Map<String, Object> reservationStatusRequest) {
+        // Map에서 데이터 추출
         String reservationStatus = (String) reservationStatusRequest.get("reservationStatus");
+        String paymentStatus = (String) reservationStatusRequest.get("paymentStatus");
+        String carStatus = (String) reservationStatusRequest.get("carStatus");
 
-        reservationsMapper.updateReservationStatus(reservationCode, reservationStatus);
+        // reservations 테이블 업데이트
+        reservationsMapper.updateReservationStatus(reservationCode, reservationStatus, paymentStatus);
+
+        // rental_cars 테이블 업데이트
+        reservationsMapper.updateRentCarStatus(reservationCode, carStatus);
+    }
+    public List<MyReservationsResponseDTO> findReservationsByUserCode(MyReservationsRequestDTO myrequestDTO) {
+        return reservationsMapper.findReservationsByUserCode(myrequestDTO);
+    }
+    public int countMyReservations(MyReservationsRequestDTO SearchRequestDTO) {
+        return reservationsMapper.countMyReservations(SearchRequestDTO);
     }
 
+    public int countAllMyReservations(String userCode) {
+        return reservationsMapper.countAllMyReservations(userCode);
+    }
+    public MyReservationsDetailResponseDTO getReservationDetailByUserAndCode(String reservationCode,String userCode) {
+        return reservationsMapper.getReservationDetailByUserAndCode(reservationCode, userCode);
+    }
+
+    public void cancelMyReservation(String reservationCode, String userCode, ReservationStatusRequestDTO mypagerequestDTO) {
+
+        String reservationStatus = mypagerequestDTO.getReservationStatus();
+        String paymentStatus = mypagerequestDTO.getPaymentStatus();
+        String carStatus = mypagerequestDTO.getCarStatus();
+
+        reservationsMapper.updateReservationAndPaymentStatus(reservationCode, userCode, reservationStatus, paymentStatus);
+        reservationsMapper.updateCarStatusForCancellation(reservationCode, userCode, carStatus);
+    }
 }
