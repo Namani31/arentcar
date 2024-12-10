@@ -14,11 +14,14 @@ const RentalCar = ({ ...selectedFilters }) => {
         ...car,
         rental_date : selectedFilters.rentalDate,
         return_date : selectedFilters.returnDate,
+        rental_time : selectedFilters.rentalTime,
+        return_time : selectedFilters.returnTime,
       }
     });
   };
 
   useEffect(() => {
+
 
     const fetchCars = async () => {
       try {
@@ -27,6 +30,7 @@ const RentalCar = ({ ...selectedFilters }) => {
         });
         if (response.data) {
           setCars(response.data);
+          console.log(response.data);
         }
       } catch (error) {
         if (axios.isCancel(error)) {

@@ -31,4 +31,8 @@ public interface CarMapper {
     int InsertUserReservation(UserReservationDTO userReservationDTO);
 
     List<RegionsDTO> getAllRegions();
+
+    void updateCarStatus(Integer carCode);
+
+    Integer getReservationNumber();
 }

@@ -149,6 +149,10 @@
         SELECT region_name FROM regions ORDER BY region_name ASC
     </select>
 
+    <select id="getReservationNumber" resultType="int">
+        SELECT reservation_code FROM reservations r ORDER BY reservation_code DESC LIMIT 1;
+    </select>
+
     <insert id="InsertUserReservation" parameterType="com.apple.arentcar.dto.UserReservationDTO">
         INSERT INTO reservations (
         user_code,
@@ -162,7 +166,9 @@
         insurance_type,
         payment_category,
         payment_type,
-        payment_amount
+        payment_amount,
+        reservation_date,
+        payment_date
         ) VALUES (
         #{userCode},
         #{carCode},
@@ -179,9 +185,15 @@
         #{insuranceType},
         #{paymentCategory},
         #{paymentType},
-        #{paymentAmount}
+        #{paymentAmount},
+        #{reservationDate},
+        #{paymentDate}
         );
     </insert>
+
+    <update id="updateCarStatus">
+        UPDATE rental_cars SET car_status = 02 WHERE car_code = #{carCode}
+    </update>
 
 
 

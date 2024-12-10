@@ -19,4 +19,7 @@ public class UserReservationDTO {
     private String paymentCategory;
     private String paymentType;
     private Integer paymentAmount;
+    private String reservationDate;
+    private String paymentDate;
+
 }

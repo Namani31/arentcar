@@ -2,6 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     gap: 60px;
     width: 1080px;
     min-height: 430px;
@@ -9,6 +10,10 @@
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 5px 5px 1px #ccc;
+    padding: 20px 0;
+}
+.reservation-calendar-content-wrap{
+    display: flex;
 }
 .reservation-calendar {
     width: 400px;
@@ -83,4 +88,50 @@
     background-color: #f0ad4e; /* 선택 범위 색상 */
     color: white;
   }
+  .reservation-calender-select-wrapper {
+    display: flex;
+    position: relative;
+    width: 600px;
+    gap: 40px;
+    font-size: 16px;
+    line-height: 16px;
+  }
+  .reservation-calender-select-wrapper p {
+    line-height: 16px;
+  }
+  
+  #time-select {
+    width: 30%;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3csvg xmlns%3d%27http%3a//www.w3.org/2000/svg%27 width%3d%2710%27 height%3d%275%27 viewBox%3d%270 0 10 5%27%3e%3cpath fill%3d%27%23333%27 d%3d%27M0 0l5 5 5-5z%27/%3e%3c/svg%3e');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px 5px;
+    cursor: pointer;
+  } 
+  
+  #time-select:focus {
+    border-color: #6c63ff;
+    outline: none;
+  }
+  
+  .select-wrapper::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+  }
+  
+  
   

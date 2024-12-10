@@ -17,6 +17,7 @@ import Notices from 'user/content/Notices';
 import Reviews from 'user/content/Reviews';
 import Inquirys from 'user/content/Inquirys';
 import MyPage from 'user/content/MyPage';
+import PaymentCompletedPage from 'user/content/PaymentCompletedPage';
 
 const UserMenu = () => {
   return (
@@ -44,6 +45,8 @@ const UserMenu = () => {
           <Route path="/customers/RV/:postId" element={<Reviews />} ></Route>
           <Route path="/customers/IQ" element={<Inquirys />} ></Route>
           <Route path="/customers/IQ/:postId" element={<Inquirys />} ></Route>
+          <Route path="/paymentpage" element={<PaymentPage />} /> 
+          <Route path="/PaymentCompletedPage" element={<PaymentCompletedPage />} /> 
         </Routes>
       </div>
       <div className='user-menu-footer-wrap'>

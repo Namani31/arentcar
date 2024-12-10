@@ -142,6 +142,7 @@
     border-left: 1px solid #ccc;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(auto-fill, 50px);
     gap: 20px;
     padding: 10px;
     overflow-y: scroll;
@@ -151,7 +152,14 @@
     padding: 10px;
     box-sizing: border-box;
     font-size: 14px;
+    line-height: 25px;
     font-weight: bold;
     color: #2f2f2f;
     cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border-radius: 6px;
+}
+.rental-cars-page-select-branch-name:hover{
+    background-color: #ff7916;
+    color: #fff;
 }
