@@ -17,14 +17,14 @@
             r.return_date AS returnDate,  <!-- 날짜 변환 -->
             ct.car_type_name AS carType,
         CONCAT(
-            'Rental Period: ',
-            r.rental_date,
-            ' to ',
-            r.return_date,
-            ' (',
+        ' ',
+        DATE_FORMAT(r.rental_date, '%Y-%m-%d'),
+        ' 부터  ',
+        DATE_FORMAT(r.return_date, '%Y-%m-%d'),
+        ' 까지 ( ',
         DATEDIFF(r.return_date, r.rental_date),
-            ' days)'
-            ) AS rentalPeriod,
+        ' 일 )'
+        ) AS rentalPeriod,
             r.payment_amount AS paymentAmount
         FROM
             reservations r
@@ -123,19 +123,21 @@
             ct.car_type_name AS carType,
             rc.car_number AS carNumber,
             cc_insurance.common_name AS insuranceType,
-            DATE_FORMAT(r.rental_date, '%Y-%m-%d') AS rentalDate,
-            TIME_FORMAT(r.rental_time, '%H:%i') AS rentalTime,
-            DATE_FORMAT(r.return_date, '%Y-%m-%d') AS returnDate,
-            TIME_FORMAT(r.return_time, '%H:%i') AS returnTime,
+            r.rental_date AS rentalDate,
+            r.rental_time AS rentalTime,
+            r.return_date AS returnDate,
+            r.return_time AS returnTime,
             CONCAT(
-            'Rental Period: ',
+            ' ',
             DATE_FORMAT(r.rental_date, '%Y-%m-%d'),  -- 포맷팅 추가
-            ' to ',
+            ' 부터  ',
             DATE_FORMAT(r.return_date, '%Y-%m-%d'),  -- 포맷팅 추가
-            ' (',
+            ' 까지 ( ',
             DATEDIFF(r.return_date, r.rental_date),
-            ' days)'
+            ' 일 )'
             ) AS rentalPeriod,
+            r.reservation_date AS reservationDate,
+            r.payment_date AS paymentDate,
             cc_payment_category.common_name AS paymentCategoryName,
             cc_payment_type.common_name AS paymentTypeName,
             r.payment_amount AS paymentAmount

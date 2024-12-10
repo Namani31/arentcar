@@ -3,7 +3,7 @@ import 'user/footer/FooterMain.css';
 
 const FooterMain = () => {
   return (
-    <div classNameName='footer-main-wrap'>
+    <div className='footer-main-wrap'>
       <div className="footer-main-info">
         <div className="footer-main-logo"><img src={`${process.env.REACT_APP_IMAGE_URL}/arentcar.png`} alt="logo Footer" /></div>
         <div className="footer-main-comment">회사소개 | 이용약관 | 개인정보처리방침 | 이메일무단수집거부 | 고정형 영상정보처리기기 운영 및 관리방침 | 채용안내 | 사회적책임</div>

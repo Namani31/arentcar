@@ -5,15 +5,38 @@
   margin: 20px 20px;
 }
 
-.manage-payment-search-wrap{
-  margin: 20px 0;
+.manage-payment-search-content-wrap {
   display: flex;
   align-items: center;
+  width: 1120px;
+  justify-content: space-between;
+}
+
+.manage-payment-search-wrap{
+  margin: 20px 0;
+  align-items: center;
   gap: 5px; /* 요소 간 간격 */
+  display: flex;
+}
+
+.manage-payment-search-close{
+  display: flex;
+  align-items: center;
+}
+
+.manage-payment-content-wrap {
+  width: 1120px;
+  height: 400x;
 }
 
 .manage-payment-content-header-row-wrap {
   display: flex; 
+  text-align: center;
+}
+
+.manage-payment-content-column {
+  text-align: right;
+  padding-right: 10px;
 }
 
 .manage-payment-content-list-wrap {
@@ -36,12 +59,15 @@
 }
 
 .manage-payment-detail-content-popup-wrap {
-  width: 500px;
-  margin: 250px auto;
+  font-size: 15px;
+  width: 600px;
+  margin: 150px auto;
   padding: 20px 20px;
   background-color: #fff;
   border-radius: 6px;
+  line-height: 2; /* 텍스트 줄 간격 */
 }
+
 .manage-payment-detail-content-popup-header-wrap{
   display: flex;
   justify-content: space-between;

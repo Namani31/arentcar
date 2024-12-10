@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { refreshAccessToken, handleLogout } from 'common/Common';
-import { formatDate } from "common/Common";
+import { refreshAccessToken, handleAdminLogout, formatDate, formatTime, formatPhone } from "common/Common";
 import 'manager/managepayment/ManagePayment.css';
 import 'index.css';
 
-const ManagePayment = () => {
+const ManagePayment = ({ onClick }) => {
   const [branchNames, setBranchNames] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState('');
   const [reservationDate, setReservationDate] = useState('');
@@ -24,9 +23,25 @@ const ManagePayment = () => {
     { headerName: '차종', field: 'car_type', width: 120, align: 'center' },
     { headerName: '렌트일', field: 'rental_date', width: 120, align: 'center' },
     { headerName: '렌트기간', field: 'rental_period', width: 300, align: 'center' },
-    { headerName: '결제금액', field: 'payment_amount', width: 120, align: 'center' },
+    { headerName: '결제금액', field: 'payment_amount', width: 120 },
     { headerName: '상세보기', field: '', width: 120, align: 'center' },
   ]);
+
+  // YYYY-MM-DD → YYYYMMDD 변환 함수
+  const formatDateToCompact = (date) => {
+    if (!date) {
+      return ""; // 날짜가 없으면 빈 문자열 반환
+    }
+    return date.replace(/-/g, ""); // "-"를 제거하여 반환
+  };
+  const formatNumberWithCommas = (number) => {
+    if (!number && number !== 0) {
+      return ""; // 숫자가 없으면 빈 문자열 반환
+    }
+
+    // 숫자를 문자열로 변환 후 정규식 사용 + 원(₩) 추가
+    return `${number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원`;
+  };
 
   const pageingManagePayment = async () => {
     try {
@@ -39,7 +54,7 @@ const ManagePayment = () => {
           await getManagePayment(newToken);
         } catch (error) {
           alert('인증이 만료되었습니다. 다시 로그인 해주세요.');
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the menus paging!', error);
@@ -60,7 +75,7 @@ const ManagePayment = () => {
       params.branchName = selectedBranch;
     }
     if (reservationDate) {
-      params.rentalDate = reservationDate;
+      params.rentalDate = formatDateToCompact(reservationDate);
     }
     if (searchName && searchName.trim() !== '') {
       params.userName = searchName;
@@ -96,7 +111,7 @@ const ManagePayment = () => {
           await getCount(newToken);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the RentalRates count!', error);
@@ -106,7 +121,7 @@ const ManagePayment = () => {
 
   const getCount = async (token) => {
     const params = {
-      ...((selectedBranch && { branchNames: selectedBranch }) || {}),
+      ...((selectedBranch && { branchName: selectedBranch }) || {}),
       ...((reservationDate && { rentalDate: reservationDate }) || {}),
       ...((searchName && { userName: searchName }) || {}),
     };
@@ -130,7 +145,7 @@ const ManagePayment = () => {
   // 지점명 가져오기
   const handleFetchBranchNames = async () => {
     let token = localStorage.getItem("accessToken");
-
+    
     try {
       await fetchBranchNamesData(token); // 기존 토큰으로 데이터 요청
     } catch (error) {
@@ -139,8 +154,9 @@ const ManagePayment = () => {
           token = await refreshAccessToken(); // 새 토큰 발급
           await fetchBranchNamesData(token); // 새 토큰으로 데이터 요청
         } catch (refreshError) {
+          console.error(error.response);
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout(); // 로그아웃 처리
+          handleAdminLogout(); // 로그아웃 처리
         }
       } else {
         console.error("지점명 데이터를 가져오는 중 오류가 발생했습니다.", error);
@@ -149,7 +165,7 @@ const ManagePayment = () => {
   };
 
   const fetchBranchNamesData = async (token) => {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs`, {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/user/branchs`, {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     });
@@ -171,7 +187,7 @@ const ManagePayment = () => {
           await getManagePaymentDetails(newToken, reservationCode);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error("There was an error fetching the managePayment details!", error);
@@ -185,7 +201,7 @@ const ManagePayment = () => {
       }
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalrates/detail/${reservationCode}`,
       {
-        header: {
+        headers: {
           Authorization: `Bearer ${token}`,
         },
         withCredentials: true,
@@ -207,9 +223,12 @@ const ManagePayment = () => {
     };
     
   useEffect(() => {
+    handleFetchBranchNames();
+  }, []);
+
+  useEffect(() => {
     pageingManagePayment();
     getTotalCount();
-    handleFetchBranchNames();
   }, [pageNumber, pageSize]);
 
 
@@ -228,7 +247,13 @@ const ManagePayment = () => {
 
   const handlePageChange = (newPage) => {
       setPageNumber(newPage);
+    };
+
+  const handleCloseClick = () => {
+    if (onClick) {
+      onClick();
     }
+  };
 
   let totalPages = totalCount > 0 ? Math.ceil(totalCount / pageSize) : 1;
 
@@ -239,97 +264,113 @@ const ManagePayment = () => {
         <div className="manage-payment-title-wrap">
           <div className='manage-payment-title manager-title'>
             ● 결제 정보 확인
-            </div>
+            </div>          
         </div>
 
         {/* 검색창 */}
-        <div className="manage-payment-search-wrap">
-          <input 
-          type="text" 
-          placeholder="회원명" 
-          value={searchName} 
-          onChange={(e) => setSearchName(e.target.value)} 
-          onKeyDown={(e) => e.key === "Enter" && handleSearchClick()}
-          className='manage=payment-text-input'
-          />
+        
+        <div className="manage-payment-search-content-wrap">
+          <div className='manage-payment-search-wrap'>
+            <input 
+            type="text" 
+            placeholder="회원명" 
+            value={searchName} 
+            onChange={(e) => setSearchName(e.target.value)} 
+            onKeyDown={(e) => e.key === "Enter" && handleSearchClick()}
+            className='manage=payment-text-input'
+            />
 
-          <select 
-          className="manage-payment-select" 
-          value={selectedBranch} 
-          onChange={(e) => setSelectedBranch(e.target.value)}>
+            <select 
+            className="manage-payment-select" 
+            value={selectedBranch} 
+            onChange={(e) => setSelectedBranch(e.target.value)}>
 
-            <option value="">대여지점</option>
-            {branchNames.map((name, index) => (
-              <option key={index} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
+              <option value="">대여지점</option>
+              {branchNames.map((name, index) => (
+                <option key={index} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
 
-          <input
-            type="date"
-            value={reservationDate}
-            onChange={(e) => setReservationDate(e.target.value)}
-            className="manage-payment-reservation-date"
-          />
-          <button 
-          className="manager-button manager-button-search" 
-          onClick={handleSearchClick}
-          >
-            검색
-          </button>
+            <input
+              type="date"
+              value={reservationDate}
+              onChange={(e) => setReservationDate(e.target.value)}
+              className="manage-payment-reservation-date"
+            />
+            <button 
+            className="manager-button manager-button-search" 
+            onClick={handleSearchClick}
+            >
+              검색
+            </button>
+          </div>
+          <div className='manage-payment-search-close'>
+              <button
+              onClick={() => handleCloseClick()}
+              className='manager-button manager-button-close'>닫기</button>
+          </div>
         </div>
       </div>
 
       {/* 테이블 헤더*/}
-      <div className="manage-payment-content-header-row-wrap">
-        {columnDefs.map((title, index) => (
-          <div key={index} 
-          className="manage-payment-content-header-column manager-head-column" 
-          style={{ 
-            width: `${title.width}px`, 
-            textAlign: title.align || "center" 
-            }}>
-            {title.headerName}
-          </div>
-        ))}
-      </div>
-
-      {/* 테이블데이터 */}
-      <div className="manage-payment-content-list-wrap">
-        {managePayment.length > 0 ? (
-          managePayment.map((row, rowIndex) => (
-            <div 
-            key={rowIndex} 
-            className="manage-payment-content-item">
-              {columnDefs.map((col, colIndex) => (
-                <div
-                  key={colIndex}
-                  className="manage-payment-content-column manager-row-column"
-                  style={{
-                    ...(col.field === "" ? { display: "flex" } : ""),
-                    ...(col.field === "" ? { alignItems: "center" } : ""),
-                    ...(col.field === "" ? { justifyContent: "center" } : ""),
-                    width: `${col.width}px`,
-                    textAlign: `${col.align}` || 'center',
-                  }}
-                >
-                  {col.field === '' ? (
-                    <button 
-                    className="manage-payment-content-button-detail manager-button" 
-                    onClick={() => handleDetailClick(row.reservation_code)}
-                    >상세
-                    </button>
-                  ) : (
-                    row[col.field]
-                  )}
-                </div>
-              ))}
+      <div className='manage-payment-content-wrap'>
+        <div className="manage-payment-content-header-row-wrap">
+          {columnDefs.map((title, index) => (
+            <div key={index} 
+            className="manage-payment-content-header-column manager-head-column" 
+            style={{ 
+              width: `${title.width}px`, 
+              textAlign: title.align || "center" 
+              }}>
+              {title.headerName}
             </div>
-          ))
-        ) : (
-          <div className="manage-payment-content-no-data">표시할 데이터가 없습니다.</div>
-        )}
+          ))}
+        </div>
+        {/* 테이블데이터 */}
+        <div className="manage-payment-content-list-wrap">
+          {managePayment.length > 0 ? (
+            managePayment.map((row, rowIndex) => (
+              <div 
+              key={rowIndex} 
+              className="manage-payment-content-item">
+                {columnDefs.map((col, colIndex) => (
+                  <div
+                    key={colIndex}
+                    className="manage-payment-content-column manager-row-column"
+                    style={{
+                      ...(col.field === "" ? { display: "flex" } : ""),
+                      ...(col.field === "" ? { alignItems: "center" } : ""),
+                      ...(col.field === "" ? { justifyContent: "center" } : ""),
+                      width: `${col.width}px`,
+                      textAlign: `${col.align}` || 'center',
+                    }}
+                  >
+                    {col.field === '' ? (
+                      <button
+                        className="manage-payment-content-button-detail manager-button"
+                        onClick={() => handleDetailClick(row.reservation_code)}
+                      >
+                        상세
+                      </button>
+                    ) : (
+                      col.field === 'rental_date' || col.field === 'return_date' ? (
+                        formatDate(row[col.field])
+                    ) : col.field === 'payment_amount' ? (
+                      formatNumberWithCommas(row[col.field]) // 결제 금액 형식 지정
+                    ) : (
+                      row[col.field]
+                    )
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))
+          ) : (
+            <div className="manage-payment-content-no-data">표시할 데이터가 없습니다.</div>
+          )}
+        </div>
       </div>
 
       {/* 팝업 */}
@@ -363,7 +404,7 @@ const ManagePayment = () => {
                 <label>생년월일 : </label>
                 <span>{formatDate(managePaymentDetails.user_birth_date)}</span>
                 <label>연락처 : </label>
-                <span>{managePaymentDetails.phone_number}</span>
+                <span>{formatPhone(managePaymentDetails.phone_number)}</span>
               </div>
               <div className="manage-payment-detail-popup-field-row">
                 <label>이메일 : </label>
@@ -373,9 +414,9 @@ const ManagePayment = () => {
               </div>
               <div className="manage-payment-detail-popup-field-row">
                 <label>면허발급일 : </label>
-                <span>{managePaymentDetails.driver_issue}</span>
+                <span>{formatDate(managePaymentDetails.driver_issue)}</span>
                 <label>면허갱신일 : </label>
-                <span>{managePaymentDetails.driver_expiry}</span>
+                <span>{formatDate(managePaymentDetails.driver_expiry)}</span>
               </div>
             </div>
 
@@ -385,24 +426,30 @@ const ManagePayment = () => {
               <div className="manage-payment-detail-popup-field-row">
                 <label>차량명 : </label>
                 <span>{managePaymentDetails.car_type}</span>
-                <label>대여일시 : </label>
-                <span>{formatDate(managePaymentDetails.rental_date)}{' '}{managePaymentDetails.rental_time}</span>
+                <label>대여지점 : </label>
+                <span>{managePaymentDetails.branch_name}</span>
               </div>
               <div className="manage-payment-detail-popup-field-row">
                 <label>차량번호 :{' '}</label>
                 <span>{managePaymentDetails.car_number}</span>
-                <label>대여지점 : </label>
-                <span>{managePaymentDetails.branch_name}</span>
+                <label>대여일시 : </label>
+                <span>{formatDate(managePaymentDetails.rental_date)}{' '}{formatTime(managePaymentDetails.rental_time)}</span>
               </div>
               <div className="manage-payment-detail-popup-field-row">
                 <label>보험 : </label>
                 <span>{managePaymentDetails.insurance_type}</span>
                 <label>반납일시 : </label>
-                <span>{formatDate(managePaymentDetails.return_date)}{' '}{managePaymentDetails.return_time}</span>
+                <span>{formatDate(managePaymentDetails.return_date)}{' '}{formatTime(managePaymentDetails.return_time)}</span>
               </div>
               <div className="manage-payment-detail-popup-field-row">
                 <label>렌트기간 : </label>
                 <span>{managePaymentDetails.rental_period}</span>
+              </div>
+              <div className="manage-payment-detail-popup-field-row">
+                <label>예약일 : </label>
+                <span>{formatDate(managePaymentDetails.reservation_date)}</span>
+                <label>결제일 : </label>
+                <span>{formatDate(managePaymentDetails.payment_date)}</span>
               </div>
               <div className="manage-payment-detail-popup-field-row">
                 <label>결제구분 : </label>
@@ -412,7 +459,7 @@ const ManagePayment = () => {
               </div>
               <div className="manage-payment-detail-popup-field-row">
                 <label>결제금액 : </label>
-                <span>{managePaymentDetails.payment_amount}</span>
+                <span>{formatNumberWithCommas(managePaymentDetails?.payment_amount) || ""}</span>
               </div>
             </div>
           </div>

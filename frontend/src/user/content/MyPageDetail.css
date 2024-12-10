@@ -1,0 +1,79 @@
+
+.mypage-detail-update-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  /* background-color: #f9f9f9; */
+  letter-spacing: 5px;
+  font-size: 12px;
+}
+
+.mypage-detail-update-contents-wrap {
+  width: 600px;
+  height: 500px;
+}
+
+.mypage-detail-update-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mypage-detail-update-close {
+  font-size: 12px;
+  font-weight: normal;
+  padding-right: 10px;
+}
+
+
+.mypage-detail-update-basic-info-wrap,
+.mypage-detail-update-sub-info-box {
+  border: solid 2px #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  letter-spacing: 5px;
+  padding: 15px;
+}
+
+.mypage-detail-update-title,
+.mypage-detail-update-sub-info-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px;
+  padding-top: 50px;
+}
+
+.mypage-detail-update-signout {
+  padding-top: 30px;
+}
+
+.mypage-detail-update-basic-info-name-section,
+.mypage-detail-update-basic-info-email-section {
+  display: flex;
+  align-items: center;
+}
+
+.mypage-detail-update-basic-info-wrap {
+  padding: 10px 20px;
+}
+
+.mypage-detail-update-sub-info-save {
+  margin: 10px;
+  right: 10px;
+}
+
+.mypage-detail-update-signout {
+margin: 0 10px;
+display: flex;
+justify-content: space-between;
+}
+
+.mypage-detail-update-signout-box {
+margin: 10px 0;
+padding-right: 5pxS;
+}
+
+.mypage-detail-update-sub-info-save-box {
+  display: flex;
+  justify-content: space-between;
+}
