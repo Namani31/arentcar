@@ -25,7 +25,6 @@ const RentalCarInfo = ({ onClick }) => {
   const [rentedRentalCarsCount, setRentedRentalCarsCount] = useState(0);
   const [maintenanceRentalCarsCount, setMaintenanceRentalCarsCount] = useState(0);
 
-  const [isHandleDetailRentalCarsSearchClick, setIsHandleDetailRentalCarsSearchClick] = useState(false); // 상세검색 SELECT, COUNT 조건에 활용
   const [isSearchClicked, setIsSearchClicked] = useState(false); // 플래그 상태 추가
   
   const [columnDefs] = useState([
@@ -115,41 +114,33 @@ const RentalCarInfo = ({ onClick }) => {
     { value: '15', label: '폴스타' },
   ];
 
-  const handlePagingSearchVehicles = async () => {
+  const handleSearchVehiclesWithPaging = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      if (isHandleDetailRentalCarsSearchClick) {
-        await getDetailRentalCars(token);
-        if (!isSearchClicked) { // 검색 클릭시 플래그 상태가 fasle면 1페이지로 이동
+      await getVehicles(token);
+        if (!isSearchClicked) { // 검색 클릭시 플래그 상태가 fasle면 1페이지로 이동(현재 1페이지면 vehiclesTrigger로 useEffect 호출)
           if (pageNumber === 1) {
             setVehiclesTrigger((prev) => !prev);
           } else {
             setPageNumber(1);
           }
-          setIsSearchClicked(true); // 1페이지로 이동 후 플래그 상태 true로 변경(페이지 변경 시 계속 1페이지에 머무는 현상 방지)
+          setIsSearchClicked(true); // 1페이지로 이동 또는 vehiclesTrigger로 useEffect 호출 후 플래그 상태 true로 변경(페이지 변경 시 계속 1페이지에 머무는 현상 방지)
           setIsDetailPopUp(false);
         }
-      } else {
-        await getVehicles(token);
-      }
     } catch (error) {
       if (error.response && error.response.status === 403) {
         try {
           const newToken = await refreshAccessToken();
-          if (isHandleDetailRentalCarsSearchClick) {
-            await getDetailRentalCars(newToken);
-            if (!isSearchClicked) { // 검색 클릭시 플래그 상태가 fasle면 1페이지로 이동
+          await getVehicles(newToken);
+            if (!isSearchClicked) { // 검색 클릭시 플래그 상태가 fasle면 1페이지로 이동(현재 1페이지면 vehiclesTrigger로 useEffect 호출)
               if (pageNumber === 1) {
                 setVehiclesTrigger((prev) => !prev);
               } else {
                 setPageNumber(1);
               }
-              setIsSearchClicked(true); // 1페이지로 이동 후 플래그 상태 true로 변경(페이지 변경 시 계속 1페이지에 머무는 현상 방지)
+              setIsSearchClicked(true); // 1페이지로 이동 또는 vehiclesTrigger로 useEffect 호출 후 플래그 상태 true로 변경(페이지 변경 시 계속 1페이지에 머무는 현상 방지)
               setIsDetailPopUp(false);
             }
-          } else {
-            await getVehicles(newToken);
-          }
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
           handleAdminLogout();
@@ -166,33 +157,9 @@ const RentalCarInfo = ({ onClick }) => {
       pageNumber,
     };
 
-    if (searchName && searchName.trim() !== "") {
-      // searchName이 설정된 경우
-      params.carNumber = searchName;
-    }
-
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/paged`, 
-      {
-        params,
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        withCredentials: true,
-      });
-
-    if (response.data) {
-      setVehicles(response.data);
-    }
-  };
-
-  const getDetailRentalCars = async (token) => {
-    const params = {
-      pageSize,
-      pageNumber,
-    };
-
     // 필터 조건들
     const filters = {
+      carNumber: searchName?.trim(),
       carTypeName: carTypeName?.trim(),
       carStatus: carStatus?.trim(),
       branchName: branchName?.trim(),
@@ -228,20 +195,12 @@ const RentalCarInfo = ({ onClick }) => {
   const getTotalCount = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      if (isHandleDetailRentalCarsSearchClick) {
-        await getSearchCount(token)
-      } else {
-        await getCount(token);
-      }
+      await getCount(token);
     } catch (error) {
       if (error.response && error.response.status === 403) {
         try {
           const newToken = await refreshAccessToken();
-          if (isHandleDetailRentalCarsSearchClick) {
-            await getSearchCount(newToken);
-          } else {
-            await getCount(newToken);
-          }
+          await getCount(newToken);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
           handleAdminLogout();
@@ -253,29 +212,11 @@ const RentalCarInfo = ({ onClick }) => {
   };
 
   const getCount = async (token) => {
-    const params = searchName ? { carNumber: searchName } : {};
-
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/rentalcars/count`,
-      {
-        params,
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        withCredentials: true,
-      });
-
-    if (typeof response.data === 'number') {
-      setTotalCount(response.data);
-    } else {
-      console.error('Unexpected response:', response.data);
-    }
-  };
-
-  const getSearchCount = async (token) => {
     const params = {};
 
     // 필터 조건들
     const filters = {
+      carNumber: searchName?.trim(),
       carTypeName: carTypeName?.trim(),
       carStatus: carStatus?.trim(),
       branchName: branchName?.trim(),
@@ -410,7 +351,7 @@ const RentalCarInfo = ({ onClick }) => {
   };
 
   useEffect(() => {
-    handlePagingSearchVehicles();
+    handleSearchVehiclesWithPaging();
     getTotalCount();
  
     getAvailabelRentalCarsCount("01");
@@ -510,7 +451,6 @@ const RentalCarInfo = ({ onClick }) => {
   }
 
   const handleSearchClick = async () => {
-    setIsHandleDetailRentalCarsSearchClick(false); // 상세검색 페이지네이션 상태 fasle로 변경(useEffect 일반 페이지네이션 작동)
     if (pageNumber === 1) {
       setVehiclesTrigger((prev) => !prev);
     } else {
@@ -519,11 +459,10 @@ const RentalCarInfo = ({ onClick }) => {
   };
 
    const handleDetailSearchClick = async (workMode) => {
-    setIsHandleDetailRentalCarsSearchClick(true); // 상세검색 페이지네이션 상태 true로 변경(useEffect 상세검색 페이지네이션 작동)
-    setIsDetailPopUp(true);
-    setWorkMode(workMode);
-    viewDetailDataInit();
-    setIsSearchClicked(false); // 상세검색 버튼 클릭시 플래그 상태 false로 초기화(시작은 무조건 false, 상태가 false여야 검색시 1페이지로 이동)
+     setIsDetailPopUp(true);
+     setWorkMode(workMode);
+     setIsSearchClicked(false); // 상세검색 버튼 클릭시 플래그 상태 false로 초기화(시작은 무조건 false, 상태가 false여야 검색시 1페이지로 이동)
+     viewDetailDataInit();
    }
 
   const handleInsertClick = (workMode) => {
@@ -931,7 +870,7 @@ const RentalCarInfo = ({ onClick }) => {
               <div className='car-info-content-popup-close'>
                 <div className='manager-popup-title'>● 차량{workMode}</div>
                 <div className='car-info-content-popup-button'>
-                  <button className='manager-button manager-button-save' onClick={handlePagingSearchVehicles}>검색</button>
+                  <button className='manager-button manager-button-save' onClick={handleSearchVehiclesWithPaging}>검색</button>
                   <button className='manager-button manager-button-close' onClick={handlePopupCloseClick}>닫기</button>
                 </div>
               </div>
