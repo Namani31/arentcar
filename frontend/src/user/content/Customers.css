@@ -1,14 +1,14 @@
 .user-customers{
     /* margin-top: 15px; */
     width: 100%;
-    background-color: #ededf0;
+    background-color: #F7F7F9;
 }
 .user-customers-header{
     margin: 0 auto;
     padding: 20px 0px;
     border-end-end-radius: 30px;
     border-end-start-radius: 30px;
-    max-width: 1280px;
+    max-width: 1080px;
     min-height: 77px;
     background-color: #ffffff;
     text-align: center;
@@ -29,14 +29,14 @@
     border-bottom: 1px solid #ededf0;
 }
 .user-customers-header-menu>li.on{
-    border-bottom: 2px solid #ee0a0a;
+    border-bottom: 2px solid #ff7916;
 }
 .user-customers-header-menu>li.on>h5{
     font-weight: 600;
     /* color: #ff7916; */
 }
 .user-customers-wrap{
-    max-width: 1280px;
+    max-width: 1080px;
     min-height: 400px;
     margin: 0 auto;
     margin-top: 30px;
@@ -73,7 +73,7 @@
     width: 70px;
     height: 30px;
     margin: 0px 5px;
-    background-color: #ee0a0a;
+    background-color: #D60228;
     color: #ededf0;
     font-weight: bold;
     vertical-align: middle;
@@ -93,6 +93,9 @@
     display: block;
     float: left;
     width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .user-customers-wrap-post-list>li>a:hover{
     color: #ff7916;
@@ -111,7 +114,7 @@
     margin: 15px 0px;
     text-align: center;
     font-size: 18px;
-    color: #ff7916;
+    /* color: #ff7916; */
 }
 .user-customers-wrap-post-paging>span{
     display: inline-block;
@@ -119,20 +122,24 @@
     height: 35px;
     line-height: 30px;
     vertical-align: top;
-    border: 1px solid #ff7916;
+    /* border: 1px solid #ff7916; */
     border-radius: 10px;
+}
+.user-customers-wrap-post-paging>span:hover{
+    color: #ff7916;
 }
 .user-customers-wrap-post-paging>span.on{
     font-weight: bold;
 }
 .user-customers-wrap-post-paging>button{
     font-size: 16px;
-    color: #ededf0;
-    background-color: #ff7916;
+    color: #fff;
+    background-color: #fff;
     width: 35px;
     height: 35px;
     border-radius: 10px;
 }
+
 
 .create{
     position: absolute;
@@ -148,7 +155,7 @@
     font-size: 14px;
     color: #ededf0;
     border-radius: 20px;
-    background-color: #ee0a0a;
+    background-color: #D60228;
 }
 
 
