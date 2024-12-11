@@ -35,7 +35,7 @@ const UserMenu = () => {
           <Route path="/rentalrateguide" element={<RentalRateGuide />} /> 
           <Route path="/branches" element={<Branches />} /> 
           <Route path="/paymentpage" element={<PaymentPage />} /> 
-          <Route path="/mypagedetail/:userCode" element={<MyPageDetail />} /> 
+          <Route path="/mypagedetail" element={<MyPageDetail />} /> 
           {/* 고객지원 */}
           <Route path="/customers" element={<Customers />} ></Route>
           <Route path="/customers/NT/:postId" element={<Notices />} ></Route>
