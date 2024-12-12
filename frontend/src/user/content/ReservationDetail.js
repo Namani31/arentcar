@@ -132,7 +132,7 @@ function calculateRentalPeriod(rentalDate, returnDate) {
             navigate('/paymentpage',{state : {...carInfo}});
         }else{
             alert('로그인이 필요한 서비스 입니다.');
-            navigate('/login',{state : {...carInfo, from: "/reservationdetail"}});
+            navigate('/login',{state : {...carInfo,from: "/reservationdetail"}});
         }
     }
     return (
