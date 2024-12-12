@@ -11,7 +11,7 @@
 }
 .my-page-content-wrap{
   position: relative;
-  width: 960px;
+  width: 1080px;
   margin: 0 auto;
   padding: 60px 0;
 }
@@ -127,6 +127,8 @@
 .my-page-reservation-no-data{
   text-align: center;
   font-size: 14px;
+  background-color: #ffffff;
+  line-height: 30px;
 }
 
 .my_page_reservation_content_popup_wrap {
@@ -149,7 +151,7 @@
   font-size: 18px;
   font-weight: 700;
   color: #2E3033;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); /* 가벼운 그림자 */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .my_page_button_close{

@@ -9,14 +9,15 @@ import { refreshAccessToken, handleLogout, formatDate, formatTime, formatPhone }
 const MyPage = () => {
   const isUserName = useSelector((state) => state.userState.userName);
   const userCode = useSelector((state) => state.userState.userCode);
+  const isLoginState = useSelector((state) => state.userState.loginState);
   const navigate = useNavigate();
   const [isPopUp, setIsPopUp] = useState(false);
   const [branchNames, setBranchNames] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState("");
   const [selectedReservationDate, setSelcetedreservationDate] = useState("");
-  const [pageNumber, setPageNumber] = useState(1); // 현재 페이지 번호
-  const pageSize = 5; // 한 페이지에 보여줄 데이터 개수
-  const [totalCount, setTotalCount] = useState(0); // 전체 페이지 수
+  const [pageNumber, setPageNumber] = useState(1);
+  const pageSize = 5;
+  const [totalCount, setTotalCount] = useState(0);
   const [myreservations, setMyReservations] = useState([]);
   const [myReservationDetails, setMyReservationDetails] = useState([]);
   const [columnDefs] = useState([
@@ -159,6 +160,14 @@ const MyPage = () => {
       console.error("There was an error fetching the branches", error);
     }
   };
+  // 랜더링
+  useEffect(() => {
+    if (!isLoginState) {
+      alert("로그인이 필요합니다.");
+      navigate("/login", { state: { from: "/mypage" } });
+    }
+  }, [isLoginState, navigate]);
+  
   useEffect(() => {
     handleFetchBranchNames();
   }, []);
@@ -256,12 +265,12 @@ const MyPage = () => {
         {
           params,
           headers: {
-            Authorization: `Bearer ${token}`, // 인증 헤더
+            Authorization: `Bearer ${token}`,
           },
-          withCredentials: true, // 쿠키 포함
+          withCredentials: true,
         }
       );
-      alert("예약이 취소되었습니다."); // 성공 메시지
+      alert("예약이 취소되었습니다.");
       await handleFetchMyReservationDetail(reservationCode, userCode);
     } catch (error) {
       console.error("Error in handleMyReservationCancel:", error);
@@ -274,11 +283,11 @@ const MyPage = () => {
 
           await handleMyReservationCancel(reservationCode, userCode);
         } catch (error) {
-          alert("인증이 만료되었습니다. 다시 로그인 해주세요."); // 인증 만료 알림
-          handleLogout(); // 로그아웃 처리
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
         }
       } else {
-        alert("예약 취소에 실패했습니다."); // 사용자 알림
+        alert("예약 취소에 실패했습니다.");
       }
     }
 };
