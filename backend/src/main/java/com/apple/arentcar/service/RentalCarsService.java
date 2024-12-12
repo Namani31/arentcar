@@ -3,6 +3,7 @@ package com.apple.arentcar.service;
 import com.apple.arentcar.dto.RentalCarsBranchOptionAttrDTO;
 import com.apple.arentcar.dto.RentalCarsDTO;
 import com.apple.arentcar.dto.RentalCarsCarOptionAttrDTO;
+import com.apple.arentcar.exception.DuplicateCarNumberException;
 import com.apple.arentcar.mapper.RentalCarsMapper;
 import com.apple.arentcar.model.RentalCars;
 import org.apache.poi.ss.usermodel.Row;
@@ -25,6 +26,11 @@ public class RentalCarsService {
 
     // 차량 등록
     public RentalCars createRentalCars(RentalCars rentalCars) {
+        // 중복 차량 번호 검사
+        if (rentalCarsMapper.existsByCarNumber(rentalCars.getCarNumber())) {
+            throw new DuplicateCarNumberException("이미 등록된 차량 번호입니다.");
+        }
+
         rentalCarsMapper.createRentalCars(rentalCars);
         return rentalCars;
     }

@@ -106,6 +106,11 @@ const CarInfo = ({ onClick }) => {
     { value: '15', label: '폴스타' },
   ];
 
+  useEffect(() => {
+    pageingVehicles();
+    getTotalCount();
+  }, [pageNumber, vehiclesTrigger]); // pageNumber가 변경될때면 pageingVehicles(), getTotalCount() 함수 호출
+
   const pageingVehicles = async () => {
     try {
       const token = localStorage.getItem('accessToken');
@@ -144,10 +149,14 @@ const CarInfo = ({ onClick }) => {
         withCredentials: true,
       });
 
-    if (response.data) {
-      setVehicles(response.data);
-      console.log(vehicles);
-    }
+      if (response.data && response.data.length > 0) {  // 배열인 경우
+        setVehicles(response.data);
+      } else if (response.data && Object.keys(response.data).length > 0) {  // 객체인 경우
+        setVehicles(response.data);
+      } else {
+        alert("조건에 맞는 차종명이 없습니다.");
+        setVehicles(response.data);
+      }
   };
 
   const getTotalCount = async () => {
@@ -187,11 +196,6 @@ const CarInfo = ({ onClick }) => {
       console.error('Unexpected response:', response.data);
     }
   };
-
-  useEffect(() => {
-    pageingVehicles();
-    getTotalCount();
-  }, [pageNumber, vehiclesTrigger]); // pageNumber가 변경될때면 pageingVehicles(), getTotalCount() 함수 호출
 
   const handleUpdateClick = (updateData, workMode) => {
     setIsPopUp(true);
@@ -580,7 +584,7 @@ const CarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="carTypeName">차종명</label>
-                <input className='width120 word-center' id='carTypeName' type="text" placeholder="모닝" maxLength={20} value={carTypeName} onChange={(e) => setCarTypeName(e.target.value)} />
+                <input className='width120 word-center' id='carTypeName' type="text" placeholder="예) 모닝" maxLength={20} value={carTypeName} onChange={(e) => setCarTypeName(e.target.value)} />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="seatingCapacity">수용인원</label>
@@ -634,7 +638,7 @@ const CarInfo = ({ onClick }) => {
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="modelYear">년식</label>
-                <input className='width120  word-center' id='modelYear' type="text" placeholder="2020년식" maxLength={10} value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
+                <input className='width120  word-center' id='modelYear' type="text" placeholder="예) 2020년식" maxLength={10} value={modelYear} onChange={(e) => {setModelYear(e.target.value)}} />
               </div>
               <div className='car-info-content-popup-line'>
                 <label className='width80 word-right label-margin-right' htmlFor="carImage">차량이미지</label>
