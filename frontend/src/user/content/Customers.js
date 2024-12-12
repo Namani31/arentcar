@@ -242,10 +242,6 @@ const Customers = () => {
                 ))}
                 {/* <li> <a href="/customers/코드"> 제목 </a> <div className="user-customers-wrap-post-list-info"> <span>작성자</span> <span>작성일</span> </div>  </li> */}
               </ul>
-              {pageNumber}
-              {pageNumber === 0 ? '#aaa' : '#fff'}
-              {totalPages}
-              {(pageNumber + 1) >= totalPages ? '#aaa' : '#fff'}
               
               <div className="user-customers-wrap-post-paging">
                 <button onClick={()=>handlePaging(-1)}
