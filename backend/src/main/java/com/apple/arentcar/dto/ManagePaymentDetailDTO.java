@@ -25,6 +25,8 @@ public class ManagePaymentDetailDTO {
     private String returnDate;
     private String returnTime;
     private String rentalPeriod;
+    private String reservationDate;
+    private String paymentDate;
     private String insuranceType; //보험
     private String paymentCategoryName;
     private String paymentTypeName;

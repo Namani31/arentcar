@@ -29,6 +29,7 @@ public class ManagePaymentController {
         int offset = (pageNumber -1) * pageSize;
 
         ManagePaymentRequestDTO requestDTO = new ManagePaymentRequestDTO();
+
         requestDTO.setUserName(userName);
         requestDTO.setBranchName(branchName);
         requestDTO.setRentalDate(rentalDate);

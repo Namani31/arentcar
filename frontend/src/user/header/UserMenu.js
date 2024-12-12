@@ -18,6 +18,7 @@ import Reviews from 'user/content/Reviews';
 import Inquirys from 'user/content/Inquirys';
 import MyPage from 'user/content/MyPage';
 import PaymentCompletedPage from 'user/content/PaymentCompletedPage';
+import MyPageDetail from 'user/content/MyPageDetail';
 
 const UserMenu = () => {
   return (
@@ -38,6 +39,7 @@ const UserMenu = () => {
           <Route path="/branches" element={<Branches />} /> 
           <Route path="/paymentpage" element={<PaymentPage />} />
           <Route path="/mypage" element={<MyPage />} /> 
+          <Route path="/mypagedetail" element={<MyPageDetail />} /> 
           {/* 고객지원 */}
           <Route path="/customers" element={<Customers />} ></Route>
           <Route path="/customers/NT/:postId" element={<Notices />} ></Route>
