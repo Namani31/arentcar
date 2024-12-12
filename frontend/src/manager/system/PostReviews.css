@@ -1,5 +1,6 @@
 .manager-post-reviews-wrap{
     margin: 20px;
+    white-space: pre-line;
 }
 
 .manager-post-reviews-header-h5{
@@ -44,7 +45,7 @@
 .manager-post-review-popup-wrap{
     background-color: #fdfdfd;
     width: 600px;
-    margin: 150px auto;
+    margin: 100px auto;
     padding: 20px;
     border-radius: 10px;
 }

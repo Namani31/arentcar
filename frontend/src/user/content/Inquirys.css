@@ -1,0 +1,137 @@
+.user-customers-inquirys{
+    width: 100%;
+    background-color: #ededf0;
+    white-space: pre-line;
+}
+
+.user-customers-detail-inquirys{
+    padding: 0px;
+}
+.user-customers-detail-inquirys-header{
+    overflow: hidden;
+}
+.user-customers-detail-inquirys-title{
+    float: left;
+}
+.user-customers-detail-inquirys-title>h4{
+    font-weight: 600;
+}
+.user-customers-detail-inquirys-author{
+    float: right;
+}
+.user-customers-detail-inquirys-author>div{
+    text-align: end;
+    font-size: 12px;
+}
+.user-customers-detail-inquirys-content{    
+    font-size: 16px;
+    padding: 0px 30px;
+    min-height: 80px;
+}
+
+.user-customers-create-inquirys{
+    margin: 0;
+}
+
+.user-customers-create-inquirys-popup-wrap{
+    margin: 0px auto;
+    min-height: 200px;
+    max-width: 1000px;
+}
+
+.user-customers-create-inquirys-popup-line{
+    text-align: center;
+    margin: 10px 0px;
+}
+.user-customers-create-inquirys-popup-line h6{
+    text-align: start;
+    margin: 0 auto;
+    width: 90%;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.user-customers-create-inquirys-popup-wrap h5{
+    font-weight: bold;
+}
+.user-customers-create-inquirys-popup-score{
+    font-size: 22px;
+}
+.user-customers-create-inquirys-popup-content{
+    border: 1px solid #cfcfcf;
+    width: 900px;
+    resize: none;
+    overflow:hidden;
+    padding: 5px;
+    display: inline-block;
+}
+.user-customers-create-inquirys-popup-content:focus {
+    outline: none;
+}
+
+.user-customers-create-inquirys-popup-button{
+    width: 70px;
+    height: 35px;
+    margin: 0px 5px;
+    background-color: #ee0a0a;
+    color: #ededf0;
+    /* font-weight: bold; */
+    /* vertical-align: middle; */
+    font-size: 14px;
+    border-radius: 20px;
+}
+
+.user-customers-list{
+    text-align: center;
+    position: absolute;
+    width: calc(100% - 50px);
+    bottom: 0;
+}
+
+.user-customers-list-button {
+    display: inline-block;
+    width: 100px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 14px;
+    color: #ededf0;
+    border-radius: 20px;
+    background-color: #ee0a0a;
+}
+
+.user-customers-detail-responses-header{
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.user-customers-detail-responses-header>h5{
+    font-weight: 600;
+    float: left;
+}
+.user-customers-detail-responses-header-day{
+    float: right;
+    font-size: 12px;
+}
+.user-customers-detail-responses-body{
+    font-size: 16px;
+    padding: 0px 30px;
+    min-height: 80px;
+}
+
+.user-customers-add-responses{
+    margin-top: 20px;
+    padding-bottom: 50px;
+    /* text-align: center; */
+}
+.user-customers-add-responses textarea{
+    width: 90%;
+}
+.user-customers-add-responses h6 {
+    /* margin-left: 100px; */
+    padding: 5px;
+    font-weight: 600;
+    float: left;
+}
+
+
+
+

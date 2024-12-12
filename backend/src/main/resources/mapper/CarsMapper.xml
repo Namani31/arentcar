@@ -2,16 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.apple.arentcar.mapper.CarsMapper">
-    <!-- 모든 차종 조회 -->
-    <select id="getAllCars" resultType="com.apple.arentcar.model.CarTypes">
-        SELECT * FROM car_types
-    </select>
-
-    <!-- PK로 단건 차종 조회 -->
-    <select id="getCarsById" resultType="com.apple.arentcar.model.CarTypes">
-        SELECT * FROM car_types WHERE car_type_code = #{carTypeCode}
-    </select>
-
     <!-- 차종 조회 및 페이지네이션 -->
     <select id="getCarsWithPaging" resultType="com.apple.arentcar.dto.CarTypesDTO">
         SELECT
@@ -76,17 +66,6 @@
         ORDER BY car_type_code LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
-    <!-- 전체 차종 수 조회 -->
-    <select id="countAllCars" resultType="int">
-        SELECT COUNT(*) FROM car_types
-    </select>
-
-    <!-- 검색조건에 맞게 전체 차종 수 조회 -->
-    <select id="countCarsByName" resultType="int">
-        SELECT COUNT(*) FROM car_types
-        WHERE car_type_name LIKE CONCAT('%', #{carTypeName}, '%')
-    </select>
-
     <!-- 차종 등록 -->
     <insert id="createCars" parameterType="com.apple.arentcar.model.CarTypes"
             useGeneratedKeys="true" keyProperty="carTypeCode">
@@ -99,11 +78,6 @@
         #{fuelType}, #{speedLimit}, #{licenseRestriction}, #{carManufacturer}, #{modelYear},
         #{carImageName}, NOW(), NOW())
     </insert>
-
-    <!-- 차종 삭제 -->
-    <delete id="deleteCarsById" >
-        DELETE FROM car_types WHERE car_type_code = #{carTypeCode};
-    </delete>
 
     <!-- 차종 수정 -->
     <update id="updateCarsById" parameterType="com.apple.arentcar.model.CarTypes">
@@ -122,4 +96,13 @@
         updated_at = NOW()
         WHERE car_type_code = #{carTypeCode}
     </update>
+
+    <!-- 조건에 따라 차종 수 조회 -->
+    <select id="countCarsWithConditions" resultType="int">
+        SELECT COUNT(*) FROM car_types
+        WHERE 1=1
+        <if test="carTypeName != null and carTypeName != ''">
+            AND car_type_name LIKE CONCAT('%', #{carTypeName}, '%')
+        </if>
+    </select>
 </mapper>

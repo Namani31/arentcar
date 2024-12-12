@@ -14,12 +14,6 @@ public class CarsService {
     @Autowired
     private CarsMapper carsMapper;
 
-    public List<CarTypes> getAllCars() { return carsMapper.getAllCars(); }
-
-    public CarTypes getCarsById(Integer carTypeCode)  {
-        return carsMapper.getCarsById(carTypeCode);
-    }
-
     // 차종 조회 및 페이지네이션
     public List<CarTypesDTO> getCarsWithPaging(int pageSize, int pageNumber) {
         int offset = (pageNumber - 1) * pageSize; // offset 계산 식
@@ -34,14 +28,9 @@ public class CarsService {
         return carsMapper.getCarsByNameWithPaging(carTypeName, pageSize, offset);
     }
 
-    // 전체 차종 수 조회
-    public int countAllCars() {
-        return carsMapper.countAllCars();
-    }
-
-    // 전체 차종 수 조회(검색 기능 포함)
-    public int countCarsByName(String carTypeName) {
-        return carsMapper.countCarsByName(carTypeName);
+    // 조건에 따라 차종 수 조회
+    public int countCarsWithConditions(String carTypeName) {
+        return carsMapper.countCarsWithConditions(carTypeName);
     }
 
     // 차종 등록

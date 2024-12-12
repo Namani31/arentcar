@@ -9,6 +9,7 @@ import Loading from 'common/Loading';
 
 const PostNotices = ({ onClick }) => {
   const [loading, setLoading] = useState(false);
+  const Type = {"NT":"공지","RV":"후기","IQ":"문의"}
   //공지사항
   const [notices, setNotices] = useState([]);
   const [totalNotices, setTotalNotices] = useState(0);
@@ -303,6 +304,14 @@ const PostNotices = ({ onClick }) => {
     getTotalCount();
   }, [totalNotices, pageNumber])
 
+  useEffect(()=>{
+    console.log(textarea.current);
+    
+    if(textarea.current) {
+      resizeHeight();
+    }
+  },[postContent, isPopUp])
+
   //검색
   const handleSearchClick = async () => {
     pageingNotices();
@@ -335,17 +344,19 @@ const PostNotices = ({ onClick }) => {
   }
   //수정 팝업창
   const handleUpdateClick = (e,i) => {
-    setIsPopUp(true);
     setPopupType(e);
     setAuthorType("AM");
     setPostType("NT");
-    getByCodeNotices(i); //setPostTitle() setPostContent()
+    getByCodeNotices(i).then(()=>{
+      setIsPopUp(true);
+    }); //setPostTitle() setPostContent()
   }
   //보기 팝업창
   const handleReadClick = async (e,i) => {
-    setIsPopUp(true);
     setPopupType(e);
-    getByCodeNotices(i);
+    getByCodeNotices(i).then(()=>{
+      setIsPopUp(true);
+    });
   }
 
   //삭제 기능
@@ -368,8 +379,25 @@ const PostNotices = ({ onClick }) => {
   const textarea = useRef();
   const handleResizeHeight = (e) => {
     setPostContent(e.target.value);
+    resizeHeight();
+  }
+  const resizeHeight = () => {
     textarea.current.style.height = "auto";
     textarea.current.style.height = textarea.current.scrollHeight + "px";
+  }
+
+  const handleColumn = (value, column) => {
+    if(column.field === '') {
+      return(<>
+        <button className='manager-button post-btn3' onClick={()=>handlePopupClick([ "보기", value["post_code"] ])}> 보기 </button> 
+        <button className='manager-button post-btn2' onClick={()=>handlePopupClick([ "수정", value["post_code"] ])}> 수정 </button> 
+        <button className='manager-button post-btn1' onClick={()=>handleDeleteClick(value["post_code"])}> 삭제 </button> 
+      </>)
+    } else if(column.field === 'post_type') {
+      return( Type[value[column.field]] )
+    } else {
+      return( value[column.field] )
+    }
   }
 
   return (
@@ -415,15 +443,10 @@ const PostNotices = ({ onClick }) => {
               <tr key={index}>
                 {columnNotices && (columnNotices.map((column,index)=>(
                   <td key={index} className='manager-post-notice-table-row-colmn'
-                    style={{width:`${column.width}`, textAlign:`${column.align}`}}
-                  > 
-                    {column.field === '' ? (<>
-                      <button className='manager-button post-btn3' onClick={()=>handlePopupClick([ "보기", notice["post_code"] ])}> 보기 </button> 
-                      <button className='manager-button post-btn2' onClick={()=>handlePopupClick([ "수정", notice["post_code"] ])}> 수정 </button> 
-                      <button className='manager-button post-btn1' onClick={()=>handleDeleteClick(notice["post_code"])}> 삭제 </button> 
-                    </>) : (
-                      notice[column.field]
-                    )}
+                    style={{width:`${column.width}`, textAlign:`${column.align}`}}> 
+
+                    {handleColumn(notice, column)}
+                    
                   </td>
                 )))}
               </tr>
@@ -450,6 +473,7 @@ const PostNotices = ({ onClick }) => {
                   <label className='manager-post-notice-popup-line-label' style={{verticalAlign: 'top'}}>내용</label>
                   <textarea className='width400 manager-post-notice-popup-line-textarea' 
                   rows={2} ref={textarea} value={postContent} onChange={(e)=>{handleResizeHeight(e)}}/>
+                  
                 </div>
                 <div className='manager-post-notice-popup-line'>
                   <label className='manager-post-notice-popup-line-label'>게시물 코드</label>
@@ -457,7 +481,7 @@ const PostNotices = ({ onClick }) => {
                 </div>
                 <div className='manager-post-notice-popup-line'>
                   <label className='manager-post-notice-popup-line-label'>게시물 유형</label>
-                  <input className='width50 word-center' type="text" value={postType} disabled/>
+                  <input className='width50 word-center' type="text" value={ Type[postType] } disabled/>
                 </div>
                 <div className='manager-post-notice-popup-line'>
                   <label className='manager-post-notice-popup-line-label'>작성자</label>

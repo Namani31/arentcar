@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "manager/reservation/ManagerReservation.css";
-import { refreshAccessToken, handleLogout, formatDate, formatTime, formatPhone } from "common/Common";
+import { refreshAccessToken, handleAdminLogout, formatDate, formatTime, formatPhone } from "common/Common";
 
-const ManagerReservation = () => {
+const ManagerReservation = ({ onClick }) => {
   const [branchNames, setBranchNames] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState("");
   const [reservationDate, setReservationDate] = useState("");
@@ -22,7 +22,7 @@ const ManagerReservation = () => {
     { titlename: "대여지점", field: "rental_location_name", width: 100, align: "center" },
     { titlename: "대여일", field: "rental_date", width: 150, align: "center" },
     { titlename: "반납일", field: "return_date", width: 150, align: "center" },
-    { titlename: "", field: "", width: 100, align: "center" }, // 상세버튼 공백 열
+    { titlename: "상세", field: "", width: 100, align: "center" },
   ]);
 
   // YYYY-MM-DD → YYYYMMDD 변환 함수
@@ -52,7 +52,7 @@ const ManagerReservation = () => {
           await getReservations(newToken);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the menus pageing!', error);
@@ -104,7 +104,7 @@ const ManagerReservation = () => {
           await getCount(newToken);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error('There was an error fetching the Reservations count!', error);
@@ -136,43 +136,26 @@ const ManagerReservation = () => {
   };
   // 렌더링
   useEffect(() => {
-    pageingReservations();
     handleFetchBranchNames();
+  },[]);
+  useEffect(() => {
+    pageingReservations();
     getTotalCount();
   }, [pageNumber, pageSize]);
 
 
   // 지점명 데이터 가져오기
   const handleFetchBranchNames = async () => {
-    let token = localStorage.getItem("accessToken"); // 기존 토큰 가져오기
-
     try {
-      await fetchBranchNamesData(token); // 기존 토큰으로 데이터 요청
-    } catch (error) {
-      if (error.response && error.response.status === 403) {
-        try {
-          token = await refreshAccessToken(); // 새 토큰 발급
-          await fetchBranchNamesData(token); // 새 토큰으로 데이터 요청
-        } catch (refreshError) {
-          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout(); // 로그아웃 처리
-        }
-      } else {
-        console.error("지점명 데이터를 가져오는 중 오류가 발생했습니다.", error);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/user/branches`);
+      if (response.data) {
+        setBranchNames(response.data.map((branch) => branch.branch_name));
       }
+    } catch (error) {
+      console.error("There was an error fetching the branches", error);
     }
   };
 
-  const fetchBranchNamesData = async (token) => {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/branchs`, {
-      headers: { Authorization: `Bearer ${token}` },
-      withCredentials: true,
-    });
-
-    if (response.data) {
-      setBranchNames(response.data.map((branch) => branch.branch_name)); // 데이터 설정
-    }
-  };
 
 
   const fetchReservationDetail = async (reservationCode) => {
@@ -186,7 +169,7 @@ const ManagerReservation = () => {
           await getreservationDetails(newToken, reservationCode);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
-          handleLogout();
+          handleAdminLogout();
         }
       } else {
         console.error("There was an error fetching the reservation details!", error);
@@ -198,7 +181,6 @@ const ManagerReservation = () => {
     if (!reservationCode) {
       return;
     }
-
     const response = await axios.get(
       `${process.env.REACT_APP_API_URL}/arentcar/manager/reservations/detail/${reservationCode}`,
       {
@@ -216,7 +198,6 @@ const ManagerReservation = () => {
 
   const handleDetailClick = (reservationCode) => {
     if (!reservationCode) {
-      console.error("Invalid reservationCode:", reservationCode); // 디버깅 로그 추가
       return;
     }
     setIsPopUp(true);
@@ -225,7 +206,7 @@ const ManagerReservation = () => {
 
 
 
-  const handlePopupClodeClick = () => {
+  const handlePopupCloseClick = () => {
     setIsPopUp(false);
     setReservationDetails([]);
   };
@@ -250,10 +231,12 @@ const ManagerReservation = () => {
 
     try {
       const token = localStorage.getItem("accessToken"); // 토큰 가져오기
-      const requestBody = { reservationStatus: "2" }; // 예약 상태: '취소'
+      const requestBody = { 
+        reservationStatus: "2", // 예약 상태: '취소'
+        paymentStatus: "2",     // 결제 상태: '취소' 
+        carStatus: "01"          // 차량 상태: '렌탈가능'
+    };
 
-      console.log("Reservation Code:", reservationCode); // 예약 코드 확인
-      console.log("Request Body:", requestBody); // 요청 본문 확인
       // 예약 상태 업데이트 API 호출
       await axios.put(
         `${process.env.REACT_APP_API_URL}/arentcar/manager/reservations/cancel/${reservationCode}`,
@@ -279,7 +262,7 @@ const ManagerReservation = () => {
           await handleReservationCancel(reservationCode);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요."); // 인증 만료 알림
-          handleLogout(); // 로그아웃 처리
+          handleAdminLogout(); // 로그아웃 처리
         }
       } else {
         alert("예약 취소에 실패했습니다."); // 사용자 알림
@@ -310,7 +293,6 @@ const ManagerReservation = () => {
           withCredentials: true, // 쿠키 포함
         }
       );
-
       alert("차량 상태가 '정비중'으로 업데이트되었습니다."); // 성공 메시지
 
       await fetchReservationDetail(carNumber); // 예약 목록 새로고침
@@ -325,11 +307,17 @@ const ManagerReservation = () => {
           await handleCarReturn(carNumber);
         } catch (error) {
           alert("인증이 만료되었습니다. 다시 로그인 해주세요."); // 인증 만료 알림
-          handleLogout(); // 로그아웃 처리
+          handleAdminLogout(); // 로그아웃 처리
         }
       } else {
         alert("차량 상태 업데이트에 실패했습니다."); // 사용자 알림
       }
+    }
+  };
+
+  const handleCloseClick = () => {
+    if (onClick) {
+      onClick();
     }
   };
 
@@ -343,40 +331,48 @@ const ManagerReservation = () => {
           <div className="manager-reservation-title manager-title">● 예약현황</div>
         </div>
         <div className="manager-reservation-controls-wrap">
-          <input
-            type="text"
-            placeholder="예약자 성함"
-            value={reserverName}
-            onChange={(e) => setReserverName(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearchClick()}
-            className="manager-reservation-text-input"
-          />
+          <div className="manager-reservation-controls-search-wrap">
+            <input
+              type="text"
+              placeholder="예약자 성함"
+              value={reserverName}
+              onChange={(e) => setReserverName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearchClick()}
+              className="manager-reservation-text-input"
+            />
 
-          <select
-            className="manager-reservation-select"
-            value={selectedBranch} // 선택된 값
-            onChange={(e) => setSelectedBranch(e.target.value)} // 선택값 변경
-          >
-            <option value="">대여지점</option>
-            {branchNames.map((name, index) => (
-              <option key={index} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
+            <select
+              className="manager-reservation-select"
+              value={selectedBranch} // 선택된 값
+              onChange={(e) => setSelectedBranch(e.target.value)} // 선택값 변경
+            >
+              <option value="">대여지점</option>
+              {branchNames.map((name, index) => (
+                <option key={index} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
 
-          <input
-            type="date"
-            value={reservationDate}
-            onChange={(e) => setReservationDate(e.target.value)}
-            className="manager-reservation-date-input"
-          />
-          <button
-            onClick={handleSearchClick}
-            className="manager-reservation-button-search manager-button manager-button-search"
-          >
-            검색
-          </button>
+            <input
+              type="date"
+              value={reservationDate}
+              onChange={(e) => setReservationDate(e.target.value)}
+              className="manager-reservation-date-input"
+            />
+            <button
+              onClick={handleSearchClick}
+              className="manager-reservation-button-search manager-button manager-button-search"
+            >
+              검색
+            </button>
+            <span>[검색건수 : {totalCount}건]</span>
+          </div>
+          <div className="manager-reservation-controls-close-wrap">
+            <button className='manager-button manager-reservation-button-close' onClick={() => handleCloseClick()}>
+              닫기
+            </button>
+          </div>
         </div>
       </div>
 
@@ -470,7 +466,7 @@ const ManagerReservation = () => {
               <div className="manager-popup-title">● 예약상세</div>
               <button
                 className="manager-button manager-button-close"
-                onClick={handlePopupClodeClick}
+                onClick={handlePopupCloseClick}
               >
                 닫기
               </button>
@@ -513,6 +509,8 @@ const ManagerReservation = () => {
               <div className="manager-reservation-popup-field-row">
                 <label>예약ID : </label>
                 <span>{reservationDetails.reservation_code}</span>
+                <label>예약일 : </label>
+                <span>{reservationDetails?.reservation_date || "예약일 없음"}</span>
               </div>
               <div className="manager-reservation-popup-field-row">
                 <label>차량번호 :{' '}</label>
@@ -542,23 +540,29 @@ const ManagerReservation = () => {
                 <label>보험 : </label>
                 <span>{reservationDetails.insurance_name}</span>
               </div>
+              <div className="manager-reservation-popup-field-row">
+                <label>예약상태 : </label>
+                <span>{reservationDetails.reservation_status}</span>
+              </div>
             </div>
             {/* 결제정보 */}
             <div className="manager-reservation-popup-section">
               <div className="manager-reservation-popup-section-title">결제정보</div>
               <div className="manager-reservation-popup-field-row">
                 <label>결제방식 : </label>
-                <span>{reservationDetails?.payment_category_name || ""}</span>
+                <span>{reservationDetails.payment_category_name}</span>
                 <label>결제수단 : </label>
-                <span>{reservationDetails?.payment_type_name || ""}</span>
+                <span>{reservationDetails.payment_type_name}</span>
               </div>
               <div className="manager-reservation-popup-field-row">
                 <label>결제금액 : </label>
                 <span>{formatNumberWithCommas(reservationDetails?.payment_amount) || ""}</span>
+                <label>결제일 : </label>
+                <span>{formatDate(reservationDetails?.payment_date) || "결제일 없음"}</span>
               </div>
               <div className="manager-reservation-popup-field-row">
-                <label>예약상태 : </label>
-                <span>{reservationDetails?.reservation_status || ""}</span>
+                <label>결제상태 : </label>
+                <span>{reservationDetails?.payment_status || "결제 상태 없음"}</span>
               </div>
             </div>
 

@@ -15,6 +15,9 @@ import PaymentPage from 'user/content/PaymentPage';
 import Customers from 'user/content/Customers';
 import Notices from 'user/content/Notices';
 import Reviews from 'user/content/Reviews';
+import Inquirys from 'user/content/Inquirys';
+import MyPage from 'user/content/MyPage';
+import PaymentCompletedPage from 'user/content/PaymentCompletedPage';
 import MyPageDetail from 'user/content/MyPageDetail';
 
 const UserMenu = () => {
@@ -34,14 +37,18 @@ const UserMenu = () => {
           <Route path="/reservationdetail" element={<ReservationDetail />} /> 
           <Route path="/rentalrateguide" element={<RentalRateGuide />} /> 
           <Route path="/branches" element={<Branches />} /> 
-          <Route path="/paymentpage" element={<PaymentPage />} /> 
+          <Route path="/paymentpage" element={<PaymentPage />} />
+          <Route path="/mypage" element={<MyPage />} /> 
           <Route path="/mypagedetail" element={<MyPageDetail />} /> 
           {/* 고객지원 */}
           <Route path="/customers" element={<Customers />} ></Route>
           <Route path="/customers/NT/:postId" element={<Notices />} ></Route>
           <Route path="/customers/RV" element={<Reviews />} ></Route>
           <Route path="/customers/RV/:postId" element={<Reviews />} ></Route>
-
+          <Route path="/customers/IQ" element={<Inquirys />} ></Route>
+          <Route path="/customers/IQ/:postId" element={<Inquirys />} ></Route>
+          <Route path="/paymentpage" element={<PaymentPage />} /> 
+          <Route path="/PaymentCompletedPage" element={<PaymentCompletedPage />} /> 
         </Routes>
       </div>
       <div className='user-menu-footer-wrap'>

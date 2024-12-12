@@ -1,0 +1,23 @@
+.payment-completed-page-wrap{
+    width: 1080px;
+    margin: 0 auto;
+    text-align: center;
+}
+.payment-completed-page-title{
+    display: block;
+    margin: 50px 0;
+    font-weight: bold;
+}
+.payment-completed-page-body{
+    text-align: left;
+    font-size: 18px;
+}
+.payment-completed-page-item{
+    display: flex;
+    gap: 80px;
+    margin: 20px;
+}
+.payment-completed-page-item span:nth-child(1){
+    width: 100px;
+    display: block;
+}

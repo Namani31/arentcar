@@ -1,0 +1,92 @@
+.rental-location-selector-wrap{
+    width: 380px;
+    padding: 20px 20px;
+    background-color: #fff;
+    box-shadow: 0 5px 5px 1px #ccc;
+}
+.rental-location-selector-select-branch{
+    font-size: 16px;
+    padding: 20px 0;
+    border-bottom: 2px solid #fff;
+}
+.rental-location-selector-select-date{
+    font-size: 16px;
+    padding: 20px 0;
+    border-bottom: 2px solid #fff;
+}
+.rental-location-selector-select-car-type{
+    display: grid;
+    grid-template-columns:repeat(3,1fr);
+    column-gap: 20px;
+    row-gap: 10px;
+    font-size: 16px;
+    padding: 20px 0;
+    border-bottom: 2px solid #fff;
+}
+.rental-location-selector-select-car-type > :first-child {
+    grid-column: span 3; 
+}
+.rental-location-selector-select-car-type-item{
+    font-size: 14px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 6px;
+}
+.rental-location-selector-select-branch-regions-wrap{
+    display: flex;
+    height: 300px;
+    gap: 10px;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+.rental-location-selector-select-branch-regions-item{
+    width: 100%;
+    height: 50px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    line-height: 50px;
+    font-weight: bold;
+    background-color: #fff;
+    box-shadow: 0 5px 5px 1px #ccc;
+    border-radius: 6px;
+}
+
+.rental-location-selector-select-branch-item {
+    margin-left: 20px;
+    margin-top: 5px;
+}
+.rental-location-selector-select-branch-name {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+.rental-location-selector-select-branch-name:hover {
+    background-color: #eaeaea;
+}
+.rental-location-selector-select-branch-detail-wrap{
+    padding: 10px;
+}
+.rental-location-selector-select-branch-detail-header-title{
+    font-size: 21px;
+}
+
+.rental-location-selector-select-branch-detail-header{
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+}
+.rental-location-selector-button{
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+    background-color: #ff7916;
+    border-radius: 12px;
+}

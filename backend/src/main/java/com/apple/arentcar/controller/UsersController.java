@@ -42,7 +42,7 @@ public class UsersController {
     }
 
     @GetMapping({"/user/users/{userCode}",
-                 "/user/mypagedetail/{userCode}"})
+                 "/manager/mypagedetail/{userCode}"})
     public ResponseEntity<Users> getUsersById(
             @PathVariable Integer userCode) {
         Users users = usersService.getUsersById(userCode);
@@ -71,7 +71,7 @@ public class UsersController {
     }
 
     @PutMapping({"/user/users/{userCode}",
-                 "/user/mypagedetail/{userCode}"})
+                 "/manager/mypagedetail/{userCode}"})
     public ResponseEntity<Void> updateUsersById(
             @PathVariable Integer userCode,
             @RequestBody Users users) {
@@ -151,7 +151,7 @@ public class UsersController {
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(false) // JavaScript에서 접근 불가
-                .secure(true) // HTTPS를 사용할 경우에만 전송
+                .secure(false) // HTTPS를 사용할 경우에만 전송
                 .path("/") // 쿠키가 유효한 경로
                 .maxAge(7 * 24 * 60 * 60) // 7일 동안 유효
                 .build();
@@ -182,7 +182,7 @@ public class UsersController {
             // 새 리프레시 토큰을 쿠키에 저장
             ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                     .httpOnly(false) // JavaScript에서 접근 불가
-                    .secure(true) // HTTPS를 사용할 경우에만 전송
+                    .secure(false) // HTTPS를 사용할 경우에만 전송
                     .path("/") // 쿠키가 유효한 경로
                     .maxAge(7 * 24 * 60 * 60) // 7일 동안 유효
                     .build();

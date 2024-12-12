@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUserState } from '../../redux/UserState';
 import axios from 'axios';
-import api from 'common/api';
+import userapi from 'common/userapi';
 import Cookies from 'js-cookie';
 import Loading from 'common/Loading';
 import 'user/content/UserLogin.css';
@@ -11,6 +11,7 @@ import 'user/content/UserLogin.css';
 
 const UserLogin = () => {
   const navigate = useNavigate();
+  const link = useLocation().state; // 로그인을 요청하는 페이지 링크
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [userEmail, setUserEmail] = useState("");
@@ -46,10 +47,16 @@ const UserLogin = () => {
   };
 
   const handleLoginClick = async () => {
+    localStorage.removeItem('accessToken');
+    Cookies.remove('refreshToken'); 
+
+    delete axios.defaults.headers.common['Authorization'];
+    // console.log("토큰이 삭제되었습니다.");
+  
+    // 3. Cache-Control 헤더 추가 (캐시 방지)
+    axios.defaults.headers.common['Cache-Control'] = 'no-cache, no-store, must-revalidate';
     try {
-      localStorage.removeItem('accessToken');
-      Cookies.remove('refreshToken'); 
-      const response = await api.post(`${process.env.REACT_APP_API_URL}/arentcar/user/users/login`, {
+      const response = await userapi.post(`${process.env.REACT_APP_API_URL}/arentcar/user/users/login`, {
         user_email: userEmail,
         user_password: userPassword,
       });
@@ -63,7 +70,7 @@ const UserLogin = () => {
         return;
       }
 
-      api.setAccessToken(response.data.token);
+      userapi.setAccessToken(response.data.token);
       const userData = response.data.users;
       dispatch(setUserState({
         userCode: userData.user_code,
@@ -74,7 +81,7 @@ const UserLogin = () => {
         loginState: true,
       }));
 
-      navigate("/");
+      navigate(link ? link : "/"); //로그인을 요청한 페이지로 다시 보내기 아니면 기본 페이지로
     } catch (error) {
       if (error.response.status === 401 || error.response.status === 404) {
         alert("아이디와 비밀번호를 확인 후 다시 로그인바랍니다.");
@@ -90,7 +97,7 @@ const UserLogin = () => {
     }
 
     try {
-      await api.put(`${process.env.REACT_APP_API_URL}/arentcar/user/users/newpassword`,
+      await userapi.put(`${process.env.REACT_APP_API_URL}/arentcar/user/users/newpassword`,
         {
           user_email: userEmail,
           user_password: newPassword,

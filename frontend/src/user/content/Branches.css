@@ -1,13 +1,14 @@
 .branches-guide-wrap {
+  background-color: #edf8f0;
   align-items: flex-start;
   gap: 50px;
-  padding: 40px 20px 20px 200px;
+  padding: 30px 20px 30px 400px;
 }
 
 /* 지점 목록 그리드 */
 .branches-guide-menu-wrap {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 7개의 열로 구성 */
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   width: 100%;
   max-width: 450px; /* 최대 너비 제한 */
@@ -20,13 +21,18 @@
   border-radius: 5px;
   padding: 10px;
   text-align: center;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer; /* 기본적으로 손가락 커서 */
   transition: background-color 0.3s ease, transform 0.2s ease; /* 애니메이션 추가 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 기본 그림자 */
 }
 
 .branches-guide-menu-item:hover {
-  background-color: #e9ecef; /* 호버 시 더 밝은 배경색 */
+  color: #fff;
+  background-color: #ff7916; /* 호버 시 더 밝은 배경색 */
   transform: translateY(-2px); /* 살짝 위로 올라가는 효과 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 강조 */
 }
 
 /* 지도 및 세부 정보 영역 */
@@ -36,7 +42,9 @@
 }
 
 .branches-guide-map-wrap {
-  height: 350px;
+  font-size: 18px;
+  font-weight: bold;
+  height: 380px;
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-bottom: 20px;
@@ -44,6 +52,7 @@
   justify-content: center;
   align-items: center;
   background-color: #f1f3f5;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
 }
 
 /* 세부 정보 스타일 */
@@ -53,10 +62,27 @@
   border-radius: 5px;
   padding: 5px 15px 5px 15px;
   font-size: 14px;
+  font-weight: 600;
   line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* 각 행 사이의 간격 */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+}
+
+.info-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.info-row strong {
+  width: 100px; /* 고정 폭으로 맞추기 */
+  text-align: center;
 }
 
 .branches-guide-info-wrap strong {
-  font-weight: bold;
-  color: #495057;
+  font-size: 16px;
+  font-weight: 600;
+  color: #47474b;
 }

@@ -90,6 +90,50 @@ public class PostsController {
         return ResponseEntity.ok(reviews);
     }
 
+    @GetMapping("/user/customers/inquirys")
+    public ResponseEntity<List<Inquirys>> getUserAllInquirys(
+            @RequestParam int pageSize,
+            @RequestParam int pageNumber,
+            @RequestParam(required = false) String postName){
+        List<Inquirys> inquirys;
+        if(postName != null && !postName.isEmpty()){
+            inquirys = postsService.getSearchAllInquirys(postName, pageSize, pageNumber);
+        } else {
+            inquirys = postsService.getAllInquirys(pageSize, pageNumber);
+        }
+        return ResponseEntity.ok(inquirys);
+    }
+    @GetMapping("/user/customers/inquirys/count")//manager
+    public ResponseEntity<Integer> getUserAllCount(
+            @RequestParam(required = false) String postName){
+        int count;
+        if(postName != null && !postName.isEmpty()){
+            count = postsService.countSearchInquirys(postName);
+        } else {
+            count = postsService.countInquirys();
+        }
+        return ResponseEntity.ok(count);
+    }
+    @GetMapping("/user/customers/inquirys/{postCode}")
+    public ResponseEntity<Inquirys> getUserInquirys(
+            @PathVariable Integer postCode
+    ){ return ResponseEntity.ok(postsService.getInquirys(postCode)); }
+
+    @GetMapping("/user/customers/responses/{postCode}")
+    public ResponseEntity<List<Responses>> getUserResponses(
+            @PathVariable Integer postCode
+    ){ return ResponseEntity.ok(postsService.getResponses(postCode)); }
+    @PostMapping("/user/customers/inquirys")
+    public ResponseEntity<Inquirys> createUserInquirys(@RequestBody Inquirys inquirys) {
+        postsService.createInquirys(inquirys);
+        return ResponseEntity.ok(inquirys);
+    }
+    @PostMapping("/user/customers/responses")
+    public ResponseEntity<Responses> createUserResponses(@RequestBody Responses responses) {
+        postsService.createUserResponses(responses);
+        return ResponseEntity.ok(responses);
+    }
+
 
     @GetMapping("/manager/post")
     public List<Notices> getPostsAll(){ return postsService.getPostsAll(); }
@@ -224,8 +268,28 @@ public class PostsController {
 
 
     @GetMapping("/manager/post/inquirys")
-    public ResponseEntity<List<Inquirys>> getAllInquirys(){
-        return ResponseEntity.ok(postsService.getAllInquirys());
+    public ResponseEntity<List<Inquirys>> getAllInquirys(
+            @RequestParam int pageSize,
+            @RequestParam int pageNumber,
+            @RequestParam(required = false) String postName){
+        List<Inquirys> inquirys;
+        if(postName != null && !postName.isEmpty()){
+            inquirys = postsService.getSearchAllInquirys(postName, pageSize, pageNumber);
+        } else {
+            inquirys = postsService.getAllInquirys(pageSize, pageNumber);
+        }
+        return ResponseEntity.ok(inquirys);
+    }
+    @GetMapping("/manager/post/inquirys/count")//manager
+    public ResponseEntity<Integer> getAllCount(
+            @RequestParam(required = false) String postName){
+        int count;
+        if(postName != null && !postName.isEmpty()){
+            count = postsService.countSearchInquirys(postName);
+        } else {
+            count = postsService.countInquirys();
+        }
+        return ResponseEntity.ok(count);
     }
 
     @GetMapping("/manager/post/inquirys/{postCode}")
@@ -233,15 +297,22 @@ public class PostsController {
             @PathVariable Integer postCode
     ){ return ResponseEntity.ok(postsService.getInquirys(postCode)); }
 
+    @DeleteMapping("/manager/post/inquirys/{postCode}")
+    public ResponseEntity<Inquirys> deleteResponses(
+            @PathVariable Integer postCode){
+        postsService.deleteInquirys(postCode);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/manager/post/responses/{postCode}")
     public ResponseEntity<List<Responses>> getResponses(
             @PathVariable Integer postCode
     ){ return ResponseEntity.ok(postsService.getResponses(postCode)); }
-
     @PostMapping("/manager/post/responses")
     public ResponseEntity<Responses> createResponses(
             @RequestBody Responses responses) {
         postsService.createResponses(responses);
+
         return ResponseEntity.ok(responses);
     }
     @PutMapping("/manager/post/responses")

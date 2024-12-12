@@ -1,6 +1,7 @@
 .user-customers-reviews{
     width: 100%;
     background-color: #ededf0;
+    white-space: pre-line;
 }
 
 .user-customers-detail-reviews{
@@ -26,6 +27,7 @@
 
 .user-customers-create-reviews{
     margin: 0;
+    padding-bottom: 35px;
 }
 
 .user-customers-create-review-popup-wrap{
@@ -58,12 +60,30 @@
 
 .user-customers-create-review-popup-button{
     width: 70px;
-    height: 30px;
+    height: 35px;
     margin: 0px 5px;
     background-color: #ee0a0a;
     color: #ededf0;
-    font-weight: bold;
-    vertical-align: middle;
+    /* font-weight: bold; */
+    font-size: 14px;
+    /* vertical-align: middle; */
     border-radius: 20px;
 }
 
+.user-customers-list{
+    text-align: center;
+    position: absolute;
+    width: calc(100% - 50px);
+    bottom: 0;
+}
+
+.user-customers-list-button {
+    display: inline-block;
+    width: 100px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 14px;
+    color: #ededf0;
+    border-radius: 20px;
+    background-color: #ee0a0a;
+}

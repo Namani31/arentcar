@@ -6,13 +6,20 @@ import { store } from '../../redux/store';
 import Loading from 'common/Loading';
 
 
+
+
 const PostInquirys = ({ onClick }) => {
   const [loading, setLoading] = useState(false);
-
+  const Type = {"NT":"공지","RV":"후기","IQ":"문의"}
+  const status = {"IQ":"답변대기중","RS":"답변완료"}
   const [inquirys, setInquirys] = useState([])
   //팝업창
   const [isPopUp, setIsPopUp] = useState(false);
-  const [popupType, setPopupType] = useState()
+  //검색/페이징
+  const [searchName, setSearchName] = useState("");
+  const [pageNumber, setPageNumber] = useState(0);
+  const pageSize = 10;
+  const [totalInquirys,setTotalInquirys] = useState();
   //컬럼
   const [columnInquirys] = useState([
     { columnName: '코드', field: 'post_code', width: 100, align: 'center'},
@@ -55,9 +62,18 @@ const PostInquirys = ({ onClick }) => {
     }
   }
   const getInquirys = async (token)=>{
-    
+    const params = {
+      pageSize,
+      pageNumber,
+    };
+
+    if(searchName && searchName.trim() !== "") {
+      params.postName = searchName;
+    }
+
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/inquirys`,
       {
+        params,
         headers: {
           Authorization: `Bearer ${token}`
         },
@@ -65,7 +81,42 @@ const PostInquirys = ({ onClick }) => {
       }
     );
     if(response.data) {
-      setInquirys(response.data);
+      setInquirys(response.data);      
+    }
+  }
+
+  const postGetCount = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      await getCount(token);
+    } catch (error) {
+      if(error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await getCount(newToken);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the movies!', error);
+      }
+    }
+  }
+  const getCount = async (token) => {
+    const params = searchName && searchName.trim() !== "" ? { postName: searchName } : {}
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/inquirys/count`,
+      {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      });
+    if(typeof response.data === "number") {
+      setTotalInquirys(response.data);
+    } else {
+      console.error('Unexpected response:', response.data);
     }
   }
 
@@ -251,12 +302,54 @@ const PostInquirys = ({ onClick }) => {
     alert("답변이 삭제되었습니다.");
   }
 
-  //manager/post/responses/{postCode}
+  const postDeleteInquiry = async (code) => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('accessToken');
+      await deleteInquiry(token, code)
+    } catch (error) {
+      if(error.response && error.response.status === 403) {
+        try {
+          const newToken = await refreshAccessToken();
+          await deleteInquiry(newToken,code);
+        } catch (error) {
+          alert("인증이 만료되었습니다. 다시 로그인 해주세요.");
+          handleLogout();
+        }
+      } else {
+        console.error('There was an error fetching the movies!', error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const deleteInquiry = async (token, code) => {
+    const response = await axios.delete(`${process.env.REACT_APP_API_URL}/arentcar/manager/post/inquirys/${code}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true,
+      }
+    )
+  }
   
   useEffect(()=>{
+    postGetCount();
     postGetInquirys();
     handleAdminCode();
-  },[])
+  },[pageNumber, totalInquirys])
+
+  useEffect(()=>{
+    resizeHeight();
+  },[responses])
+
+  const handleSearchClick = async () => {
+    postGetInquirys();
+    postGetCount();
+    setPageNumber(0);
+  }
 
   const handleAdminCode = async () => {
     setAuthorCode(store.getState().adminState.adminCode);
@@ -273,58 +366,99 @@ const PostInquirys = ({ onClick }) => {
   const handleAnswer = (i) => {
     setCreateContent("");
     postGetCodeInquiry(i);
-    postGetResponses(i);
-    setIsPopUp(true);
-  }
-
-  const handleUpdate = () => {
-    postUpdateResponses();
-  }
-
-  const handleDelete = (code) => {
-    postDeleteResponses(code).then(function (value) {
-      //성공했을 때 실행
-      postGetResponses(postCode);
-    }, function (reason) {
-      //실패했을 때 실행
-      alert("삭제에 실패했습니다.")
+    postGetResponses(i).then(()=>{
+      setIsPopUp(true);
     });
+    
+
+    // for (const Height of textarea.current) {}
+    // textarea.current[0].dispatchEvent(new Event('change', { bubbles: true }));
   }
 
-  const handleCreate = () => {
-    postCreateResponses().then(function (value) {
-      //성공했을 때 실행
-      postGetResponses(postCode);
-    }, function (reason) {
-      //실패했을 때 실행
-      alert("작성의 실패했습니다.")
-    });
+  const handleUpdateResponses = () => { //update state
+    if(window.confirm('수정하시겠습니까?')) {
+      postUpdateResponses();
+    }
+  }
 
+  const handleDeleteResponses = (code) => { //update state
+    if(window.confirm('삭제하시겠습니까?')) {
+      postDeleteResponses(code).then(function (value) {
+        //성공했을 때 실행
+        postGetResponses(postCode);
+      }, function (reason) {
+        //실패했을 때 실행
+        alert("삭제에 실패했습니다.")
+      });
+    }
+  }
+
+  const handleCreate = () => { //update state
+    if(createContent !== "") {
+      postCreateResponses().then(function (value) {
+        //성공했을 때 실행
+        postGetInquirys();
+        postGetResponses(postCode);
+        setCreateContent("");
+      }, function (reason) {
+        //실패했을 때 실행
+        alert("작성의 실패했습니다.")
+      });
+    } else {
+      alert("답변을 입력해주세요.")
+    }
+  }
+
+  const handleDeleteInquiry = (code) => {
+    if(window.confirm('삭제하시겠습니까?')) {
+      postDeleteInquiry(code).then(()=>{
+        postGetCount();
+      });
+    }
   }
 
   const textarea = useRef([]);
+  const resizeHeight = () => {
+    for (const Height of textarea.current) {
+      if(Height) {
+        Height.style.height = "auto";
+        Height.style.height = Height.scrollHeight + "px";
+      }
+    }
+    return "";
+  }
   const handleResizeHeight = (e,i) => {
     const copy = [...responses]
     copy[i].response_content = e.target.value;
     setResponses(copy)
-    
     // setPostContent(e.target.value);
-    for (let index = 0; index < textarea.current.length; index++) {
-      if(textarea.current[index]) {
-        textarea.current[index].style.height = "auto";
-        textarea.current[index].style.height = textarea.current[index].scrollHeight + "px";
-      }
-    }
-
+    resizeHeight();
+      // if(textarea.current[index]) {
+      //   list.current[index].style.height = "auto";
+      //   list.current[index].style.height = textarea.current[index].scrollHeight + "px";
+      // }
   }
   const handleCreateResizeHeight = (e) => {
     setCreateContent(e.target.value);
+    resizeHeight();
+  }
+  let totalPages = Math.ceil(totalInquirys / pageSize);
+  if (totalPages < 1) { totalPages = 1; }
+  if (totalInquirys === 0) { totalPages = 0; }
 
-    for (let index = 0; index < textarea.current.length; index++) {
-      if(textarea.current[index]) {
-        textarea.current[index].style.height = "auto";
-        textarea.current[index].style.height = textarea.current[index].scrollHeight + "px";
-      }
+  const handleColumn = (value, column) => {
+    if(column.field === '') {
+      return(<>
+        {/* <button className='manager-button post-btn3' > 보기 </button>  */}
+        <button className='manager-button post-btn2' onClick={()=>handleAnswer(value["post_code"])}> 답변 </button> 
+        <button className='manager-button post-btn1' onClick={()=>handleDeleteInquiry(value["post_code"])}> 삭제 </button> 
+      </>)
+    } else if(column.field === 'post_type') {
+      return( Type[value[column.field]] )
+    } else if(column.field === "inquiry_status") {
+      return( status[value[column.field]] )
+    } else {
+      return( value[column.field] )
     }
   }
 
@@ -340,9 +474,12 @@ const PostInquirys = ({ onClick }) => {
         <div className='manager-post-inquirys-table-head'>
           <div className='flex-align-center'>
             <label className='manager-label' htmlFor="manager-post-serch">제목</label>
-            <input id='manager-post-serch' className='width200' type="text"></input>
-            <button className='manager-button manager-button-search' onClick={()=>{}}> 검색 </button>
-            <span> [ 검색건수 : {1}건 ] </span>
+            <input id='manager-post-serch' className='width200' type="text"
+              value={searchName}
+              onChange={(e)=>(setSearchName(e.target.value))} 
+              onKeyDown={(e)=>{if(e.key === "Enter") {handleSearchClick()} }}></input>
+            <button className='manager-button manager-button-search' onClick={()=>handleSearchClick()}> 검색 </button>
+            <span> [ 검색건수 : {totalInquirys}건 ] </span>
           </div>
 
           <div>
@@ -368,15 +505,9 @@ const PostInquirys = ({ onClick }) => {
               <tr key={index}>
                 {columnInquirys && (columnInquirys.map((column,index)=>(
                   <td key={index} className='manager-post-inquirys-table-row-colmn'
-                    style={{width:`${column.width}`, textAlign:`${column.align}`}}
-                  > 
-                    {column.field === '' ? (<>
-                      {/* <button className='manager-button post-btn3' > 보기 </button>  */}
-                      <button className='manager-button post-btn2' onClick={()=>handleAnswer(inquiry["post_code"])}> 답변 </button> 
-                      <button className='manager-button post-btn1' onClick={()=>console.log(inquiry["post_code"])}> 삭제 </button> 
-                    </>) : (
-                      inquiry[column.field]
-                    )}
+                    style={{width:`${column.width}`, textAlign:`${column.align}`}}> 
+
+                    {handleColumn(inquiry,column)}
                   </td>
                 )))}
               </tr>
@@ -390,7 +521,7 @@ const PostInquirys = ({ onClick }) => {
               <div className='manager-post-inquirys-popup-header'>
                 <div className='manager-post-inquirys-popup-title'> <h6 className='manager-post-inquirys-h6'> 문의사항 </h6> </div>
                 <div className='manager-post-inquirys-popup-buttons'>
-                  <button className='manager-button manager-post-inquirys-popup-save' onClick={()=>handleUpdate()}> 수정 </button>
+                  <button className='manager-button manager-post-inquirys-popup-save' onClick={()=>handleUpdateResponses()}> 수정 </button>
                   <button className='manager-button manager-post-inquirys-popup-close' onClick={()=>{setIsPopUp(!isPopUp)}}> 닫기 </button>
                 </div>
               </div>
@@ -422,7 +553,7 @@ const PostInquirys = ({ onClick }) => {
                       {response.author_type === "AM" && (
                         <>
                           &nbsp;
-                          <button onClick={()=>handleDelete(response.response_code)} style={{backgroundColor:'#ee0a0a',color:"#ededf0", padding:"0px 4px"}}> 삭제 </button>
+                          <button onClick={()=>handleDeleteResponses(response.response_code)} style={{backgroundColor:'#ee0a0a',color:"#ededf0", padding:"0px 4px"}}> 삭제 </button>
                         </> 
                       )}
                     </div>
@@ -445,12 +576,23 @@ const PostInquirys = ({ onClick }) => {
                 <h6 className="manager-post-inquirys-popup-answer-h6"> 답변 </h6>
                 <textarea className='manager-post-inquirys-popup-line-textarea' 
                 rows={2} ref={el => (textarea.current[0] = el)} value={createContent} onChange={(e)=>{handleCreateResizeHeight(e)}}/> 
-                <button className="manager-button post-btn2" onClick={()=>handleCreate()}>작성</button>
+                <button className="manager-button post-btn2" onClick={()=>handleCreate()}> 작성 </button>
               </div>
               {/* postCode postType postTitle postContent authorCode authorType postContent가 넘어갔을때 문제 */}
             </div>
           </div>
         )}
+        <div className='manager-post-notice-table-paging flex-align-center'>
+          <button className='manager-button' onClick={()=>setPageNumber(pageNumber - 1)}
+            style={{color: pageNumber === 0 ? '#aaa' : '#26319b'}}
+            disabled={pageNumber === 0}
+          >이전</button>
+          <div className='manager-post-notice-table-paging-page'>{(pageNumber+1)} / {totalPages}</div>
+          <button className='manager-button' onClick={()=>setPageNumber(pageNumber + 1)}
+            style={{color: (pageNumber + 1) >= totalPages ? '#aaa' : '#26319b'}}
+            disabled={ (pageNumber + 1) >= totalPages }
+          >다음 </button>
+        </div>
       </div>
       {loading && (
         <Loading />

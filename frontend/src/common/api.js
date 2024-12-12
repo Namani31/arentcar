@@ -12,11 +12,17 @@ const setAccessToken = (token) => {
 
 // JWT 만료 확인 함수
 const isTokenExpired = (token) => {
+  // console.log(token);
   if (token === null || typeof token === 'undefined' || token === '' || token === 'undefined') {
     return false;
   }
   const decoded = jwtDecode(token);
-  return decoded.exp * 1000 < Date.now(); // 현재 시간과 만료 시간 비교
+  // const gracePeriod = 5 * 60 * 1000;
+  // console.log("decoded.exp * 1000 : ", decoded.exp * 1000);
+  // console.log("Date.now() : ", Date.now());
+
+  return (decoded.exp * 1000) < Date.now(); 
+  // return (decoded.exp * 1000) - gracePeriod < Date.now(); 
 };
 
 // 액세스 토큰을 재발급하는 함수

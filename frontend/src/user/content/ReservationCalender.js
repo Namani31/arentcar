@@ -9,6 +9,8 @@ const ReservationCalender = ({ onRentalPeriod }) => {
   const [secondSelectedDay, setSecondSelectedDay] = useState(null); // 두 번째 달력 선택된 날짜
   const [firstSelectedRange, setFirstSelectedRange] = useState([]); // 첫 번째 달력 날짜 범위
   const [secondSelectedRange, setSecondSelectedRange] = useState([]); // 두 번째 달력 날짜 범위
+  const [rentalTime, setRentalTime] = useState(10); // 두 번째 달력 날짜 범위
+  const [returnTime, setReturnTime] = useState(10); // 두 번째 달력 날짜 범위
 
 
   const year = currentMonteDate.getFullYear();
@@ -59,16 +61,17 @@ const ReservationCalender = ({ onRentalPeriod }) => {
       if (currentDate.getTime() > new Date(year, month, day + 1).getTime()) {
         alert("이전날짜는 선택 하실 수 없습니다.");
       } else {
-
-        if (firstSelectedDay == null) {
+        if (firstSelectedDay == null || (firstSelectedDay != null && secondSelectedDay != null)) {
           setFirstSelectedDay(new Date(year, month, day));
+          setSecondSelectedDay(null);
         } else {
           setSecondSelectedDay(new Date(year, month, day));
         }
       }
     } else {
-      if (firstSelectedDay == null) {
+      if (firstSelectedDay == null || (firstSelectedDay != null && secondSelectedDay != null)) {
         setFirstSelectedDay(new Date(nextMonthYear, nextMonth, day));
+        setSecondSelectedDay(null);
       } else {
         setSecondSelectedDay(new Date(nextMonthYear, nextMonth, day));
       }
@@ -90,6 +93,14 @@ const ReservationCalender = ({ onRentalPeriod }) => {
     }
     return range;
   };
+
+  const handleSelectRentalTime = (time) =>{
+    setRentalTime(time);
+  }
+  const handleSelectReturnTime = (time) =>{
+    setReturnTime(time);
+  }
+
   useEffect(() => {
     if (firstSelectedDay && secondSelectedDay) {
       if (firstSelectedDay > secondSelectedDay) {
@@ -97,7 +108,7 @@ const ReservationCalender = ({ onRentalPeriod }) => {
         setFirstSelectedDay(secondSelectedDay);
         setSecondSelectedDay(change);
       }
-      onRentalPeriod(firstSelectedDay, secondSelectedDay);
+      onRentalPeriod(firstSelectedDay, secondSelectedDay, rentalTime, returnTime);
       const newFirstRange = filterRangeByCurrentMonth(
         firstSelectedDay,
         secondSelectedDay,
@@ -118,7 +129,7 @@ const ReservationCalender = ({ onRentalPeriod }) => {
       setFirstSelectedRange([]);
       setSecondSelectedRange([]);
     }
-  }, [firstSelectedDay, secondSelectedDay, currentMonteDate]);
+  }, [firstSelectedDay, secondSelectedDay, currentMonteDate, rentalTime, returnTime]);
 
   useEffect(() => {
     setNextMonteDate(new Date(year, month + 1, 1));
@@ -129,22 +140,23 @@ const ReservationCalender = ({ onRentalPeriod }) => {
 
   return (
     <div className='reservation-calendar-wrap'>
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16" onClick={goToPreviousMonth}>
-        <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
-        <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
-      </svg>
-      <div className="reservation-calendar">
-        <div className="reservation-calendar-header">
-          <span>{year}년 {month + 1}월</span>
-        </div>
-        <div className="reservation-calendar-grid">
-          {daysOfWeek.map((day) => (
-            <div key={day} className="reservation-calendar-day-of-week">{day}</div>
-          ))}
-          {days.map((day, index) => (
-            <div
-              key={index}
-              className={`reservation-calendar-day
+      <div className='reservation-calendar-content-wrap'>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16" onClick={goToPreviousMonth}>
+          <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+          <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+        </svg>
+        <div className="reservation-calendar">
+          <div className="reservation-calendar-header">
+            <span>{year}년 {month + 1}월</span>
+          </div>
+          <div className="reservation-calendar-grid">
+            {daysOfWeek.map((day) => (
+              <div key={day} className="reservation-calendar-day-of-week">{day}</div>
+            ))}
+            {days.map((day, index) => (
+              <div
+                key={index}
+                className={`reservation-calendar-day
                 ${isDayInFirstRange(day) ? 'selected-range' : ''}
                 ${index % 7 === 0 ? 'day-off' : ''}
                 ${firstSelectedDay && firstSelectedDay.getMonth() === month && firstSelectedDay.getDate() === day ? 'selected' : ''}
@@ -152,42 +164,68 @@ const ReservationCalender = ({ onRentalPeriod }) => {
                 ${day ? '' : 'empty'}
                 ${currentDate.getMonth() + 1 === currentMonteDate.getMonth() + 1 && currentDate.getDate() > day ? 'disabled-day' : ''}
               `}
-              onClick={() => handleSelected(day, false)} // 첫 번째 달력에서 클릭
-            >
-              {day}
-            </div>
-          ))}
+                onClick={() => handleSelected(day, false)} // 첫 번째 달력에서 클릭
+              >
+                {day}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="reservation-calendar">
-        <div className="reservation-calendar-header">
-          <span>{nextMonthYear}년 {nextMonth + 1}월</span>
-        </div>
-        <div className="reservation-calendar-grid">
-          {daysOfWeek.map((day) => (
-            <div key={day} className="reservation-calendar-day-of-week">{day}</div>
-          ))}
-          {nextMonthDays.map((day, index) => (
-            <div
-              key={index}
-              className={`reservation-calendar-day 
+        <div className="reservation-calendar">
+          <div className="reservation-calendar-header">
+            <span>{nextMonthYear}년 {nextMonth + 1}월</span>
+          </div>
+          <div className="reservation-calendar-grid">
+            {daysOfWeek.map((day) => (
+              <div key={day} className="reservation-calendar-day-of-week">{day}</div>
+            ))}
+            {nextMonthDays.map((day, index) => (
+              <div
+                key={index}
+                className={`reservation-calendar-day 
                 ${isDayInSecondRange(day) ? 'selected-range' : ''}
                 ${index % 7 === 0 ? 'day-off' : ''}
                 ${firstSelectedDay && firstSelectedDay.getMonth() === nextMonth && firstSelectedDay.getDate() === day ? 'selected' : ''}
                 ${secondSelectedDay && secondSelectedDay.getMonth() === nextMonth && secondSelectedDay.getDate() === day ? 'selected' : ''}
                 ${day ? '' : 'empty'}
               `}
-              onClick={() => handleSelected(day, true)} // 두 번째 달력에서 클릭
-            >
-              {day}
-            </div>
-          ))}
+                onClick={() => handleSelected(day, true)} // 두 번째 달력에서 클릭
+              >
+                {day}
+              </div>
+            ))}
+          </div>
         </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16" onClick={goToNextMonth}>
+          <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708" />
+          <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708" />
+        </svg>
       </div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16" onClick={goToNextMonth}>
-        <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708" />
-        <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708" />
-      </svg>
+      <div class="reservation-calender-select-wrapper">
+        <p>대여시간</p>
+        <select name="rentalTime" id="time-select" onChange={(e) => handleSelectRentalTime(e.target.value)}>
+          <option value="10">10:00</option>
+          <option value="11">11:00</option>
+          <option value="12">12:00</option>
+          <option value="13">13:00</option>
+          <option value="14">14:00</option>
+          <option value="15">15:00</option>
+          <option value="16">16:00</option>
+          <option value="17">17:00</option>
+        </select>
+        <p>반납시간</p>
+        <select name="returnTime" id="time-select" onChange={(e) => handleSelectReturnTime(e.target.value)}>
+          <option value="10">10:00</option>
+          <option value="11">11:00</option>
+          <option value="12">12:00</option>
+          <option value="13">13:00</option>
+          <option value="14">14:00</option>
+          <option value="15">15:00</option>
+          <option value="16">16:00</option>
+          <option value="17">17:00</option>
+        </select>
+      </div>
+
     </div>
   );
 };
