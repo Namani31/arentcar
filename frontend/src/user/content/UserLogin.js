@@ -9,6 +9,7 @@ import 'user/content/UserLogin.css';
 
 
 const UserLogin = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -71,7 +72,13 @@ const UserLogin = () => {
         loginState: true,
       }));
 
-      navigate("/");
+      if(location.state?.from === "/mypage"){
+        navigate("/mypage");
+      }else if(location.state?.from === "/reservationdetail"){
+        navigate("/paymentpage",{state : location.state});
+      }else{
+        navigate("/");
+      }
     } catch (error) {
       if (error.response.status === 401 || error.response.status === 404) {
         alert("아이디와 비밀번호를 확인 후 다시 로그인바랍니다.");
